@@ -53,6 +53,3 @@ class TestsKtTest {
             )
     }
 }
-
-/** A tab */
-internal const val t = "\t"

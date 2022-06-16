@@ -21,15 +21,15 @@ it for each supported platform separately.
 
 Kommons Debug is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.1.0")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.1.0")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.2.0")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.2.0")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.1.0</version>
+      <version>0.2.0</version>
       <scope>test</scope>
   </dependency>
   ```
@@ -74,10 +74,10 @@ Write a bunch of tests conveniently for multiple subjects in a single test:
 testAll("foo bar", "FOO BAR") { /* ... */ }
 listOf("foo bar", "FOO BAR").testAll { /* ... */ }
 sequenceOf("foo bar", "FOO BAR").testAll { /* ... */ }
-arrayOf("foo bar", "FOO BAR").testAll { /* ... */ }
+mapOf("key1" to "foo bar", "key2" to "FOO BAR").testAll { (_, v) -> /* ... */ }
 ```
 
-The above tests has three assertions of which the first and last fail
+The above tests has three assertions of which the first and second fail
 when run with the following output:
 
 ```
@@ -94,6 +94,39 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:1)
 2) "FOO BAR" should include substring "bar"
     at sample.Tests.test_contain(Tests.kt:2)
+```
+
+### testEnum
+
+Write a bunch of tests conveniently for all enum entries in a single test:
+
+```kotlin
+enum class FooBar { foo_bar, FOO_BAR }
+
+@Test fun test_contain() = testEnum<FooBar> {
+    it.name shouldContain "foo"
+    it.name shouldContain "bar"
+    it.name shouldContain "BAR"
+}
+```
+
+The above tests has three assertions of which the first and second fail
+when run with the following output:
+
+```
+0 elements passed but expected 2
+
+The following elements passed:
+--none--
+
+The following elements failed:
+foo_bar => "foo_bar" should include substring "BAR"
+FOO_BAR => 
+The following 2 assertions failed:
+1) "FOO_BAR" should include substring "foo"
+    at sample.Tests.test_contain(Tests.kt:3)
+2) "FOO_BAR" should include substring "bar"
+    at sample.Tests.test_contain(Tests.kt:4)
 ```
 
 ## Contributing

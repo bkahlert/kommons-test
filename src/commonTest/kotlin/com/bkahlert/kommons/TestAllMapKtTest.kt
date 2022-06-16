@@ -8,45 +8,45 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldContainIgnoringCase
 import kotlin.test.Test
 
-class TestAllKtTest {
+class TestAllMapKtTest {
 
     @Test fun test_empty() {
         shouldThrow<IllegalArgumentException> {
-            testAll<Any?, Any?> { }
+            emptyMap<Any?, Any?>().testAll { }
         }
     }
 
     @Test fun test_success() {
         shouldNotThrowAny {
-            testAll("foo bar", "FOO BAR") {
-                it shouldContainIgnoringCase "foo"
-                it shouldContainIgnoringCase "bar"
+            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
+                value shouldContainIgnoringCase "foo"
+                value shouldContainIgnoringCase "bar"
             }
         }
     }
 
     @Test fun test_single_fail_single_subject() {
         shouldThrow<AssertionError> {
-            testAll("foo bar", "FOO BAR") {
-                it shouldContain "foo"
-                it shouldContainIgnoringCase "bar"
+            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
+                value shouldContain "foo"
+                value shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             1 elements passed but expected 2
 
             The following elements passed:
-            foo bar
+            a=foo bar
 
             The following elements failed:
-            "FOO BAR" => "FOO BAR" should include substring "foo"
+            b=FOO BAR => "FOO BAR" should include substring "foo"
         """.trimIndent()
     }
 
     @Test fun test_single_fail_multiple_subjects() {
         shouldThrow<AssertionError> {
-            testAll("foo bar", "FOO BAR") {
-                it shouldContainIgnoringCase "baz"
-                it shouldContainIgnoringCase "bar"
+            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
+                value shouldContainIgnoringCase "baz"
+                value shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             0 elements passed but expected 2
@@ -55,16 +55,16 @@ class TestAllKtTest {
             --none--
 
             The following elements failed:
-            "foo bar" => "foo bar" should contain the substring "baz" (case insensitive)
-            "FOO BAR" => "FOO BAR" should contain the substring "baz" (case insensitive)
+            a=foo bar => "foo bar" should contain the substring "baz" (case insensitive)
+            b=FOO BAR => "FOO BAR" should contain the substring "baz" (case insensitive)
         """.trimIndent()
     }
 
     @Test fun test_multiple_fails_multiple_subjects() {
         shouldThrow<AssertionError> {
-            testAll("foo bar", "FOO BAR") {
-                it shouldContain "baz"
-                it shouldContain "BAZ"
+            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
+                value shouldContain "baz"
+                value shouldContain "BAZ"
             }
         }.message
             .shouldContain(
@@ -75,7 +75,7 @@ class TestAllKtTest {
                     --none--
                     
                     The following elements failed:
-                    "foo bar" => 
+                    a=foo bar => 
                     The following 2 assertions failed:
                     1) "foo bar" should include substring "baz"
                 """.trimIndent()
@@ -87,7 +87,7 @@ class TestAllKtTest {
             )
             .shouldContain(
                 """
-                    "FOO BAR" => 
+                    b=FOO BAR => 
                     The following 2 assertions failed:
                     1) "FOO BAR" should include substring "baz"
                 """.trimIndent()

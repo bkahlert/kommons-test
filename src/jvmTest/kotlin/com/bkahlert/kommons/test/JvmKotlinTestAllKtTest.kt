@@ -10,6 +10,12 @@ import kotlin.test.Test as KotlinTest
 
 class JvmKotlinTestAllKtTest {
 
+    @KotlinTest fun test_empty() {
+        shouldThrow<IllegalArgumentException> {
+            testAll<Any?, Any?> { }
+        }
+    }
+
     @KotlinTest fun test_success() {
         shouldNotThrowAny {
             testAll("foo bar", "FOO BAR") {
@@ -21,18 +27,18 @@ class JvmKotlinTestAllKtTest {
 
     @KotlinTest fun test_single_fail_single_subject() {
         shouldThrow<AssertionError> {
-            testAll("foo bar baz", "FOO BAR") {
-                it shouldContainIgnoringCase "baz"
+            testAll("foo bar", "FOO BAR") {
+                it shouldContain "foo"
                 it shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             1 elements passed but expected 2
 
             The following elements passed:
-            foo bar baz
+            foo bar
 
             The following elements failed:
-            "FOO BAR" => "FOO BAR" should contain the substring "baz" (case insensitive)
+            "FOO BAR" => "FOO BAR" should include substring "foo"
         """.trimIndent()
     }
 
@@ -70,16 +76,16 @@ class JvmKotlinTestAllKtTest {
             "foo bar" => 
             The following 2 assertions failed:
             1) "foo bar" should include substring "baz"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:60)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:66)
             2) "foo bar" should include substring "BAZ"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:61)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:67)
             
             "FOO BAR" => 
             The following 2 assertions failed:
             1) "FOO BAR" should include substring "baz"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:60)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:66)
             2) "FOO BAR" should include substring "BAZ"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:61)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:67)
             
         """.trimIndent()
     }

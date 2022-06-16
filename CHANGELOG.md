@@ -39,7 +39,21 @@ Write a bunch of tests conveniently for multiple subjects in a single test:
 testAll("foo bar", "FOO BAR") { /* ... */ }
 listOf("foo bar", "FOO BAR").testAll { /* ... */ }
 sequenceOf("foo bar", "FOO BAR").testAll { /* ... */ }
-arrayOf("foo bar", "FOO BAR").testAll { /* ... */ }
+mapOf("key1" to "foo bar", "key2" to "FOO BAR").testAll { (_, v) -> /* ... */ }
+```
+
+#### testEnum
+
+Write a bunch of tests conveniently for all enum entries in a single test:
+
+```kotlin
+enum class FooBar { foo_bar, FOO_BAR }
+
+@Test fun test_contain() = testEnum<FooBar> {
+    it.name shouldContain "foo"
+    it.name shouldContain "bar"
+    it.name shouldContain "BAR"
+}
 ```
 
 ## [0.1.0] - 2022-06-16
