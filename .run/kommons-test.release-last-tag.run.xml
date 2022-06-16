@@ -1,17 +1,17 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Release SNAPSHOT ➜ publish to local" type="GradleRunConfiguration" factoryName="Gradle" folderName="kommons-test">
+  <configuration default="false" name="Release last-tag ➜ publish to OSSRH, GitHubPackages" type="GradleRunConfiguration" factoryName="Gradle" folderName="kommons-test">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="-x :dokkaHtml -x check" />
+      <option name="scriptParameters" value="-Prelease.useLastTag=true" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
-          <option value="snapshot" />
-          <option value="publishToMavenLocal" />
+          <option value="release" />
+          <option value="publish" />
         </list>
       </option>
       <option name="vmOptions" />

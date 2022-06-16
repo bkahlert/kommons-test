@@ -59,6 +59,43 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:3)
 ```
 
+### testAll
+
+Write a bunch of tests conveniently for multiple subjects in a single test:
+
+```kotlin
+@Test fun test_contain() = testAll("foo bar", "FOO BAR") {
+    it shouldContain "foo"
+    it shouldContain "bar"
+    it shouldContain "BAR"
+}
+
+// The following invocations are equivalent: 
+testAll("foo bar", "FOO BAR") { /* ... */ }
+listOf("foo bar", "FOO BAR").testAll { /* ... */ }
+sequenceOf("foo bar", "FOO BAR").testAll { /* ... */ }
+arrayOf("foo bar", "FOO BAR").testAll { /* ... */ }
+```
+
+The above tests has three assertions of which the first and last fail
+when run with the following output:
+
+```
+0 elements passed but expected 2
+
+The following elements passed:
+--none--
+
+The following elements failed:
+"foo bar" => "foo bar" should include substring "BAR"
+"FOO BAR" => 
+The following 2 assertions failed:
+1) "FOO BAR" should include substring "foo"
+    at sample.Tests.test_contain(Tests.kt:1)
+2) "FOO BAR" should include substring "bar"
+    at sample.Tests.test_contain(Tests.kt:2)
+```
+
 ## Contributing
 
 Want to contribute? Awesome! The most basic way to show your support is to star the project, or to raise issues. You can also support this project by making

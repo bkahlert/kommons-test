@@ -13,7 +13,7 @@ allprojects {
     apply { plugin("maven-publish") }
 }
 
-description = "Kommons Debug is a Kotlin Multiplatform Library to support print debugging"
+description = "Kommons Test is a Kotlin Multiplatform Library to ease testing"
 group = "com.bkahlert.kommons"
 
 repositories {
@@ -40,13 +40,14 @@ kotlin {
                 }
             }
         }
+        nodejs()
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 api(kotlin("test"))
-                api("io.kotest:kotest-assertions-core:5.3.0")
+                api("io.kotest:kotest-assertions-core:5.3.1")
             }
         }
         val commonTest by getting
