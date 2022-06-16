@@ -33,9 +33,6 @@ kotlin {
     }
     js(IR) {
         browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
             testTask {
                 testLogging.showStandardStreams = true
                 useKarma {
@@ -48,7 +45,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("test"))
+                api(kotlin("test"))
                 api("io.kotest:kotest-assertions-core:5.3.0")
             }
         }
@@ -62,13 +59,7 @@ kotlin {
             }
         }
         val jvmTest by getting
-        val jsMain by getting {
-            dependencies {
-                @Suppress("SpellCheckingInspection")
-                implementation(npm("xregexp", "5.1.0"))
-                implementation(npm("grapheme-splitter", "1.0.4"))
-            }
-        }
+        val jsMain by getting
         val jsTest by getting
 
         all {
