@@ -9,12 +9,6 @@ import org.junit.jupiter.api.Test as JupiterTest
 
 class JvmJupiterTestsKtTest {
 
-    @JupiterTest fun test_contain() = tests {
-        "foo bar" shouldContain "Foo"
-        "foo bar" shouldContain "foo"
-        "foo bar" shouldContain "baz"
-    }
-
     @JupiterTest fun test_success() {
         shouldNotThrowAny {
             tests {

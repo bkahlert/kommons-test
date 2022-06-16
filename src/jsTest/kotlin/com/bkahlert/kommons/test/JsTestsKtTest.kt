@@ -34,7 +34,7 @@ class JsTestsKtTest {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "FOO"
             }
-        }.message.also { println(it) } shouldBe """
+        }.message shouldBe """
             
             The following 2 assertions failed:
             1) "foo bar" should include substring "baz"
