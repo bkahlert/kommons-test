@@ -1,0 +1,72 @@
+name: build
+
+on:
+  push:
+    branches: ['master']
+    tags: ['v*']
+    paths-ignore: ['**.md']
+  pull_request:
+    branches: ['master']
+    tags: ['dependencies']
+    paths-ignore: ['**.md']
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8.0'
+          distribution: 'adopt'
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build -Pkotlin.tests.individualTaskReports=true
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-reports
+          if-no-files-found: error
+          path: build/test-results/**/*.xml
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: kommons-test
+          if-no-files-found: error
+          path: |
+            build/dokka
+            build/libs
+            build/publications
+            build/reports
+            build/test-results
+
+  release-draft:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Draft release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          draft: true
+          body_path: CHANGELOG.md
+          files: build/libs
+          token: ${{ secrets.GITHUB_TOKEN }}

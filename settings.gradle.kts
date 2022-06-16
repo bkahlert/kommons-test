@@ -1,0 +1,2 @@
+
+rootProject.name = "kommons-test"
