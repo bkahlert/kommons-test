@@ -10,14 +10,6 @@ import kotlin.test.Test
 
 class TestEnumKtTest {
 
-    enum class FooBar { foo_bar, FOO_BAR }
-
-    @Test fun test_contain() = testEnum<FooBar> {
-        it.name shouldContain "foo"
-        it.name shouldContain "bar"
-        it.name shouldContain "BAR"
-    }
-
     @Test fun test_empty() {
         shouldNotThrowAny {
             testEnum<EmptyEnum> { }
