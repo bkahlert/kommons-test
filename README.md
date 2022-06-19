@@ -146,6 +146,20 @@ class UniqueIdResolverTest {
 }
 ```
 
+#### Simple ID
+
+```kotlin
+class SimpleIdResolverTest {
+    @Nested inner class NestedTest {
+        @Test fun test_name(simpleId: SimpleId) = tests {
+            simpleId.segments.first() // "SimpleIdResolverTest"
+            simpleId.segments.last()  // "test_name"
+            simpleId.toString()       // "SimpleIdResolverTest.test_name"
+        }
+    }
+}
+```
+
 #### DisplayName
 
 ```kotlin

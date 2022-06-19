@@ -61,6 +61,7 @@ enum class FooBar { foo_bar, FOO_BAR }
 #### Parameter Resolvers
 
 - Unique ID
+- Simple ID
 - DisplayName
 
 ## [0.1.0] - 2022-06-16
