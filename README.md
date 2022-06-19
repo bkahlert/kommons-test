@@ -173,6 +173,18 @@ class DisplayNameResolverTest {
 }
 ```
 
+#### ExtensionContext
+
+```kotlin
+class ExtensionContextResolverTest {
+    @Nested inner class NestedTest {
+        @Test fun `test name`(extensionContext: ExtensionContext) = tests {
+            extensionContext.simpleId   // "ExtensionContextResolverTest.NestedTest.test_name"
+        }
+    }
+}
+```
+
 ## Contributing
 
 Want to contribute? Awesome! The most basic way to show your support is to star the project, or to raise issues. You can also support this project by making

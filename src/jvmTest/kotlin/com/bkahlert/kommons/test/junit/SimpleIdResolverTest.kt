@@ -1,9 +1,11 @@
 package com.bkahlert.kommons.test.junit
 
+import com.bkahlert.kommons.test.junit.SimpleIdResolver.Companion.simpleId
 import com.bkahlert.kommons.test.tests
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.platform.engine.UniqueId
 
 class SimpleIdResolverTest {
@@ -12,11 +14,19 @@ class SimpleIdResolverTest {
         simpleId shouldBe SimpleId.from(uniqueId)
     }
 
+    @Test fun extension(simpleId: SimpleId, extensionContext: ExtensionContext) = tests {
+        simpleId shouldBe extensionContext.simpleId
+    }
+
     @Nested
     inner class NestedTest {
 
         @Test fun test_name(simpleId: SimpleId, uniqueId: UniqueId) = tests {
             simpleId shouldBe SimpleId.from(uniqueId)
+        }
+
+        @Test fun extension(simpleId: SimpleId, extensionContext: ExtensionContext) = tests {
+            simpleId shouldBe extensionContext.simpleId
         }
     }
 }

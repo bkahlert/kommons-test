@@ -1,10 +1,8 @@
 package com.bkahlert.kommons.test.junit
 
 import com.bkahlert.kommons.test.withPrefix
-import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.UniqueId.Segment
-import org.junit.platform.engine.UniqueId.parse
 
 /**
  * Simplified form of a [UniqueId] that only uses simple class names
@@ -21,9 +19,6 @@ public data class SimpleId(
     override fun toString(): String = segments.joinToString(".")
 
     public companion object {
-
-        /** The [SimpleId] of the current test or container. */
-        public val ExtensionContext.simpleId: SimpleId get(): SimpleId = from(parse(uniqueId))
 
         /** Creates a [SimpleId] from the specified [StackTraceElement]. */
         public fun from(stackTraceElement: StackTraceElement): SimpleId = SimpleId(buildList {
