@@ -1,6 +1,10 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.test.withPrefix
+import com.bkahlert.kommons.withPrefix
+import org.junit.jupiter.engine.descriptor.ClassTestDescriptor
+import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
+import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor
+import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor
 import org.junit.platform.engine.UniqueId
 import org.junit.platform.engine.UniqueId.Segment
 
@@ -37,12 +41,12 @@ public data class SimpleId(
         private fun simplifySegment(node: Segment): String = with(node) {
             when (type) {
                 "engine" -> ""
-                "class" -> simplifyClass(value)
-                "nested-class" -> simplifyClass(value)
-                "method" -> simplifyMethod(value)
-                "test-factory" -> simplifyMethod(value)
-                "dynamic-container" -> value.removePrefix("#").withPrefix("container-")
-                "dynamic-test" -> value.removePrefix("#").withPrefix("test-")
+                ClassTestDescriptor.SEGMENT_TYPE -> simplifyClass(value)
+                NestedClassTestDescriptor.SEGMENT_TYPE -> simplifyClass(value)
+                TestMethodTestDescriptor.SEGMENT_TYPE -> simplifyMethod(value)
+                TestFactoryTestDescriptor.SEGMENT_TYPE -> simplifyMethod(value)
+                TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE -> value.removePrefix("#").withPrefix("container-")
+                TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE -> value.removePrefix("#").withPrefix("test-")
                 else -> value
             }
         }

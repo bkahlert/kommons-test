@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.ExtensionContext
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace
+import org.junit.jupiter.api.extension.ExtensionContext.Store
 import org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE
 import org.junit.jupiter.api.parallel.ResourceLock
 import org.junit.jupiter.api.parallel.Resources
@@ -40,14 +40,14 @@ public class SystemPropertyExtension : BeforeAllCallback, AfterAllCallback, Befo
 
     private fun ExtensionContext.backupAndApplySystemProperties() {
         annotatedSystemProperties.forEach { property ->
-            val oldValue = System.setProperty(property.name, property.value)
-            getStore().put(property, oldValue)
+            val oldValue: String? = System.setProperty(property.name, property.value)
+            store.put(property, oldValue)
         }
     }
 
     private fun ExtensionContext.restoreBackedUpSystemProperties() {
         annotatedSystemProperties.forEach { property ->
-            val backupValue = getStore().get(property, String::class.java)
+            val backupValue: String? = store.getTyped(property)
             if (backupValue != null) System.setProperty(property.name, backupValue)
             else System.clearProperty(property.name)
         }
@@ -56,7 +56,8 @@ public class SystemPropertyExtension : BeforeAllCallback, AfterAllCallback, Befo
     private val ExtensionContext.annotatedSystemProperties: List<SystemProperty>
         get() = AnnotationSupport.findRepeatableAnnotations(element, SystemProperty::class.java)
 
-    private fun ExtensionContext.getStore(): ExtensionContext.Store = getStore(Namespace.create(element))
+
+    private val ExtensionContext.store: Store get() = getStore<SystemPropertyExtension>()
 }
 
 

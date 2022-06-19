@@ -1,6 +1,5 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.test.testAll
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -8,45 +7,45 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldContainIgnoringCase
 import kotlin.test.Test
 
-class TestAllMapKtTest {
+class TestEnumKtTest {
 
     @Test fun test_empty() {
-        shouldThrow<IllegalArgumentException> {
-            emptyMap<Any?, Any?>().testAll { }
+        shouldNotThrowAny {
+            testEnum<EmptyEnum> { }
         }
     }
 
     @Test fun test_success() {
         shouldNotThrowAny {
-            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
-                value shouldContainIgnoringCase "foo"
-                value shouldContainIgnoringCase "bar"
+            testEnum<FooBarEnum> {
+                it.name shouldContainIgnoringCase "foo"
+                it.name shouldContainIgnoringCase "bar"
             }
         }
     }
 
     @Test fun test_single_fail_single_subject() {
         shouldThrow<AssertionError> {
-            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
-                value shouldContain "foo"
-                value shouldContainIgnoringCase "bar"
+            testEnum<FooBarEnum> {
+                it.name shouldContain "foo"
+                it.name shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             1 elements passed but expected 2
 
             The following elements passed:
-            a=foo bar
+            foo_bar
 
             The following elements failed:
-            b=FOO BAR => "FOO BAR" should include substring "foo"
+            FOO_BAR => "FOO_BAR" should include substring "foo"
         """.trimIndent()
     }
 
     @Test fun test_single_fail_multiple_subjects() {
         shouldThrow<AssertionError> {
-            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
-                value shouldContainIgnoringCase "baz"
-                value shouldContainIgnoringCase "bar"
+            testEnum<FooBarEnum> {
+                it.name shouldContainIgnoringCase "baz"
+                it.name shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             0 elements passed but expected 2
@@ -55,16 +54,16 @@ class TestAllMapKtTest {
             --none--
 
             The following elements failed:
-            a=foo bar => "foo bar" should contain the substring "baz" (case insensitive)
-            b=FOO BAR => "FOO BAR" should contain the substring "baz" (case insensitive)
+            foo_bar => "foo_bar" should contain the substring "baz" (case insensitive)
+            FOO_BAR => "FOO_BAR" should contain the substring "baz" (case insensitive)
         """.trimIndent()
     }
 
     @Test fun test_multiple_fails_multiple_subjects() {
         shouldThrow<AssertionError> {
-            mapOf("a" to "foo bar", "b" to "FOO BAR").testAll { (_, value) ->
-                value shouldContain "baz"
-                value shouldContain "BAZ"
+            testEnum<FooBarEnum> {
+                it.name shouldContain "baz"
+                it.name shouldContain "BAZ"
             }
         }.message
             .shouldContain(
@@ -75,26 +74,26 @@ class TestAllMapKtTest {
                     --none--
                     
                     The following elements failed:
-                    a=foo bar => 
+                    foo_bar => 
                     The following 2 assertions failed:
-                    1) "foo bar" should include substring "baz"
+                    1) "foo_bar" should include substring "baz"
                 """.trimIndent()
             )
             .shouldContain(
                 """
-                    2) "foo bar" should include substring "BAZ"
+                    2) "foo_bar" should include substring "BAZ"
                 """.trimIndent()
             )
             .shouldContain(
                 """
-                    b=FOO BAR => 
+                    FOO_BAR => 
                     The following 2 assertions failed:
-                    1) "FOO BAR" should include substring "baz"
+                    1) "FOO_BAR" should include substring "baz"
                 """.trimIndent()
             )
             .shouldContain(
                 """
-                    2) "FOO BAR" should include substring "BAZ"
+                    2) "FOO_BAR" should include substring "BAZ"
                 """.trimIndent()
             )
     }

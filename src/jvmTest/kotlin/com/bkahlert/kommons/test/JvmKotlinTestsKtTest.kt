@@ -1,6 +1,5 @@
 package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.t
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -39,9 +38,9 @@ class JvmKotlinTestsKtTest {
             
             The following 2 assertions failed:
             1) "foo bar" should include substring "baz"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestsKtTest.test_multiple_fails(JvmKotlinTestsKtTest.kt:35)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestsKtTest.test_multiple_fails(JvmKotlinTestsKtTest.kt:34)
             2) "foo bar" should include substring "FOO"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestsKtTest.test_multiple_fails(JvmKotlinTestsKtTest.kt:36)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestsKtTest.test_multiple_fails(JvmKotlinTestsKtTest.kt:35)
             
         """.trimIndent()
     }

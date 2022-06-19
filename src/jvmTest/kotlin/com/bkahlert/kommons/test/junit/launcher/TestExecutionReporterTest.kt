@@ -1,8 +1,8 @@
-package com.bkahlert.kommons.test.junit
+package com.bkahlert.kommons.test.junit.launcher
 
-import com.bkahlert.kommons.test.ansiRemoved
+import com.bkahlert.kommons.ansiRemoved
 import com.bkahlert.kommons.test.tests
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldMatch
 import org.junit.jupiter.api.Test
 import org.junit.platform.engine.ConfigurationParameters
 import org.junit.platform.engine.TestDescriptor
@@ -18,52 +18,62 @@ import java.util.Optional
 class TestExecutionReporterTest {
 
     @Test fun no_tests() = tests {
-        testExecutionReporterOutput(0, 0, 0).ansiRemoved shouldBe """
+        testExecutionReporterOutput(0, 0, 0, 0) shouldMatch """
             ⁉︎ no tests executed
         """.trimIndent()
     }
 
+    @Test fun successful_tests() = tests {
+        testExecutionReporterOutput(1, 0, 0, 0) shouldMatch """
+            1 test within \d+m?s: ✔︎ all passed
+        """.trimIndent()
+        testExecutionReporterOutput(2, 0, 0, 0) shouldMatch """
+            2 tests within \d+m?s: ✔︎ all passed
+        """.trimIndent()
+    }
+
     @Test fun aborted_tests() = tests {
-        testExecutionReporterOutput(0, 0, 1).ansiRemoved shouldBe """
-            ! the test crashed
+        testExecutionReporterOutput(0, 0, 1, 0) shouldMatch """
+            1 test within \d+m?s: ‼ all crashed
         """.trimIndent()
-        testExecutionReporterOutput(0, 0, 2).ansiRemoved shouldBe """
-            ! all 2 tests crashed
+        testExecutionReporterOutput(0, 0, 2, 0) shouldMatch """
+            2 tests within \d+m?s: ‼ all crashed
         """.trimIndent()
-        testExecutionReporterOutput(1, 0, 2).ansiRemoved shouldBe """
-            ! 2 out of 3 tests crashed
+        testExecutionReporterOutput(1, 0, 2, 0) shouldMatch """
+            3 tests within \d+m?s: ‼ 2 crashed, ✔︎ 1 passed
         """.trimIndent()
     }
 
     @Test fun failed_tests() = tests {
-        testExecutionReporterOutput(0, 1, 0).ansiRemoved shouldBe """
-            ✘︎ the test failed
+        testExecutionReporterOutput(0, 1, 0, 0) shouldMatch """
+            1 test within \d+m?s: ✘︎ all failed
         """.trimIndent()
-        testExecutionReporterOutput(0, 2, 0).ansiRemoved shouldBe """
-            ✘︎ all 2 tests failed
+        testExecutionReporterOutput(0, 2, 0, 0) shouldMatch """
+            2 tests within \d+m?s: ✘︎ all failed
         """.trimIndent()
-        testExecutionReporterOutput(1, 2, 0).ansiRemoved shouldBe """
-            ✘︎ 2 out of 3 tests failed
-        """.trimIndent()
-    }
-
-    @Test fun aborted_and_failed_tests() = tests {
-        testExecutionReporterOutput(1, 2, 1).ansiRemoved shouldBe """
-            ✘︎ 2 out of 4 tests failed
-            ! 1 out of 4 tests crashed
-        """.trimIndent()
-        testExecutionReporterOutput(1, 1, 2).ansiRemoved shouldBe """
-            ✘︎ 1 out of 4 tests failed
-            ! 2 out of 4 tests crashed
+        testExecutionReporterOutput(1, 2, 0, 0) shouldMatch """
+            3 tests within \d+m?s: ✘︎ 2 failed, ✔︎ 1 passed
         """.trimIndent()
     }
 
-    @Test fun successful_tests() = tests {
-        testExecutionReporterOutput(1, 0, 0).ansiRemoved shouldBe """
-            ✔︎ the test passed within 0s
+    @Test fun failed_and_failed_tests() = tests {
+        testExecutionReporterOutput(1, 2, 1, 0) shouldMatch """
+            4 tests within \d+m?s: ✘︎ 2 failed, ‼ 1 crashed, ✔︎ 1 passed
         """.trimIndent()
-        testExecutionReporterOutput(2, 0, 0).ansiRemoved shouldBe """
-            ✔︎ all 2 tests passed within 0s
+        testExecutionReporterOutput(1, 1, 2, 0) shouldMatch """
+            4 tests within \d+m?s: ✘︎ 1 failed, ‼ 2 crashed, ✔︎ 1 passed
+        """.trimIndent()
+    }
+
+    @Test fun skipped_tests() = tests {
+        testExecutionReporterOutput(1, 1, 1, 2) shouldMatch """
+            3 tests within \d+m?s: ✘︎ 1 failed, ‼ 1 crashed, ✔︎ 1 passed, ◍ 2 ignored
+        """.trimIndent()
+        testExecutionReporterOutput(2, 2, 2, 2) shouldMatch """
+            6 tests within \d+m?s: ✘︎ 2 failed, ‼ 2 crashed, ✔︎ 2 passed, ◍ 2 ignored
+        """.trimIndent()
+        testExecutionReporterOutput(2, 0, 0, 2) shouldMatch """
+            2 tests within \d+m?s: ✔︎ all passed, ◍ all ignored
         """.trimIndent()
     }
 }
@@ -72,17 +82,31 @@ private fun testExecutionReporterOutput(
     passed: Int,
     failed: Int,
     aborted: Int,
+    skipped: Int,
+    sanitize: Boolean = true,
 ): String {
     val testPlan = TestPlan.from(emptyList(), configurationParameters())
     val lines = mutableListOf<String>()
     TestExecutionReporter { lines.add(it) }.apply {
         testPlanExecutionStarted(testPlan)
-        repeat(passed) { executionFinished(testIdentifier(), TestExecutionResult.successful()) }
-        repeat(failed) { executionFinished(testIdentifier(), TestExecutionResult.failed(RuntimeException())) }
-        repeat(aborted) { executionFinished(testIdentifier(), TestExecutionResult.aborted(RuntimeException())) }
+        repeat(passed) {
+            executionStarted(testIdentifier())
+            executionFinished(testIdentifier(), TestExecutionResult.successful())
+        }
+        repeat(failed) {
+            executionStarted(testIdentifier())
+            executionFinished(testIdentifier(), TestExecutionResult.failed(RuntimeException()))
+        }
+        repeat(aborted) {
+            executionStarted(testIdentifier())
+            executionFinished(testIdentifier(), TestExecutionResult.aborted(RuntimeException()))
+        }
+        repeat(skipped) {
+            executionSkipped(testIdentifier(), null)
+        }
         testPlanExecutionFinished(testPlan)
     }
-    return lines.joinToString("\n")
+    return lines.joinToString("\n").let { if (sanitize) it.ansiRemoved.trim() else it }
 }
 
 private fun configurationParameters(vararg entries: Pair<String?, String>) =
@@ -93,6 +117,7 @@ private fun configurationParameters(vararg entries: Pair<String?, String>) =
         override fun getBoolean(key: String?): Optional<Boolean> =
             get(key).flatMap { Optional.ofNullable(it.toBoolean()) }
 
+        @Deprecated("use keySet", ReplaceWith("keySet.size()"))
         override fun size(): Int = entries.size
         override fun keySet(): MutableSet<String> = entries.mapNotNull { it.first }.toMutableSet()
     }

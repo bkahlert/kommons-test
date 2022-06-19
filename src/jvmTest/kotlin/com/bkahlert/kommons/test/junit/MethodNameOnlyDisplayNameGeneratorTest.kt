@@ -4,6 +4,7 @@ import com.bkahlert.kommons.test.tests
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayNameGenerator
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInfo
 import kotlin.reflect.jvm.javaMethod
 
 class MethodNameOnlyDisplayNameGeneratorTest {
@@ -45,9 +46,9 @@ private class OuterClass {
 
     inner class NestedClass {
         @Test fun method() = Unit
-        @Test fun methodWithParameters(baz: Any?) = Unit
+        @Test fun methodWithParameters(@Suppress("UNUSED_PARAMETER") baz: TestInfo) = Unit
     }
 
     @Test fun method() = Unit
-    @Test fun methodWithParameters(baz: Any?) = Unit
+    @Test fun methodWithParameters(@Suppress("UNUSED_PARAMETER") baz: TestInfo) = Unit
 }

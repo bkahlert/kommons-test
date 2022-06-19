@@ -4,7 +4,6 @@ import java.net.URI
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.nio.file.attribute.PosixFilePermission
 import java.util.jar.JarOutputStream
 import kotlin.io.path.createDirectories
@@ -15,11 +14,6 @@ import kotlin.io.path.outputStream
 import kotlin.io.path.setPosixFilePermissions
 import kotlin.io.path.writeBytes
 import kotlin.random.Random
-
-/**
- * Directory in which temporary data can be stored.
- */
-internal val Temp: Path by lazy { Paths.get(System.getProperty("java.io.tmpdir")) }
 
 /**
  * Returns this [Path] with all parent directories created.
@@ -87,8 +81,8 @@ public fun Path.randomFile(base: String = randomString(4), extension: String = "
  */
 public fun Path.requireTempSubPath(): Path =
     apply {
-        require(fileSystem != FileSystems.getDefault() || isSubPathOf(Temp)) {
-            "${normalize().toAbsolutePath()} is not inside $Temp."
+        require(fileSystem != FileSystems.getDefault() || isSubPathOf(KommonsTest.Temp)) {
+            "${normalize().toAbsolutePath()} is not inside ${KommonsTest.Temp}."
         }
     }
 
@@ -98,7 +92,7 @@ public fun Path.requireTempSubPath(): Path =
  * The POSIX permissions are set to `700`.
  */
 public fun tempDir(base: String = "", extension: String = ""): Path =
-    Temp.tempDir(base, extension)
+    KommonsTest.Temp.tempDir(base, extension)
 
 /**
  * Creates a temporary file inside the system's temporary directory.
@@ -106,7 +100,7 @@ public fun tempDir(base: String = "", extension: String = ""): Path =
  * The POSIX permissions are set to `700`.
  */
 public fun tempFile(base: String = "", extension: String = ""): Path =
-    Temp.tempFile(base, extension)
+    KommonsTest.Temp.tempFile(base, extension)
 
 /**
  * Creates a temporary directory inside this temporary directory.

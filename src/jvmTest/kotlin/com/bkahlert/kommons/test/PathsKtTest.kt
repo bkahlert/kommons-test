@@ -69,7 +69,7 @@ class PathsKtTest {
 
     @Test fun temp_dir() = tests {
         tempDir() should { tmp ->
-            tmp.isSubPathOf(Temp) shouldBe true
+            tmp.isSubPathOf(KommonsTest.Temp) shouldBe true
             tmp.shouldBeADirectory()
             tmp.getPosixFilePermissions() shouldContainExactly setOf(
                 PosixFilePermission.OWNER_READ,
@@ -103,7 +103,7 @@ class PathsKtTest {
 
     @Test fun temp_file() {
         tempFile() should { tmp ->
-            tmp.isSubPathOf(Temp) shouldBe true
+            tmp.isSubPathOf(KommonsTest.Temp) shouldBe true
             tmp.shouldBeAFile()
             tmp.getPosixFilePermissions() shouldContainExactly setOf(
                 PosixFilePermission.OWNER_READ,

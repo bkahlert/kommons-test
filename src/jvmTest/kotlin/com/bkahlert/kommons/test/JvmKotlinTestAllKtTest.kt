@@ -1,6 +1,5 @@
 package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.t
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -76,16 +75,16 @@ class JvmKotlinTestAllKtTest {
             "foo bar" => 
             The following 2 assertions failed:
             1) "foo bar" should include substring "baz"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:66)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:65)
             2) "foo bar" should include substring "BAZ"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:67)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:66)
             
             "FOO BAR" => 
             The following 2 assertions failed:
             1) "FOO BAR" should include substring "baz"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:66)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:65)
             2) "FOO BAR" should include substring "BAZ"
-            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:67)
+            ${t}at com.bkahlert.kommons.test.JvmKotlinTestAllKtTest.test_multiple_fails_multiple_subjects(JvmKotlinTestAllKtTest.kt:66)
             
         """.trimIndent()
     }

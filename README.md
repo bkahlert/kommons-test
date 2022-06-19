@@ -129,7 +129,153 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:4)
 ```
 
+## JVM Features
+
+### Test Builders
+
+Write concise tests with one of the following test builders:
+
+- `testing`
+- `testingEach`
+
+```kotlin
+class SubjectsTest {
+
+    // create three test containers - one for each subject 
+    @TestFactory fun subjects() = testEach(
+        "subject 1",
+        "subject 2",
+        "subject 3",
+    ) {
+        // all assertions will be run as separate JUnit tests 
+        expecting { length } it { shouldBeGreaterThan(0) }
+        // if you prefer to do assertions using `it` use the `that` infix 
+        expecting { length } that { it.shouldBeGreaterThan(0) }
+
+        // assert potential exceptions 
+        expectCatching { "nope" } it { shouldBeSuccess() }
+        expectCatching { throw RuntimeException() } it { shouldBeFailure() }
+
+        // assert definitive exceptions 
+        expectThrows<RuntimeException> { throw RuntimeException() }
+
+        // the display name for each expectation is computed automatically
+        // the following expectation will render as `"$this-foo" shouldStartWith("subject ")`
+        expecting { "$this-foo" } it { shouldStartWith("subject ") }
+
+        // this expectation will render as `error(this) shouldBeFailure().shouldBeInstanceOf<IllegalStateException>()`
+        expectCatching { error(this) } that { it.shouldBeFailure().shouldBeInstanceOf<IllegalStateException>() }
+    }
+}
+```
+
+A proper [JUnit test source URI](https://junit.org/junit5/docs/current/user-guide/#writing-tests-dynamic-tests-uri-test-source)
+similar to `file:///home/dev/my-project/src/jvmTest/kotlin/pkg/test/SubjectsTest.kt?line=16&column=9` is created
+automatically for each expectation.
+
+Depending on your IDE a simple double-click on a failed test should bring you exactly to where you typed your expectation.
+
+### Source File Location
+
+Find the class directory, the source directory or the source file itself of a class.
+
+```kotlin
+Foo::class.findClassesDirectoryOrNull()  // /home/john/dev/project/build/classes/kotlin/jvm/test
+Foo::class.findSourceDirectoryOrNull()   // /home/john/dev/project/src/jvmTest/kotlin
+Foo::class.findSourceFileOrNull()        // /home/john/dev/project/src/jvmTest/kotlin/packages/source.kt
+```
+
+### Source Code Analysis
+
+Ever wondered what the code that triggered an exception looks like?
+
+Doing so was never easier with `getLambdaBodyOrNull`:
+
+```kotlin
+val caught = catchException {
+    foo {
+        bar {
+            val now = Instant.now()
+            throw RuntimeException("failed at $now")
+        }
+    }
+}
+
+val bodyOfBarCall = caught.getLambdaBodyOrNull()?.body
+// """
+// val now = Instant.now()
+// throw RuntimeException("failed at ${'$'}now")
+// """
+
+
+val bodyOfFooCall = caught.getLambdaBodyOrNull("foo")?.body
+// """
+// bar {
+//     val now = Instant.now()
+//     throw RuntimeException("failed at $now")
+// }
+// """
+
+
+// helper
+private fun <R> foo(block: () -> R): R = block()
+private fun <R> bar(block: () -> R): R = block()
+
+private inline fun catchException(block: () -> Nothing): Throwable =
+    try {
+        block()
+    } catch (e: Throwable) {
+        e
+    }
+
+```
+
 ## JUnit 5 Features
+
+### Opinionated Defaults
+
+JUnit based tests will be started with the following settings by default:
+
+```properties
+# concise test names with no parameter list
+junit.jupiter.displayname.generator.default=\
+  com.bkahlert.kommons.test.junit.MethodNameOnlyDisplayNameGenerator
+# run top-level test containers in parallel
+junit.jupiter.execution.parallel.enabled=true
+junit.jupiter.execution.parallel.mode.classes.default=concurrent
+junit.jupiter.execution.parallel.config.strategy=dynamic
+junit.jupiter.execution.parallel.config.dynamic.factor=5
+# run tests inside a test tree sequentially
+junit.jupiter.execution.parallel.mode.default=same_thread
+# auto-detect extensions located in META-INF/services
+junit.jupiter.extensions.autodetection.enabled=true
+# instantiate test classes only once for all tests
+# same as annotating all test classes with @TestInstance(PER_CLASS)
+junit.jupiter.testinstance.lifecycle.default=per_class
+# enable constructor dependency injection for Spring tests
+spring.test.constructor.autowire.mode=all
+```
+
+### Reporting
+
+Tests results are printed at the end of a test run
+by [TestExecutionReporter](src/jvmMain/kotlin/com/bkahlert/kommons/test/junit/launcher/TestExecutionReporter.kt) as follows:
+
+```log
+120 tests within 1.8s: ✘︎ 2 failed, ‼ 3 crashed, ✔︎ 113 passed, 2 ignored
+```
+
+Or if all went well:
+
+```log
+120 tests within 1.55s: ✔︎ all passed
+```
+
+This feature is enabled by default but can be disabled by setting:
+
+```properties
+com.bkahlert.kommons.test.junit.launcher.reporter.disabled=true
+```
 
 ### Parameter Resolvers
 
@@ -198,6 +344,103 @@ class SystemPropertiesTest {
     @SystemProperty(name = "foo", value = "bar")
     fun test() {
         System.getProperty("foo") // "bar"
+    }
+}
+```
+
+### Extension Authoring
+
+For authors of JUnit extensions `getStore` and `getTestStore` can
+be used to obtain differently namespaced stores.
+
+Reified variants of `getTyped`, `getTypedOrDefault`, `getTypedOrComputeIfAbsent`, and `removeTyped`
+can be used in place of their type-safe counterparts that require
+a class instance argument.
+
+```kotlin
+class MyExtension : BeforeAllCallback, BeforeEachCallback {
+
+    override fun beforeAll(context: ExtensionContext) {
+        // store the moment the tests were started in the container store
+        context.getStore<MyExtension>().put("start", Instant.now())
+
+        // will throw an exception because there is no current test
+        context.getTestStore<MyExtension>().put("foo", "bar")
+    }
+
+    override fun beforeEach(context: ExtensionContext) {
+        // returns the moment the tests were started
+        context.getStore<MyExtension>().getTyped<Instant>("start")
+
+        // returns null, because the store is namespaced with the test itself
+        context.getTestStore<MyExtension>().getTyped<Instant>("start")
+    }
+}
+```
+
+### Launching Tests
+
+Launch JUnit tests programmatically using `launchTests`.
+
+Use [KotlinDiscoverySelectors](src/jvmMain/kotlin/com/bkahlert/kommons/test/junit/launcher/KotlinDiscoverySelectors.kt) to easily select the tests to run
+explicitly using
+`selectKotlinClass`, `selectKotlinMemberFunction`,
+`selectKotlinNestedClass`, `selectKotlinNestedMemberFunction`.
+
+Alternatively use `select` to no longer have to write the full paths to your tests
+yourself.
+
+```kotlin
+class FooTest {
+    @Test
+    fun test_foo() {
+        "foo" shouldBe "foo"
+    }
+}
+
+class BarTest {
+    @Test
+    fun test_bar() {
+        "bar" shouldBe "baz"
+    }
+
+    @Nested
+    inner class BazTest {
+        @Test
+        fun test_baz() {
+            "baz" shouldBe "baz"
+        }
+    }
+}
+
+fun main() {
+    // launches all FooTest tests and BazTest.test_bat()
+    launchTests(
+        select(FooTest::class),
+        select(BazTest::test_baz),
+    )
+
+    // same as above but with classic discovery function
+    launchTests(
+        selectClass(FooTest::class.java),
+        selectNestedMethod(listOf(BarTest::class.java), BazTest::class.java, "test_baz"),
+    )
+
+    // customizes how tests are discovered and run
+    launchTests(
+        select(FooTest::class),
+        select(BazTest::test_baz),
+    ) {
+        request {
+            // customize discovery request
+            parallelExecutionEnabled(true)
+        }
+        config {
+            // customize launcher configuration
+        }
+        launcher {
+            // customize launcher
+        }
     }
 }
 ```

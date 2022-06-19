@@ -1,6 +1,7 @@
 package com.bkahlert.kommons.test
 
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveAtLeastSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.paths.shouldBeADirectory
@@ -10,7 +11,6 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
 import kotlin.io.path.pathString
 
 class JvmFilePeekKtTest {
@@ -58,7 +58,7 @@ class JvmFilePeekKtTest {
         compute().shouldNotBeNull() should { file ->
             file.shouldBeAFile()
             file.map { it.pathString }.takeLast(8).shouldContainExactly(
-                "src", "jvmTest", "kotlin", "com", "bkahlert", "kommons", "debug", "ReflectKtTest.kt"
+                "src", "jvmTest", "kotlin", "com", "bkahlert", "kommons", "test", "JvmFilePeekKtTest.kt"
             )
         }
 
@@ -69,30 +69,95 @@ class JvmFilePeekKtTest {
     inner class InnerClass
 
     @Test fun get_caller_file_info() = tests {
-        FilePeekMPP.getCallerFileInfo(
-            try {
-                throw RuntimeException()
-            } catch (e: Throwable) {
-                e.stackTrace.first()
+        FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {
+            throw RuntimeException()
+        }).shouldNotBeNull() should { fileInfo ->
+            fileInfo.sourceFile should { file ->
+                file.pathString shouldEndWith "src/jvmTest/kotlin/com/bkahlert/kommons/test/JvmFilePeekKtTest.kt"
+                file.shouldExist()
             }
-        ).shouldNotBeNull() should {
-            it.lineNumber shouldBe 17
-            it.sourceFileName should { name ->
-                name shouldEndWith "src/jvmTest/kotlin/com/bkahlert/kommons/JvmFilePeekKtTest.kt"
-                Paths.get(name).shouldExist()
+            fileInfo.sourceFileLines shouldHaveAtLeastSize 100
+            fileInfo.lineRange shouldBe 73..73
+            fileInfo.methodLineNumber shouldBe 71
+            fileInfo.methodColumnNumber shouldBe 15
+            fileInfo.methodName shouldBe "get_caller_file_info"
+            fileInfo.lines.shouldContainExactly("            throw RuntimeException()")
+            fileInfo.code shouldBe "            throw RuntimeException()"
+            fileInfo.trimmedLine shouldBe "throw RuntimeException()"
+            fileInfo.zoomOut().shouldNotBeNull() should { zoomedOutFileInfo ->
+                zoomedOutFileInfo.sourceFile shouldBe fileInfo.sourceFile
+                zoomedOutFileInfo.sourceFileLines shouldBe fileInfo.sourceFileLines
+                zoomedOutFileInfo.lineRange shouldBe 72..74
+                zoomedOutFileInfo.methodLineNumber shouldBe 71
+                zoomedOutFileInfo.methodColumnNumber shouldBe 15
+                zoomedOutFileInfo.methodName shouldBe fileInfo.methodName
+                zoomedOutFileInfo.lines.shouldContainExactly(
+                    "        FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {",
+                    "            throw RuntimeException()",
+                    "        }).shouldNotBeNull() should { fileInfo ->",
+                )
+                zoomedOutFileInfo.code shouldBe """
+                    FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {
+                        throw RuntimeException()
+                    }).shouldNotBeNull() should { fileInfo ->
+                """.trimIndent().prependIndent("        ")
+                zoomedOutFileInfo.trimmedLine shouldBe """
+                    FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {throw RuntimeException()}).shouldNotBeNull() should { fileInfo ->
+                """.trimIndent()
             }
-            it.line shouldBe "throw RuntimeException()"
-            it.methodName shouldBe "get_caller_file_info"
         }
     }
 
-    @Test fun lambda_body_get_or_null() = tests {
-        fun <R> call(block: () -> R): R = block()
-
-        kotlin.runCatching {
-            call { throw RuntimeException() }
-        }.exceptionOrNull()?.stackTrace?.first()?.let {
-            LambdaBody.getOrNull(it)
-        } shouldBe "throw RuntimeException()"
+    @Test fun get_caller_file_info__fallback() {
+        FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {
+            foo { bar { throw RuntimeException() } }
+        }).shouldNotBeNull() should { fileInfo ->
+            fileInfo.sourceFile should { file ->
+                file.pathString shouldEndWith "src/jvmTest/kotlin/com/bkahlert/kommons/test/JvmFilePeekKtTest.kt"
+                file.shouldExist()
+            }
+            fileInfo.sourceFileLines shouldHaveAtLeastSize 100
+            fileInfo.lineRange shouldBe 113..113
+            fileInfo.methodLineNumber shouldBe 113
+            fileInfo.methodColumnNumber shouldBe 13
+            fileInfo.methodName shouldBe "invoke"
+            fileInfo.lines.shouldContainExactly("            foo { bar { throw RuntimeException() } }")
+            fileInfo.code shouldBe "            foo { bar { throw RuntimeException() } }"
+            fileInfo.trimmedLine shouldBe "foo { bar { throw RuntimeException() } }"
+            fileInfo.zoomOut().shouldNotBeNull() should { zoomedOutFileInfo ->
+                zoomedOutFileInfo.sourceFile shouldBe fileInfo.sourceFile
+                zoomedOutFileInfo.sourceFileLines shouldBe fileInfo.sourceFileLines
+                zoomedOutFileInfo.lineRange shouldBe 112..114
+                zoomedOutFileInfo.methodLineNumber shouldBe 112
+                zoomedOutFileInfo.methodColumnNumber shouldBe 9
+                zoomedOutFileInfo.methodName shouldBe fileInfo.methodName
+                zoomedOutFileInfo.lines.shouldContainExactly(
+                    "        FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {",
+                    "            foo { bar { throw RuntimeException() } }",
+                    "        }).shouldNotBeNull() should { fileInfo ->",
+                )
+                zoomedOutFileInfo.code shouldBe """
+                    FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {
+                        foo { bar { throw RuntimeException() } }
+                    }).shouldNotBeNull() should { fileInfo ->
+                """.trimIndent().prependIndent("        ")
+                zoomedOutFileInfo.trimmedLine shouldBe """
+                    FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {foo { bar { throw RuntimeException() } }}).shouldNotBeNull() should { fileInfo ->
+                """.trimIndent()
+            }
+        }
     }
 }
+
+internal inline fun raiseStackTraceElement(block: () -> Nothing): StackTraceElement =
+    raise(block).stackTrace.first()
+
+internal inline fun raise(block: () -> Nothing): Throwable =
+    try {
+        block()
+    } catch (e: Throwable) {
+        e
+    }
+
+internal fun <R> foo(block: () -> R): R = block()
+internal fun <R> bar(block: () -> R): R = block()

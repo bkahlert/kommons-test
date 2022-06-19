@@ -1,9 +1,8 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
+@file:Suppress("UNUSED_VARIABLE")
 
 plugins {
     kotlin("multiplatform") version "1.7.0"
-    id("org.jetbrains.dokka") version "1.6.21"
+    id("org.jetbrains.dokka") version "1.7.0"
     id("maven-publish")
     signing
     id("nebula.release") version "16.0.0"
@@ -80,22 +79,6 @@ kotlin {
     }
 }
 
-tasks {
-    withType<Test>().configureEach {
-        testLogging {
-            events = setOf(
-                TestLogEvent.SKIPPED,
-                TestLogEvent.FAILED,
-                TestLogEvent.STANDARD_OUT,
-                TestLogEvent.STANDARD_ERROR
-            )
-            exceptionFormat = TestExceptionFormat.FULL
-            showExceptions = true
-            showCauses = true
-            showStackTraces = true
-        }
-    }
-}
 
 val dokkaOutputDir = buildDir.resolve("dokka")
 tasks.dokkaHtml.configure {
@@ -135,7 +118,7 @@ publishing {
 
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/bkahlert/kommons")
+            url = uri("https://maven.pkg.github.com/bkahlert/kommons-test")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")

@@ -1,6 +1,5 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.test.testAll
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -8,17 +7,17 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldContainIgnoringCase
 import kotlin.test.Test
 
-class TestAllSequenceKtTest {
+class TestAllKtTest {
 
     @Test fun test_empty() {
         shouldThrow<IllegalArgumentException> {
-            emptySequence<Any?>().testAll<Any?, Any?> { }
+            testAll<Any?, Any?> { }
         }
     }
 
     @Test fun test_success() {
         shouldNotThrowAny {
-            sequenceOf("foo bar", "FOO BAR").testAll {
+            testAll("foo bar", "FOO BAR") {
                 it shouldContainIgnoringCase "foo"
                 it shouldContainIgnoringCase "bar"
             }
@@ -27,7 +26,7 @@ class TestAllSequenceKtTest {
 
     @Test fun test_single_fail_single_subject() {
         shouldThrow<AssertionError> {
-            sequenceOf("foo bar", "FOO BAR").testAll {
+            testAll("foo bar", "FOO BAR") {
                 it shouldContain "foo"
                 it shouldContainIgnoringCase "bar"
             }
@@ -44,7 +43,7 @@ class TestAllSequenceKtTest {
 
     @Test fun test_single_fail_multiple_subjects() {
         shouldThrow<AssertionError> {
-            sequenceOf("foo bar", "FOO BAR").testAll {
+            testAll("foo bar", "FOO BAR") {
                 it shouldContainIgnoringCase "baz"
                 it shouldContainIgnoringCase "bar"
             }
@@ -62,7 +61,7 @@ class TestAllSequenceKtTest {
 
     @Test fun test_multiple_fails_multiple_subjects() {
         shouldThrow<AssertionError> {
-            sequenceOf("foo bar", "FOO BAR").testAll {
+            testAll("foo bar", "FOO BAR") {
                 it shouldContain "baz"
                 it shouldContain "BAZ"
             }

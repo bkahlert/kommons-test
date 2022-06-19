@@ -1,8 +1,5 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.test.shouldHaveRootCauseInstanceOf
-import com.bkahlert.kommons.test.shouldHaveRootCauseMessage
-import com.bkahlert.kommons.test.testAll
 import kotlin.test.Test
 
 class ExceptionsMatchersKtTest {

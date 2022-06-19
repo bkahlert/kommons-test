@@ -1,6 +1,5 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.test.testAll
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe

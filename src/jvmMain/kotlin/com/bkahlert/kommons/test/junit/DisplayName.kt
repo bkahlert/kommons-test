@@ -10,7 +10,7 @@ public class DisplayName(
     public val displayName: String,
 ) : CharSequence by displayName {
     internal constructor(extensionContext: ExtensionContext) : this(
-        extensionContext.ancestorContexts.reversed().map { it.displayName },
+        extensionContext.ancestors.reversed().map { it.displayName },
         extensionContext.displayName,
     )
 
