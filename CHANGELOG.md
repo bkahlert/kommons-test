@@ -60,17 +60,8 @@ enum class FooBar { foo_bar, FOO_BAR }
 
 #### Parameter Resolvers
 
-##### DisplayName
-```kotlin
-class DisplayNameResolverTest {
-  @Nested inner class NestedTest {
-    @Test fun `test name`(displayName: DisplayName) = tests {
-      displayName.displayName         // "test_name"
-      displayName.composedDisplayName // "DisplayNameResolverTest ➜ NestedTest ➜ test_name"
-    }
-  }
-}
-```
+- Unique ID
+- DisplayName
 
 ## [0.1.0] - 2022-06-16
 

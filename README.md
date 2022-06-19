@@ -133,16 +133,29 @@ The following 2 assertions failed:
 
 ### Parameter Resolvers
 
+#### Unique ID
+
+```kotlin
+class UniqueIdResolverTest {
+    @Nested inner class NestedTest {
+        @Test fun test_name(uniqueId: UniqueId) = tests {
+            uniqueId.segments.first() // "[engine:junit-jupiter]"
+            uniqueId.segments.last()  // "[method:test_name(org.junit.platform.engine.UniqueId)]"
+        }
+    }
+}
+```
+
 #### DisplayName
 
 ```kotlin
 class DisplayNameResolverTest {
-  @Nested inner class NestedTest {
-    @Test fun `test name`(displayName: DisplayName) = tests {
-      displayName.displayName         // "test_name"
-      displayName.composedDisplayName // "DisplayNameResolverTest ➜ NestedTest ➜ test_name"
+    @Nested inner class NestedTest {
+        @Test fun `test name`(displayName: DisplayName) = tests {
+            displayName.displayName         // "test_name"
+            displayName.composedDisplayName // "DisplayNameResolverTest ➜ NestedTest ➜ test_name"
+        }
     }
-  }
 }
 ```
 
