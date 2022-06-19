@@ -129,6 +129,23 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:4)
 ```
 
+## JUnit 5 Features
+
+### Parameter Resolvers
+
+#### DisplayName
+
+```kotlin
+class DisplayNameResolverTest {
+  @Nested inner class NestedTest {
+    @Test fun `test name`(displayName: DisplayName) = tests {
+      displayName.displayName         // "test_name"
+      displayName.composedDisplayName // "DisplayNameResolverTest ➜ NestedTest ➜ test_name"
+    }
+  }
+}
+```
+
 ## Contributing
 
 Want to contribute? Awesome! The most basic way to show your support is to star the project, or to raise issues. You can also support this project by making

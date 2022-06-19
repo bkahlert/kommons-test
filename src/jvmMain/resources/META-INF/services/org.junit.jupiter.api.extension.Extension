@@ -1,0 +1,3 @@
+com.bkahlert.kommons.test.junit.DisplayNameResolver
+com.bkahlert.kommons.test.junit.UniqueIdResolver
+com.bkahlert.kommons.test.junit.IllegalUsageCheck

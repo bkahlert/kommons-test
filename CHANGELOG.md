@@ -20,7 +20,7 @@
 
 ### Fixed
 
-## [0.2.0] - 2022-06-17
+## [0.2.0] - 2022-06-19
 
 ### Added
 
@@ -53,6 +53,22 @@ enum class FooBar { foo_bar, FOO_BAR }
     it.name shouldContain "foo"
     it.name shouldContain "bar"
     it.name shouldContain "BAR"
+}
+```
+
+### JUnit 5 Features
+
+#### Parameter Resolvers
+
+##### DisplayName
+```kotlin
+class DisplayNameResolverTest {
+  @Nested inner class NestedTest {
+    @Test fun `test name`(displayName: DisplayName) = tests {
+      displayName.displayName         // "test_name"
+      displayName.composedDisplayName // "DisplayNameResolverTest ➜ NestedTest ➜ test_name"
+    }
+  }
 }
 ```
 
