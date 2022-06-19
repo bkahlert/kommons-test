@@ -185,6 +185,23 @@ class ExtensionContextResolverTest {
 }
 ```
 
+### System Property Extension
+
+This extension allows you to set the system properties
+for the duration of a text execution.
+
+Tests that use this annotation are guaranteed to not run concurrently.
+
+```kotlin
+class SystemPropertiesTest {
+    @Test
+    @SystemProperty(name = "foo", value = "bar")
+    fun test() {
+        System.getProperty("foo") // "bar"
+    }
+}
+```
+
 ## Contributing
 
 Want to contribute? Awesome! The most basic way to show your support is to star the project, or to raise issues. You can also support this project by making
