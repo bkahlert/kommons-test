@@ -7,17 +7,11 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.ints.shouldBeGreaterThan
-import io.kotest.matchers.ints.shouldBeLessThan
-import io.kotest.matchers.result.shouldBeFailure
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldEndWith
-import io.kotest.matchers.string.shouldHaveLength
 import io.kotest.matchers.string.shouldStartWith
-import io.kotest.matchers.types.shouldBeInstanceOf
-import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Nested
@@ -25,7 +19,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import java.util.stream.Stream
 import kotlin.streams.asSequence
-
 
 class DynamicTestBuilderTest {
 
@@ -69,32 +62,9 @@ class DynamicTestBuilderTest {
             expectThrows<RuntimeException> { throw RuntimeException() }
             expectThrows<RuntimeException> { throw RuntimeException() } it { message.isNullOrEmpty() }
             expectThrows<RuntimeException> { throw RuntimeException() } that { it.message.isNullOrEmpty() }
-
-            group {
-                asserting { shouldBe("subject") }
-                expecting { length } it { shouldBeGreaterThan(5) }
-                expecting { length } that { it.shouldBeGreaterThan(5) }
-                expectCatching { length } it { isSuccess.shouldBeTrue() }
-                expectCatching { length } that { it.isSuccess.shouldBeTrue() }
-                expectThrows<RuntimeException> { throw RuntimeException() }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { message.isNullOrEmpty() }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.message.isNullOrEmpty() }
-            }
-
-            with { reversed() } testing {
-                @Suppress("SpellCheckingInspection")
-                asserting { shouldBe("tcejbus") }
-                expecting { length } it { shouldBeGreaterThan(5) }
-                expecting { length } that { it.shouldBeGreaterThan(5) }
-                expectCatching { length } it { isSuccess.shouldBeTrue() }
-                expectCatching { length } that { it.isSuccess.shouldBeTrue() }
-                expectThrows<RuntimeException> { throw RuntimeException() }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { message.isNullOrEmpty() }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.message.isNullOrEmpty() }
-            }
         }
 
-    internal val failingTestsWithSubject
+    private val failingTestsWithSubject
         get() = testing("subject") {
             "other" asserting { shouldBe("fail") }
             asserting { shouldBe("fail") }
@@ -105,32 +75,10 @@ class DynamicTestBuilderTest {
             expectThrows<RuntimeException> { shouldBe("fail") }
             expectThrows<RuntimeException> { throw RuntimeException() } it { shouldBe("fail") }
             expectThrows<RuntimeException> { throw RuntimeException() } that { it.shouldBe("fail") }
-
-            group {
-                asserting { shouldBe("fail") }
-                expecting { length } it { shouldBe("fail") }
-                expecting { length } that { it.shouldBe("fail") }
-                expectCatching { length } it { shouldBe("fail") }
-                expectCatching { length } that { it.shouldBe("fail") }
-                expectThrows<RuntimeException> { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.shouldBe("fail") }
-            }
-
-            with { reversed() } testing {
-                asserting { shouldBe("fail") }
-                expecting { length } it { shouldBe("fail") }
-                expecting { length } that { it.shouldBe("fail") }
-                expectCatching { length } it { shouldBe("fail") }
-                expectCatching { length } that { it.shouldBe("fail") }
-                expectThrows<RuntimeException> { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.shouldBe("fail") }
-            }
         }
 
     private val testsWithSubjects
-        get() = testingAll("subject 1", "subject 1", "subject 1") {
+        get() = testingAll("subject 1", "subject 2", "subject 3") {
             "other" asserting { shouldBe("other") }
             asserting { shouldStartWith("subject") }
             expecting { length } it { shouldBeGreaterThan(5) }
@@ -140,33 +88,10 @@ class DynamicTestBuilderTest {
             expectThrows<RuntimeException> { throw RuntimeException() }
             expectThrows<RuntimeException> { throw RuntimeException() } it { message.isNullOrEmpty() }
             expectThrows<RuntimeException> { throw RuntimeException() } that { it.message.isNullOrEmpty() }
-
-            group {
-                asserting { shouldStartWith("subject") }
-                expecting { length } it { shouldBeGreaterThan(5) }
-                expecting { length } that { it.shouldBeGreaterThan(5) }
-                expectCatching { length } it { isSuccess.shouldBeTrue() }
-                expectCatching { length } that { it.isSuccess.shouldBeTrue() }
-                expectThrows<RuntimeException> { throw RuntimeException() }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { message.isNullOrEmpty() }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.message.isNullOrEmpty() }
-            }
-
-            with { reversed() } testing {
-                @Suppress("SpellCheckingInspection")
-                asserting { shouldEndWith("tcejbus") }
-                expecting { length } it { shouldBeGreaterThan(5) }
-                expecting { length } that { it.shouldBeGreaterThan(5) }
-                expectCatching { length } it { isSuccess.shouldBeTrue() }
-                expectCatching { length } that { it.isSuccess.shouldBeTrue() }
-                expectThrows<RuntimeException> { throw RuntimeException() }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { message.isNullOrEmpty() }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.message.isNullOrEmpty() }
-            }
         }
 
     private val failingTestsWithSubjects
-        get() = testingAll("subject 1", "subject 1", "subject 1") {
+        get() = testingAll("subject 1", "subject 2", "subject 3") {
             "other" asserting { shouldBe("fail") }
             asserting { shouldBe("fail") }
             expecting { length } it { shouldBe("fail") }
@@ -176,34 +101,12 @@ class DynamicTestBuilderTest {
             expectThrows<RuntimeException> { shouldBe("fail") }
             expectThrows<RuntimeException> { throw RuntimeException() } it { shouldBe("fail") }
             expectThrows<RuntimeException> { throw RuntimeException() } that { it.shouldBe("fail") }
-
-            group {
-                asserting { shouldStartWith("subject") }
-                expecting { length } it { shouldBe("fail") }
-                expecting { length } that { it.shouldBe("fail") }
-                expectCatching { length } it { shouldBe("fail") }
-                expectCatching { length } that { it.shouldBe("fail") }
-                expectThrows<RuntimeException> { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.shouldBe("fail") }
-            }
-
-            with { reversed() } testing {
-                @Suppress("SpellCheckingInspection")
-                asserting { shouldEndWith("tcejbus") }
-                expecting { length } it { shouldBe("fail") }
-                expecting { length } that { it.shouldBe("fail") }
-                expectCatching { length } it { shouldBe("fail") }
-                expectCatching { length } that { it.shouldBe("fail") }
-                expectThrows<RuntimeException> { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } it { shouldBe("fail") }
-                expectThrows<RuntimeException> { throw RuntimeException() } that { it.shouldBe("fail") }
-            }
         }
 
+
     @Test fun tests_without_subject() = tests {
-        var currentLine = 37
-        testsWithoutSubject.filterIsInstance<DynamicTest>().map { test ->
+        var currentLine = 30
+        testsWithoutSubject.asList().filterIsInstance<DynamicTest>().map { test ->
             test.displayName to test.testSourceString?.substringAfterLast("?")
         }.shouldContainExactly(
             """❕ ❮ "other" ❯ shouldBe("other")""" to "line=${currentLine++}&column=14",
@@ -224,8 +127,8 @@ class DynamicTestBuilderTest {
 
 
     @Test fun tests_with_subject() = tests {
-        var currentLine = 63
-        testsWithSubject.filterIsInstance<DynamicTest>().map { test ->
+        var currentLine = 56
+        testsWithSubject.asList().filterIsInstance<DynamicTest>().map { test ->
             test.displayName to test.testSourceString?.substringAfterLast("?")
         }.shouldContainExactly(
             """❕ ❮ "other" ❯ shouldBe("other")""" to "line=${currentLine++}&column=14",
@@ -233,49 +136,11 @@ class DynamicTestBuilderTest {
             """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=13",
             """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=13",
             """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=13",
-            """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=13",
+            """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine}&column=13",
             """❗ RuntimeException""" to "line=1&column=1",
             """❗ RuntimeException""" to "line=1&column=1",
             """❗ RuntimeException""" to "line=1&column=1",
         )
-
-        testsWithSubject.filterIsInstance<DynamicContainer>().shouldHaveSize(2) should {
-            it.first() should { groupContainer ->
-                currentLine += 4
-                groupContainer.displayName shouldBe "group"
-                groupContainer.testSourceString shouldEndWith "line=${currentLine++}&column=13"
-                groupContainer.children.asList().filterIsInstance<DynamicTest>().map { test ->
-                    test.displayName to test.testSourceString?.substringAfterLast("?")
-                }.shouldContainExactly(
-                    """❕ ❮ "subject" ❯ shouldBe("subject")""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=17",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                )
-            }
-            it.last() should { withContainer ->
-                currentLine += 5
-                withContainer.displayName shouldStartWith "with " shouldEndWith " ❮ \"${"subject".reversed()}\" ❯"
-                withContainer.testSourceString shouldEndWith "line=${currentLine++}&column=13"
-                currentLine++
-                withContainer.children.asList().filterIsInstance<DynamicTest>().map { test ->
-                    test.displayName to test.testSourceString?.substringAfterLast("?")
-                }.shouldContainExactly(
-                    """❕ ❮ "${"subject".reversed()}" ❯ shouldBe("${"subject".reversed()}")""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine}&column=17",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                )
-            }
-        }
     }
 
     @TestFactory fun run_tests_with_subject() = testsWithSubject
@@ -284,54 +149,22 @@ class DynamicTestBuilderTest {
 
 
     @Test fun tests_with_subjects() = tests {
-        var currentLine = 63
-        testsWithSubjects.filterIsInstance<DynamicTest>().map { test ->
-            test.displayName to test.testSourceString?.substringAfterLast("?")
-        }.shouldContainExactly(
-            """❕ ❮ "other" ❯ shouldBe("other")""" to "line=${currentLine++}&column=14",
-            """❕ ❮ "subject" ❯ shouldBe("subject")""" to "line=${currentLine++}&column=13",
-            """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=13",
-            """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=13",
-            """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=13",
-            """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=13",
-            """❗ RuntimeException""" to "line=1&column=1",
-            """❗ RuntimeException""" to "line=1&column=1",
-            """❗ RuntimeException""" to "line=1&column=1",
-        )
-
-        // TODO test three groups
-
-        testsWithSubjects.filterIsInstance<DynamicContainer>().shouldHaveSize(2) should {
-            it.first() should { groupContainer ->
-                currentLine += 4
-                groupContainer.displayName shouldBe "group"
-                groupContainer.testSourceString shouldEndWith "line=${currentLine++}&column=13"
-                groupContainer.children.asList().filterIsInstance<DynamicTest>().map { test ->
+        val firstLine = 82
+        testsWithSubjects.asList() should { containers ->
+            containers shouldHaveSize 3
+            for (i in 1..3) {
+                val container = containers[i - 1]
+                container.displayName shouldBe "for ❮ \"subject $i\" ❯"
+                container.testSourceString shouldEndWith "line=${firstLine - 1}&column=9"
+                container.children.asList().filterIsInstance<DynamicTest>().map { test ->
                     test.displayName to test.testSourceString?.substringAfterLast("?")
                 }.shouldContainExactly(
-                    """❕ ❮ "subject" ❯ shouldBe("subject")""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=17",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                    """❗ RuntimeException""" to "line=1&column=1",
-                )
-            }
-            it.last() should { withContainer ->
-                currentLine += 5
-                withContainer.displayName shouldStartWith "with " shouldEndWith " ❮ \"${"subject".reversed()}\" ❯"
-                withContainer.testSourceString shouldEndWith "line=${currentLine++}&column=13"
-                currentLine++
-                withContainer.children.asList().filterIsInstance<DynamicTest>().map { test ->
-                    test.displayName to test.testSourceString?.substringAfterLast("?")
-                }.shouldContainExactly(
-                    """❕ ❮ "${"subject".reversed()}" ❯ shouldBe("${"subject".reversed()}")""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❔ length shouldBeGreaterThan(5)""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine++}&column=17",
-                    """❓ length isSuccess.shouldBeTrue()""" to "line=${currentLine}&column=17",
+                    """❕ ❮ "other" ❯ shouldBe("other")""" to "line=${firstLine + 0}&column=14",
+                    """❕ ❮ "subject $i" ❯ shouldStartWith("subject")""" to "line=${firstLine + 1}&column=13",
+                    """❔ length shouldBeGreaterThan(5)""" to "line=${firstLine + 2}&column=13",
+                    """❔ length shouldBeGreaterThan(5)""" to "line=${firstLine + 3}&column=13",
+                    """❓ length isSuccess.shouldBeTrue()""" to "line=${firstLine + 4}&column=13",
+                    """❓ length isSuccess.shouldBeTrue()""" to "line=${firstLine + 5}&column=13",
                     """❗ RuntimeException""" to "line=1&column=1",
                     """❗ RuntimeException""" to "line=1&column=1",
                     """❗ RuntimeException""" to "line=1&column=1",
@@ -344,71 +177,6 @@ class DynamicTestBuilderTest {
 
     @TestFactory fun run_failing_tests_with_subjects() = failingTestsWithSubjects.transform { it.toExceptionExpectingTest<AssertionError>() }
 
-    // TODO test multiple
-    // TODO "with kotlin.String.() -> ..."
-    // TODO write documentation
-
-    @Nested
-    inner class TestingSingleSubject {
-
-
-        @TestFactory
-        fun `string subject`() = testing("foo") {
-            asserting { shouldBe("foo") }
-        }
-
-        @TestFactory
-        fun `list subject`() = testing(listOf("foo", "bar")) {
-            expecting { sorted().joinToString("+") } that { it.shouldBe("bar+foo") }
-        }
-    }
-
-    @Nested
-    inner class TestingMultipleSubjects {
-
-        @TestFactory
-        fun `as parameters`() = testingAll("subject 1", "subject 2", "subject 3") {
-            expecting { length } it { shouldBeGreaterThan(0) }
-            expecting { length } that { it.shouldBeGreaterThan(0) }
-
-            expectThrows<RuntimeException> { throw RuntimeException() }
-            expectCatching { "nope" } it { isSuccess.shouldBeTrue() }
-            expectCatching { "nope" } that { it.isSuccess.shouldBeTrue() }
-
-            "foo" asserting { shouldBe("foo") }
-            expecting { "$this-foo" } it { shouldStartWith("subject ") }
-            expecting { "$this-foo" } that { it.shouldStartWith("subject ") }
-            expectCatching { error(this) } it { shouldBeFailure().shouldBeInstanceOf<IllegalStateException>() }
-            expectCatching { error(this) } that { it.shouldBeFailure().shouldBeInstanceOf<IllegalStateException>() }
-            expectThrows<IllegalStateException> { error(this) }
-            expectThrows<IllegalStateException> { error(this) } it { message shouldContain "subject" }
-            expectThrows<IllegalStateException> { error(this) } that { it.message shouldContain "subject" }
-
-            group("group") {
-                expecting("test") { length } it { shouldBeGreaterThan(0) }
-                expecting("test") { length } that { it.shouldBeGreaterThan(0) }
-
-                group("nested group") {
-                    asserting { shouldNotBe("automatically named test") }
-                }
-            }
-
-            expecting { length } it {
-                shouldBeGreaterThan(0).shouldBeLessThan(10)
-                shouldBe(9)
-            }
-        }
-
-        @TestFactory
-        fun `string subjects`() = testingAll("foo", "bar") {
-            asserting { shouldHaveLength(3) }
-        }
-
-        @TestFactory
-        fun `list subjects`() = testingAll(listOf("foo", "bar"), listOf("bar", "foo")) {
-            expecting { sorted().joinToString("+") } that { it.shouldBe("bar+foo") }
-        }
-    }
 
     @Nested
     inner class DynamicTestsWithSubjectBuilderTest {

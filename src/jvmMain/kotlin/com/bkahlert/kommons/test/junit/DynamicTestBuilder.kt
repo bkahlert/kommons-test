@@ -6,9 +6,7 @@ import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.asserting
 import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.catchingDisplayName
 import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.displayNameFor
 import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.expectingDisplayName
-import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.property
 import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.throwingDisplayName
-import com.bkahlert.kommons.test.junit.PathSource.Companion.currentUri
 import com.bkahlert.kommons.test.junit.PathSource.Companion.sourceUri
 import com.bkahlert.kommons.test.junit.SimpleIdResolver.Companion.simpleId
 import io.kotest.assertions.asClue
@@ -21,13 +19,16 @@ import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import java.net.URI
+import java.util.stream.Stream
 
 /** Builds tests with no subjects using a [DynamicTestsWithoutSubjectBuilder]. */
-public fun testing(init: DynamicTestsWithoutSubjectBuilder.() -> Unit): List<DynamicNode> =
+public fun testing(init: DynamicTestsWithoutSubjectBuilder.() -> Unit): Stream<DynamicNode> =
     DynamicTestsWithoutSubjectBuilder.build(init)
 
 /** Builder for tests (and test containers) with no subjects. */
-public class DynamicTestsWithoutSubjectBuilder(public val tests: MutableList<DynamicNode>) {
+public class DynamicTestsWithoutSubjectBuilder(
+    public val addDynamicNode: (DynamicNode) -> Unit,
+) {
 
     /**
      * Expects this subject to fulfil the given [assertion].
@@ -40,7 +41,7 @@ public class DynamicTestsWithoutSubjectBuilder(public val tests: MutableList<Dyn
         val test = dynamicTest(caller.assertingDisplayName(this, assertion), caller.sourceUri) {
             asClue(assertion)
         }
-        tests.add(test)
+        addDynamicNode(test)
     }
 
     /**
@@ -53,7 +54,7 @@ public class DynamicTestsWithoutSubjectBuilder(public val tests: MutableList<Dyn
         val test = dynamicTest(caller.assertingDisplayName(subject, assertion), caller.sourceUri) {
             subject.asClue(assertion)
         }
-        tests.add(test)
+        addDynamicNode(test)
     }
 
     /**
@@ -73,7 +74,7 @@ public class DynamicTestsWithoutSubjectBuilder(public val tests: MutableList<Dyn
                 subject.asClue(it)
             } ?: throw IllegalUsageException("expecting", caller.sourceUri)
         }
-        tests.add(test)
+        addDynamicNode(test)
         return AssertionBuilder { assertion: Assertion<R> ->
             additionalAssertion = assertion
         }
@@ -96,7 +97,7 @@ public class DynamicTestsWithoutSubjectBuilder(public val tests: MutableList<Dyn
                 subject.asClue(it)
             } ?: throw IllegalUsageException("expectCatching", caller.sourceUri)
         }
-        tests.add(test)
+        addDynamicNode(test)
         return AssertionBuilder { assertion: Assertion<Result<R>> ->
             additionalAssertion = assertion
         }
@@ -118,22 +119,25 @@ public class DynamicTestsWithoutSubjectBuilder(public val tests: MutableList<Dyn
         val test = dynamicTest(throwingDisplayName(E::class), caller.sourceUri) {
             shouldThrow<E>(action).asClue(additionalAssertion ?: {})
         }
-        tests.add(test)
+        addDynamicNode(test)
         return AssertionBuilder { assertion: Assertion<E> ->
             additionalAssertion = assertion
         }
     }
 
     public companion object {
-        public inline fun build(init: DynamicTestsWithoutSubjectBuilder.() -> Unit): List<DynamicNode> =
-            mutableListOf<DynamicNode>().also { DynamicTestsWithoutSubjectBuilder(it).init() }
+        public inline fun build(
+            init: DynamicTestsWithoutSubjectBuilder.() -> Unit,
+        ): Stream<DynamicNode> = buildList {
+            DynamicTestsWithoutSubjectBuilder { add(it) }.init()
+        }.stream()
     }
 }
 
 /**
  * Builds tests with the specified [subject] using a [DynamicTestsWithSubjectBuilder].
  */
-public fun <T> testing(subject: T, init: DynamicTestsWithSubjectBuilder<T>.() -> Unit): List<DynamicNode> =
+public fun <T> testing(subject: T, init: DynamicTestsWithSubjectBuilder<T>.() -> Unit): Stream<DynamicNode> =
     DynamicTestsWithSubjectBuilder.build(subject, init)
 
 /**
@@ -146,7 +150,7 @@ public fun <T> testingAll(
     vararg subjects: T,
     containerNamePattern: String? = null,
     init: DynamicTestsWithSubjectBuilder<T>.() -> Unit,
-): List<DynamicContainer> = subjects.asList().testingAll(containerNamePattern, init)
+): Stream<DynamicContainer> = subjects.asList().testingAll(containerNamePattern, init)
 
 /**
  * Builds tests for each of subject of this [Collection] using a [DynamicTestsWithSubjectBuilder].
@@ -157,11 +161,15 @@ public fun <T> testingAll(
 public fun <T> Iterable<T>.testingAll(
     containerNamePattern: String? = null,
     init: DynamicTestsWithSubjectBuilder<T>.() -> Unit,
-): List<DynamicContainer> = toList()
+): Stream<DynamicContainer> = toList()
     .also { require(it.isNotEmpty()) { "At least one subject must be provided for testing." } }
-    .run {
-        map { subject -> dynamicContainer("for ${displayNameFor(subject, containerNamePattern)}", DynamicTestsWithSubjectBuilder.build(subject, init)) }
-    }
+    .map { subject ->
+        dynamicContainer(
+            "for ${displayNameFor(subject, containerNamePattern)}",
+            PathSource.currentUri,
+            testing(subject, init)
+        )
+    }.stream()
 
 /**
  * Builds tests for each of subject of this [Sequence] using a [DynamicTestsWithSubjectBuilder].
@@ -172,7 +180,7 @@ public fun <T> Iterable<T>.testingAll(
 public fun <T> Sequence<T>.testingAll(
     containerNamePattern: String? = null,
     init: DynamicTestsWithSubjectBuilder<T>.() -> Unit,
-): List<DynamicContainer> = toList().testingAll(containerNamePattern, init)
+): Stream<DynamicContainer> = toList().testingAll(containerNamePattern, init)
 
 /**
  * Builds tests for each of entry of this [Map] using a [DynamicTestsWithSubjectBuilder].
@@ -183,10 +191,13 @@ public fun <T> Sequence<T>.testingAll(
 public fun <K, V> Map<K, V>.testingAll(
     containerNamePattern: String? = null,
     init: DynamicTestsWithSubjectBuilder<Map.Entry<K, V>>.() -> Unit,
-): List<DynamicContainer> = entries.testingAll(containerNamePattern, init)
+): Stream<DynamicContainer> = entries.testingAll(containerNamePattern, init)
 
 /** Builder for tests (and test containers) with the specified [subject]. */
-public class DynamicTestsWithSubjectBuilder<T>(public val subject: T, public val callback: (DynamicNode) -> Unit) {
+public class DynamicTestsWithSubjectBuilder<T>(
+    public val subject: T,
+    public val addDynamicNode: (DynamicNode) -> Unit,
+) {
 
     /**
      * Expects this subject to fulfil the given [assertion].
@@ -200,7 +211,7 @@ public class DynamicTestsWithSubjectBuilder<T>(public val subject: T, public val
         val test = dynamicTest(caller.assertingDisplayName(this, assertion), caller.sourceUri) {
             asClue(assertion)
         }
-        callback(test)
+        addDynamicNode(test)
     }
 
     /**
@@ -213,7 +224,7 @@ public class DynamicTestsWithSubjectBuilder<T>(public val subject: T, public val
         val test = dynamicTest(caller.assertingDisplayName(subject, assertion), caller.sourceUri) {
             subject.asClue(assertion)
         }
-        callback(test)
+        addDynamicNode(test)
     }
 
     /**
@@ -235,7 +246,7 @@ public class DynamicTestsWithSubjectBuilder<T>(public val subject: T, public val
                 }
             } ?: throw IllegalUsageException("expecting", caller.sourceUri)
         }
-        callback(test)
+        addDynamicNode(test)
         return AssertionBuilder { assertion: Assertion<R> ->
             additionalAssertion = assertion
         }
@@ -260,7 +271,7 @@ public class DynamicTestsWithSubjectBuilder<T>(public val subject: T, public val
                 }
             } ?: throw IllegalUsageException("expectCatching", caller.sourceUri)
         }
-        callback(test)
+        addDynamicNode(test)
         return AssertionBuilder { assertion: Assertion<Result<R>> ->
             additionalAssertion = assertion
         }
@@ -284,61 +295,20 @@ public class DynamicTestsWithSubjectBuilder<T>(public val subject: T, public val
                 shouldThrow<E> { subject.action() }.asClue(additionalAssertion ?: {})
             }
         }
-        callback(test)
+        addDynamicNode(test)
         return AssertionBuilder { assertion: Assertion<E> ->
             additionalAssertion = assertion
         }
     }
 
-    /**
-     * Builds a [DynamicContainer] using the specified [name] and the
-     * specified [DynamicTestsWithSubjectBuilder] based [init] to build the child nodes.
-     */
-    public fun group(description: String? = null, init: DynamicTestsWithSubjectBuilder<T>.() -> Unit) {
-        callback(dynamicContainer(displayNameFor(subject, description), currentUri, build(subject, init).stream()))
-    }
-
-    /**
-     * Builds a new test tree testing the aspect returned by [transform].
-     */
-    public fun <R> with(description: String? = null, transform: T.() -> R): PropertyTestBuilder<R> {
-        val aspect = subject.transform()
-        val nodes = mutableListOf<DynamicNode>()
-        callback(dynamicContainer(description?.takeUnless { it.isBlank() } ?: ("with".property(transform) + " " + displayNameFor(aspect)),
-            currentUri,
-            nodes.stream()))
-        return CallbackCallingPropertyTestBuilder(aspect) { nodes.add(it) }
-    }
-
-    /**
-     * Builder for testing a property of the test subject.
-     */
-    public interface PropertyTestBuilder<T> {
-        /**
-         * Builds tests for this property using a [DynamicTestsWithSubjectBuilder].
-         */
-        public infix fun testing(block: DynamicTestsWithSubjectBuilder<T>.() -> Unit): T
-    }
-
     public companion object {
 
-        private class CallbackCallingPropertyTestBuilder<T>(
-            private val aspect: T,
-            private val callback: (DynamicNode) -> Unit,
-        ) : PropertyTestBuilder<T> {
-            override fun testing(block: DynamicTestsWithSubjectBuilder<T>.() -> Unit): T {
-                DynamicTestsWithSubjectBuilder(aspect, callback).block()
-                return aspect
-            }
-        }
-
-        /**
-         * Builds an arbitrary test trees to test all necessary aspect of the specified [subject].
-         */
-        public fun <T> build(subject: T, init: DynamicTestsWithSubjectBuilder<T>.() -> Unit): List<DynamicNode> =
-            mutableListOf<DynamicNode>().apply {
-                DynamicTestsWithSubjectBuilder(subject) { add(it) }.init()
-            }.toList()
+        public fun <T> build(
+            subject: T,
+            init: DynamicTestsWithSubjectBuilder<T>.() -> Unit,
+        ): Stream<DynamicNode> = buildList {
+            DynamicTestsWithSubjectBuilder(subject) { add(it) }.init()
+        }.stream()
     }
 }
 

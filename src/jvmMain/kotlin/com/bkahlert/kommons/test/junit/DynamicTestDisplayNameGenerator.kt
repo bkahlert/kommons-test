@@ -147,7 +147,7 @@ public object DynamicTestDisplayNameGenerator {
      * Attempts to calculate a rich display name for a property
      * expressed by the specified [fn].
      */
-    public fun <T, R> StackTraceElement.displayName(fn: T.() -> R, fnName: String? = null): String {
+    private fun <T, R> StackTraceElement.displayName(fn: T.() -> R, fnName: String? = null): String {
         return when (fn) {
             is KProperty<*> -> fn.name
             is KFunction<*> -> fn.name
@@ -160,7 +160,7 @@ public object DynamicTestDisplayNameGenerator {
      * Attempts to calculate a rich display name for a property
      * expressed by the specified [fn].
      */
-    public fun <R> StackTraceElement.displayName(fn: () -> R, fnName: String? = null): String {
+    private fun <R> StackTraceElement.displayName(fn: () -> R, fnName: String? = null): String {
         return when (fn) {
             is KProperty<*> -> fn.name
             is KFunction<*> -> fn.name
