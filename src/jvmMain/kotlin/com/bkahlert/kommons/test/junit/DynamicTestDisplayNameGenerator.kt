@@ -1,12 +1,13 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.ansiRemoved
-import com.bkahlert.kommons.decapitalize
 import com.bkahlert.kommons.test.KommonsTest
 import com.bkahlert.kommons.test.LambdaBody
 import com.bkahlert.kommons.test.SLF4J
-import com.bkahlert.kommons.test.renderFunctionType
-import com.bkahlert.kommons.test.toCompactString
+import com.bkahlert.kommons.test.com.bkahlert.kommons.ansiRemoved
+import com.bkahlert.kommons.test.com.bkahlert.kommons.debug.renderFunctionType
+import com.bkahlert.kommons.test.com.bkahlert.kommons.debug.toCompactString
+import com.bkahlert.kommons.test.com.bkahlert.kommons.decapitalize
+import com.bkahlert.kommons.test.com.bkahlert.kommons.quoted
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -14,6 +15,24 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.reflect
 
 public object DynamicTestDisplayNameGenerator {
+
+    internal const val FOR: String = "ꜰᴏʀ"
+
+    @Suppress("SpellCheckingInspection")
+    internal const val PROPERTY: String = "ᴩʀᴏᴩᴇʀᴛy"
+
+    @Suppress("SpellCheckingInspection")
+    internal const val FUNCTION: String = "ꜰᴜɴᴄᴛɪᴏɴ"
+
+    @Suppress("SpellCheckingInspection")
+    internal const val VALUE_OF: String = "ᴠᴀʟᴜᴇ ᴏꜰ"
+
+    @Suppress("SpellCheckingInspection")
+    internal const val RETURN: String = "ʀᴇᴛᴜʀɴ"
+
+    internal const val BLANK: String = "𝘣𝘭𝘢𝘯𝘬"
+    internal const val EMPTY: String = "𝘦𝘮𝘱𝘵𝘺"
+    internal const val NULL: String = "𝘯𝘶𝘭𝘭"
 
     /**
      * Calculates the display name for a test with the specified [subject],
@@ -32,23 +51,29 @@ public object DynamicTestDisplayNameGenerator {
      * Attempts to calculate a display name for a test case testing the specified [subject].
      */
     private fun displayNameFallback(subject: Any?): Pair<String, Array<String>> = when (subject) {
-        is KProperty<*> -> "property $angleBrackets" to arrayOf(subject.name)
-        is KFunction<*> -> "function $angleBrackets" to arrayOf(subject.name)
+        is KProperty<*> -> "$PROPERTY {}" to arrayOf(subject.name)
+        is KFunction<*> -> "$FUNCTION {}" to arrayOf(subject.name)
         is Function<*> -> kotlin.runCatching { subject.reflect() }.getOrNull()
             ?.let { displayNameFallback(it) }
-            ?: (angleBrackets to arrayOf(subject.renderFunctionType()))
-        is Triple<*, *, *> -> roundBrackets(3) to arrayOf(
+            ?: ("{}" to arrayOf(subject.renderFunctionType()))
+        is Triple<*, *, *> -> "( {}, {}, {} )" to arrayOf(
             subject.first.serialized,
             subject.second.serialized,
             subject.third.serialized
         )
-        is Pair<*, *> -> roundBrackets(2) to arrayOf(subject.first.serialized, subject.second.serialized)
-        else -> angleBrackets to arrayOf(subject.serialized)
+        is Pair<*, *> -> "( {}, {} )" to arrayOf(subject.first.serialized, subject.second.serialized)
+        is Map.Entry<*, *> -> "{} → {}" to arrayOf(subject.key.serialized, subject.value.serialized)
+        is CharSequence -> "{}" to arrayOf(
+            when {
+                subject.isEmpty() -> EMPTY
+                subject.isBlank() -> BLANK
+                else -> subject.quoted
+            }
+        )
+        else -> "{}" to arrayOf(subject.serialized)
     }
 
-    private fun roundBrackets(count: Int): String = arrayOfNulls<Any>(count).joinToString(", ", "❪ ", " ❫") { "{}" }
-    private const val angleBrackets: String = "❮ {} ❯"
-    private val <T> T?.serialized get() = this?.toCompactString() ?: "␀"
+    private val <T> T?.serialized get() = this?.toCompactString() ?: NULL
 
     /** Returns an object with its [Any.toString] returning this string in order to protect it from being quoted (again). */
     private val CharSequence.protected: Any
@@ -61,9 +86,9 @@ public object DynamicTestDisplayNameGenerator {
      * expressed by the specified [fn].
      */
     public fun <T, R> String.property(fn: T.() -> R): String = when (fn) {
-        is KProperty<*> -> "$this value of property ${fn.name}"
-        is KFunction<*> -> "$this return value of ${fn.name}"
-        is KCallable<*> -> KommonsTest.locateCall().run { "$this value of ${fn.getPropertyName(methodName)}" }
+        is KProperty<*> -> "$this $VALUE_OF $PROPERTY ${fn.name}"
+        is KFunction<*> -> "$this $RETURN $VALUE_OF ${fn.name}"
+        is KCallable<*> -> KommonsTest.locateCall().run { "$this $VALUE_OF ${fn.getPropertyName(methodName)}" }
         else -> "$this " + KommonsTest.locateCall().run {
             getLambdaBodyOrNull(this, methodName)?.let { " ❴ $it ❵ " } ?: fn.toCompactString()
         }
@@ -72,12 +97,12 @@ public object DynamicTestDisplayNameGenerator {
     /**
      * Returns the display name for an [subject] asserting test.
      */
-    public fun <T> StackTraceElement.assertingDisplayName(subject: T, assertion: Assertion<T>): String =
+    public fun <T> StackTraceElement.assertingDisplayName(subject: T, assertions: Assertions<T>): String =
         buildString {
             append("❕ ")
             append(displayNameFor(subject))
             append(" ")
-            append(this@assertingDisplayName.displayName(assertion))
+            append(this@assertingDisplayName.displayName(assertions))
         }
 
     /**

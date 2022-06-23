@@ -1,6 +1,6 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.test
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 class ExtensionContextResolverTest {
 
-    @Test fun test_name(extensionContext: ExtensionContext) = tests {
+    @Test fun test_name(extensionContext: ExtensionContext) = test {
         extensionContext.uniqueId shouldBe listOf(
             "[engine:junit-jupiter]",
             "[class:com.bkahlert.kommons.test.junit.ExtensionContextResolverTest]",
@@ -19,7 +19,7 @@ class ExtensionContextResolverTest {
     @Nested
     inner class NestedTest {
 
-        @Test fun test_name(extensionContext: ExtensionContext) = tests {
+        @Test fun test_name(extensionContext: ExtensionContext) = test {
             extensionContext.uniqueId shouldBe listOf(
                 "[engine:junit-jupiter]",
                 "[class:com.bkahlert.kommons.test.junit.ExtensionContextResolverTest]",

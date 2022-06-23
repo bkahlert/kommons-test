@@ -1,4 +1,4 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test.com.bkahlert.kommons
 
 /** Contains this string escaped and wrapped with double quotes. */
 internal val Char.quoted: String get() = buildString { this@quoted.quoteTo(this) }

@@ -1,6 +1,6 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.test
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
@@ -13,7 +13,7 @@ import org.junit.platform.engine.UniqueId.parse
 
 class SimpleIdTest {
 
-    @Test fun test_name(simpleId: SimpleId) = tests {
+    @Test fun test_name(simpleId: SimpleId) = test {
         simpleId.toString() shouldBe listOf(
             "SimpleIdTest",
             "test_name",
@@ -23,7 +23,7 @@ class SimpleIdTest {
     @Nested
     inner class NestedTest {
 
-        @Test fun test_name(simpleId: SimpleId) = tests {
+        @Test fun test_name(simpleId: SimpleId) = test {
             simpleId.toString() shouldBe listOf(
                 "SimpleIdTest",
                 "NestedTest",
@@ -46,7 +46,7 @@ class SimpleIdTest {
             }
         ))
 
-    @Test fun from() = tests {
+    @Test fun from() = test {
         SimpleId.from(parse("[engine:junit-jupiter]/[class:com.bkahlert.kommons.test.SimpleIdTest]/[method:from()]"))
             .toString().shouldBe("SimpleIdTest.from")
         SimpleId.from(StackTraceElement(SimpleIdTest::class.java.name, "from", "SimpleIdTest.kt", 1135))

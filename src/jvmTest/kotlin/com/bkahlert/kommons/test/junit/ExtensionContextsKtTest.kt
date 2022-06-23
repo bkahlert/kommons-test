@@ -1,6 +1,6 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.test
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.should
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtensionContextException
 
 class ExtensionContextsKtTest {
 
-    @Test fun ancestors(extensionContext: ExtensionContext) = tests {
+    @Test fun ancestors(extensionContext: ExtensionContext) = test {
         extensionContext.ancestors.map { it.uniqueId }.shouldContainExactly(
             listOf(
                 "[engine:junit-jupiter]",
@@ -24,7 +24,7 @@ class ExtensionContextsKtTest {
     }
 
 
-    @Test fun get_store(context: ExtensionContext) = tests {
+    @Test fun get_store(context: ExtensionContext) = test {
         context.getStore<Foo>() should {
             it.get("key") shouldBe null
             it.put("key", "value")
@@ -40,7 +40,7 @@ class ExtensionContextsKtTest {
         }
     }
 
-    @Test fun get_test_store(context: ExtensionContext) = tests {
+    @Test fun get_test_store(context: ExtensionContext) = test {
         context.getStore<Foo>().put("key", "value")
         context.getTestStore<Foo>() should {
             it.get("key") shouldBe null
@@ -58,7 +58,7 @@ class ExtensionContextsKtTest {
     }
 
 
-    @Test fun store_get_typed(context: ExtensionContext) = tests {
+    @Test fun store_get_typed(context: ExtensionContext) = test {
         context.getStore<Foo>() should {
             it.getTyped<String>("key") shouldBe null
             it.put("key", "value")
@@ -69,7 +69,7 @@ class ExtensionContextsKtTest {
         }
     }
 
-    @Test fun store_get_typed_or_default(context: ExtensionContext) = tests {
+    @Test fun store_get_typed_or_default(context: ExtensionContext) = test {
         context.getStore<Foo>() should {
             it.getTypedOrDefault("key", "default") shouldBe "default"
             it.put("key", "value")
@@ -79,7 +79,7 @@ class ExtensionContextsKtTest {
         }
     }
 
-    @Test fun store_get_typed_or_compute_if_absent(context: ExtensionContext) = tests {
+    @Test fun store_get_typed_or_compute_if_absent(context: ExtensionContext) = test {
         context.getStore<Foo>() should {
             it.getTypedOrComputeIfAbsent("key") { "computed" } shouldBe "computed"
             it.get("key") shouldBe "computed"
@@ -90,7 +90,7 @@ class ExtensionContextsKtTest {
         }
     }
 
-    @Test fun store_remove_typed(context: ExtensionContext) = tests {
+    @Test fun store_remove_typed(context: ExtensionContext) = test {
         context.getStore<Foo>() should {
             it.put("key", "value")
             val removed: String = it.removeTyped("key")

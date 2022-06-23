@@ -5,7 +5,7 @@ import com.bkahlert.kommons.test.junit.launcher.KotlinDiscoverySelectors.selectK
 import com.bkahlert.kommons.test.junit.launcher.KotlinDiscoverySelectors.selectNestedKotlinMemberFunction
 import com.bkahlert.kommons.test.junit.launcher.LaunchersTest.BarTest.BazTest
 import com.bkahlert.kommons.test.junit.launcher.TestExecutionReporter.Companion.disableTestExecutionReporter
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.test
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
@@ -18,7 +18,7 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder
 
 class LaunchersTest {
 
-    @Test fun launch_tests() = tests {
+    @Test fun launch_tests() = test {
         launchTests(
             selectClass(FooTest::class.java),
             selectClass(BarTest::class.java),

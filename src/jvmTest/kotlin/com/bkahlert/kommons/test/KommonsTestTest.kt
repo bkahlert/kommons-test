@@ -1,5 +1,7 @@
 package com.bkahlert.kommons.test
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.StackTrace
+import com.bkahlert.kommons.test.com.bkahlert.kommons.get
 import io.kotest.matchers.paths.shouldBeADirectory
 import io.kotest.matchers.paths.shouldBeAbsolute
 import io.kotest.matchers.paths.shouldExist
@@ -22,12 +24,12 @@ class KommonsTestTest {
         it.shouldBeADirectory()
     }
 
-    @Test fun locate_call() = tests {
+    @Test fun locate_call() = test {
         KommonsTest.locateCall() should {
             it.fileName shouldBe "KommonsTestTest.kt"
             it.className shouldBe KommonsTestTest::class.qualifiedName
             it.methodName shouldBe "locate_call"
-            it.lineNumber shouldBe 26
+            it.lineNumber shouldBe 28
         }
 
         KommonsTest.locateCall(StackTrace(StackTrace.get().dropWhile { !it.className.startsWith("org.junit") })) should {
@@ -38,7 +40,7 @@ class KommonsTestTest {
             it.fileName shouldBe "KommonsTestTest.kt"
             it.className shouldBe KommonsTestTest::class.qualifiedName
             it.methodName shouldBe "locate_call"
-            it.lineNumber shouldBe 37
+            it.lineNumber shouldBe 39
         }
     }
 }

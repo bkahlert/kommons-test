@@ -9,7 +9,7 @@ import java.time.Instant
 
 class LambdaBodyTest {
 
-    @Test fun to_string() = tests {
+    @Test fun to_string() = test {
         LambdaBody("body").toString() shouldBe "body"
         LambdaBody(
             """
@@ -19,7 +19,7 @@ class LambdaBodyTest {
         ).toString() shouldBe "body 1\nbody 2"
     }
 
-    @Test fun body() = tests {
+    @Test fun body() = test {
         LambdaBody("body").body shouldBe "body"
         LambdaBody(
             """
@@ -29,7 +29,7 @@ class LambdaBodyTest {
         ).body shouldBe "body 1\nbody 2"
     }
 
-    @Test fun outer_body() = tests {
+    @Test fun outer_body() = test {
         LambdaBody("body").outerBody shouldBe "{ body }"
         LambdaBody(
             """
@@ -57,7 +57,7 @@ class LambdaBodyTest {
         """.trimIndent()
     }
 
-    @Test fun guess_name() = tests {
+    @Test fun guess_name() = test {
         "foo".asClue { LambdaBody.guessName(it) shouldBe null }
         "foo {".asClue { LambdaBody.guessName(it) shouldBe "foo" }
         "   foo {".asClue { LambdaBody.guessName(it) shouldBe "foo" }
@@ -114,7 +114,7 @@ class LambdaBodyTest {
         LambdaBody.parseOrNull("bar", code) shouldBe null
     }
 
-    @Test fun parse_or_null__stacktrace_single_line() = tests {
+    @Test fun parse_or_null__stacktrace_single_line() = test {
         LambdaBody.parseOrNull(raiseStackTraceElement { foo { bar { throw RuntimeException() } } })
             .shouldBe(LambdaBody("foo { bar { throw RuntimeException() } }"))
 
@@ -131,7 +131,7 @@ class LambdaBodyTest {
             .shouldBeNull()
     }
 
-    @Test fun parse_or_null__stacktrace_multi_line() = tests {
+    @Test fun parse_or_null__stacktrace_multi_line() = test {
         LambdaBody.parseOrNull(raiseStackTraceElement {
             foo {
                 bar {
@@ -208,7 +208,7 @@ class LambdaBodyTest {
         }, "invalid").shouldBeNull()
     }
 
-    @Test fun parse_or_null__extension() = tests {
+    @Test fun parse_or_null__extension() = test {
         raiseStackTraceElement { foo { bar { throw RuntimeException() } } }
             .getLambdaBodyOrNull().shouldBe(LambdaBody("foo { bar { throw RuntimeException() } }"))
         raise { foo { bar { throw RuntimeException() } } }

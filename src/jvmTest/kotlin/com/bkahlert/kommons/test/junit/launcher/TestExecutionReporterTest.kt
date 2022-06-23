@@ -1,7 +1,7 @@
 package com.bkahlert.kommons.test.junit.launcher
 
-import com.bkahlert.kommons.ansiRemoved
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.com.bkahlert.kommons.ansiRemoved
+import com.bkahlert.kommons.test.test
 import io.kotest.matchers.string.shouldMatch
 import org.junit.jupiter.api.Test
 import org.junit.platform.engine.ConfigurationParameters
@@ -17,13 +17,13 @@ import java.util.Optional
 
 class TestExecutionReporterTest {
 
-    @Test fun no_tests() = tests {
+    @Test fun no_tests() = test {
         testExecutionReporterOutput(0, 0, 0, 0) shouldMatch """
             ⁉︎ no tests executed
         """.trimIndent()
     }
 
-    @Test fun successful_tests() = tests {
+    @Test fun successful_tests() = test {
         testExecutionReporterOutput(1, 0, 0, 0) shouldMatch """
             1 test within \d+m?s: ✔︎ all passed
         """.trimIndent()
@@ -32,7 +32,7 @@ class TestExecutionReporterTest {
         """.trimIndent()
     }
 
-    @Test fun aborted_tests() = tests {
+    @Test fun aborted_tests() = test {
         testExecutionReporterOutput(0, 0, 1, 0) shouldMatch """
             1 test within \d+m?s: ‼ all crashed
         """.trimIndent()
@@ -44,7 +44,7 @@ class TestExecutionReporterTest {
         """.trimIndent()
     }
 
-    @Test fun failed_tests() = tests {
+    @Test fun failed_tests() = test {
         testExecutionReporterOutput(0, 1, 0, 0) shouldMatch """
             1 test within \d+m?s: ✘︎ all failed
         """.trimIndent()
@@ -56,7 +56,7 @@ class TestExecutionReporterTest {
         """.trimIndent()
     }
 
-    @Test fun failed_and_failed_tests() = tests {
+    @Test fun failed_and_failed_tests() = test {
         testExecutionReporterOutput(1, 2, 1, 0) shouldMatch """
             4 tests within \d+m?s: ✘︎ 2 failed, ‼ 1 crashed, ✔︎ 1 passed
         """.trimIndent()
@@ -65,7 +65,7 @@ class TestExecutionReporterTest {
         """.trimIndent()
     }
 
-    @Test fun skipped_tests() = tests {
+    @Test fun skipped_tests() = test {
         testExecutionReporterOutput(1, 1, 1, 2) shouldMatch """
             3 tests within \d+m?s: ✘︎ 1 failed, ‼ 1 crashed, ✔︎ 1 passed, ◍ 2 ignored
         """.trimIndent()

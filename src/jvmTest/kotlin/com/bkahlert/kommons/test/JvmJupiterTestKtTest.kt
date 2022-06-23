@@ -4,28 +4,22 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import kotlin.test.Test
+import org.junit.jupiter.api.Test as JupiterTest
 
-class JsTestsKtTest {
+class JvmJupiterTestKtTest {
 
-    @Test fun test_empty() {
-        shouldThrow<IllegalArgumentException> {
-            testAll<Any?, Any?> { }
-        }
-    }
-
-    @Test fun test_success() {
+    @JupiterTest fun test_success() {
         shouldNotThrowAny {
-            tests {
+            test {
                 "foo bar" shouldContain "foo"
                 "foo bar" shouldContain "bar"
             }
         }
     }
 
-    @Test fun test_single_fail() {
+    @JupiterTest fun test_single_fail() {
         shouldThrow<AssertionError> {
-            tests {
+            test {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "bar"
             }
@@ -34,9 +28,9 @@ class JsTestsKtTest {
         """.trimIndent()
     }
 
-    @Test fun test_multiple_fails() {
+    @JupiterTest fun test_multiple_fails() {
         shouldThrow<AssertionError> {
-            tests {
+            test {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "FOO"
             }
@@ -44,7 +38,9 @@ class JsTestsKtTest {
             
             The following 2 assertions failed:
             1) "foo bar" should include substring "baz"
+            ${t}at com.bkahlert.kommons.test.JvmJupiterTestKtTest.test_multiple_fails(JvmJupiterTestKtTest.kt:34)
             2) "foo bar" should include substring "FOO"
+            ${t}at com.bkahlert.kommons.test.JvmJupiterTestKtTest.test_multiple_fails(JvmJupiterTestKtTest.kt:35)
             
         """.trimIndent()
     }

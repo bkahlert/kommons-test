@@ -1,6 +1,6 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.withPrefix
+import com.bkahlert.kommons.test.com.bkahlert.kommons.withPrefix
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor

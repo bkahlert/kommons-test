@@ -1,8 +1,8 @@
 package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.capitalize
-import com.bkahlert.kommons.indexOfOrNull
-import com.bkahlert.kommons.withSuffix
+import com.bkahlert.kommons.test.com.bkahlert.kommons.capitalize
+import com.bkahlert.kommons.test.com.bkahlert.kommons.indexOfOrNull
+import com.bkahlert.kommons.test.com.bkahlert.kommons.withSuffix
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.div

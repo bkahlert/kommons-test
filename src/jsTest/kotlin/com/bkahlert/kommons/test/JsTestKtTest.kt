@@ -6,11 +6,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import kotlin.test.Test
 
-class TestsKtTest {
+class JsTestKtTest {
 
     @Test fun test_success() {
         shouldNotThrowAny {
-            tests {
+            test {
                 "foo bar" shouldContain "foo"
                 "foo bar" shouldContain "bar"
             }
@@ -19,7 +19,7 @@ class TestsKtTest {
 
     @Test fun test_single_fail() {
         shouldThrow<AssertionError> {
-            tests {
+            test {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "bar"
             }
@@ -30,25 +30,16 @@ class TestsKtTest {
 
     @Test fun test_multiple_fails() {
         shouldThrow<AssertionError> {
-            tests {
+            test {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "FOO"
             }
-        }.message
-            .shouldContain(
-                """
-                    The following 2 assertions failed:
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    1) "foo bar" should include substring "baz"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    2) "foo bar" should include substring "FOO"
-                """.trimIndent()
-            )
+        }.message shouldBe """
+            
+            The following 2 assertions failed:
+            1) "foo bar" should include substring "baz"
+            2) "foo bar" should include substring "FOO"
+            
+        """.trimIndent()
     }
 }

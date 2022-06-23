@@ -1,4 +1,4 @@
-package com.bkahlert.kommons.debug
+package com.bkahlert.kommons.test.com.bkahlert.kommons.debug
 
 /** Function that renders any object. */
 internal typealias Renderer = (Any?) -> String

@@ -1,13 +1,13 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test.com.bkahlert.kommons
 
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.test
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 class StringsKtTest {
 
-    @Test fun ansi_contained() = tests {
+    @Test fun ansi_contained() = test {
         charSequence.ansiContained shouldBe false
         string.ansiContained shouldBe false
         emptyCharSequence.ansiContained shouldBe false
@@ -20,7 +20,7 @@ class StringsKtTest {
         ansiOscString.ansiContained shouldBe true
     }
 
-    @Test fun ansi_removed() = tests {
+    @Test fun ansi_removed() = test {
         string.ansiRemoved shouldBe string
         emptyString.ansiRemoved shouldBe emptyString
         blankString.ansiRemoved shouldBe blankString
@@ -28,19 +28,19 @@ class StringsKtTest {
         ansiOscString.ansiRemoved shouldBe "↗ link"
     }
 
-    @Test fun with_prefix() = tests {
+    @Test fun with_prefix() = test {
         string.withPrefix(string) shouldBe string
         string.withPrefix("str") shouldBe string
         string.withPrefix("str-") shouldBe "str-$string"
     }
 
-    @Test fun with_suffix() = tests {
+    @Test fun with_suffix() = test {
         string.withSuffix(string) shouldBe string
         string.withSuffix("ing") shouldBe string
         string.withSuffix("-ing") shouldBe "$string-ing"
     }
 
-    @Test fun index_of_or_null() = tests {
+    @Test fun index_of_or_null() = test {
         charSequence.indexOfOrNull('h') shouldBe 1
         string.indexOfOrNull('t') shouldBe 1
 
@@ -54,7 +54,7 @@ class StringsKtTest {
         string.indexOfOrNull("xyz") shouldBe null
     }
 
-    @Test fun is_multiline() = tests {
+    @Test fun is_multiline() = test {
         "".isMultiline shouldBe false
         "foo".isMultiline shouldBe false
         arrayOf("\u000D\u000A", "\u000A", "\u000D").forAll {

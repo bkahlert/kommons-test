@@ -1,7 +1,7 @@
 package com.bkahlert.kommons.test
 
-import com.bkahlert.kommons.indexOfOrNull
-import com.bkahlert.kommons.isMultiline
+import com.bkahlert.kommons.test.com.bkahlert.kommons.indexOfOrNull
+import com.bkahlert.kommons.test.com.bkahlert.kommons.isMultiline
 
 /** The body of a lambda function. */
 @JvmInline

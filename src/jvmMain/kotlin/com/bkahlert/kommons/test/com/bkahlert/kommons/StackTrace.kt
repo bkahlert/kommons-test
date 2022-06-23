@@ -1,4 +1,4 @@
-package com.bkahlert.kommons.test
+package com.bkahlert.kommons.test.com.bkahlert.kommons
 
 /** Representation of a stack trace. */
 internal class StackTrace(elements: List<StackTraceElement>) : List<StackTraceElement> by elements {

@@ -1,4 +1,4 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test.com.bkahlert.kommons
 
 internal val ansiPatterns = listOf(
     @Suppress("RegExpRedundantEscape") // otherwise "lone quantifier brackets in JS"

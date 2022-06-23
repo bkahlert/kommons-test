@@ -26,7 +26,7 @@
 
 #### testAll
 
-Write a bunch of tests conveniently for multiple subjects in a single test:
+Write a bunch of soft assertions conveniently for multiple subjects in a single test:
 
 ```kotlin
 @Test fun test_contain() = testAll("foo bar", "FOO BAR") {
@@ -44,7 +44,7 @@ mapOf("key1" to "foo bar", "key2" to "FOO BAR").testAll { (_, v) -> /* ... */ }
 
 #### testEnum
 
-Write a bunch of tests conveniently for all enum entries in a single test:
+Write a bunch of soft assertions conveniently for all enum entries in a single test:
 
 ```kotlin
 enum class FooBar { foo_bar, FOO_BAR }
@@ -141,12 +141,12 @@ yourself.
 
 ### Added
 
-#### tests
+#### test
 
-Write a bunch of tests conveniently in a single test:
+Write a bunch of soft assertions conveniently in a single test:
 
 ```kotlin
-@Test fun test_contain() = tests {
+@Test fun test_contain() = test {
     "foo bar" shouldContain "Foo"
     "foo bar" shouldContain "foo"
     "foo bar" shouldContain "baz"

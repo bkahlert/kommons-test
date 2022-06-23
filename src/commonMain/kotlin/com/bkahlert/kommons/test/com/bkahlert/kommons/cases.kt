@@ -1,4 +1,4 @@
-package com.bkahlert.kommons
+package com.bkahlert.kommons.test.com.bkahlert.kommons
 
 /** Returns this char sequence with its first letter in upper case. */
 internal fun CharSequence.capitalize(): CharSequence = if (isNotEmpty() && first().isLowerCase()) first().uppercaseChar() + substring(1) else this

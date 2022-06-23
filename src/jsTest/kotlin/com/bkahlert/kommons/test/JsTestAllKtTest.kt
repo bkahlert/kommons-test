@@ -9,6 +9,12 @@ import kotlin.test.Test
 
 class JsTestAllKtTest {
 
+    @Test fun test_empty() {
+        shouldThrow<IllegalArgumentException> {
+            testAll<Any?, Any?> { }
+        }
+    }
+
     @Test fun test_success() {
         shouldNotThrowAny {
             testAll("foo bar", "FOO BAR") {

@@ -1,6 +1,6 @@
 package com.bkahlert.kommons.test.junit
 
-import com.bkahlert.kommons.test.tests
+import com.bkahlert.kommons.test.test
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayNameGenerator
 import org.junit.jupiter.api.Test
@@ -12,17 +12,17 @@ class MethodNameOnlyDisplayNameGeneratorTest {
     private val generator = MethodNameOnlyDisplayNameGenerator()
     private val standardGenerator = DisplayNameGenerator.Standard()
 
-    @Test fun generate_display_name_for_class() = tests {
+    @Test fun generate_display_name_for_class() = test {
         generator.generateDisplayNameForClass(OuterClass::class.java)
             .shouldBe(standardGenerator.generateDisplayNameForClass(OuterClass::class.java))
     }
 
-    @Test fun generate_display_name_for_nested_class() = tests {
+    @Test fun generate_display_name_for_nested_class() = test {
         generator.generateDisplayNameForNestedClass(OuterClass.NestedClass::class.java)
             .shouldBe(standardGenerator.generateDisplayNameForNestedClass(OuterClass.NestedClass::class.java))
     }
 
-    @Test fun generate_display_name_for_method() = tests {
+    @Test fun generate_display_name_for_method() = test {
         generator.generateDisplayNameForMethod(
             OuterClass::class.java,
             checkNotNull(OuterClass::method.javaMethod),

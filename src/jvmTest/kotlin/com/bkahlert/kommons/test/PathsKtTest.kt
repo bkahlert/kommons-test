@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
 import java.nio.file.attribute.PosixFilePermission
+import java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE
+import java.nio.file.attribute.PosixFilePermission.OWNER_READ
+import java.nio.file.attribute.PosixFilePermission.OWNER_WRITE
 import kotlin.io.path.getPosixFilePermissions
 
 class PathsKtTest {
@@ -19,12 +22,12 @@ class PathsKtTest {
     inner class RandomPath {
 
         @Test
-        fun `should create inside receiver path`(@TempDir tempDir: Path) = tests {
+        fun `should create inside receiver path`(@TempDir tempDir: Path) = test {
             tempDir.randomPath().isSubPathOf(tempDir) shouldBe true
         }
 
         @Test
-        fun `should not exist`(@TempDir tempDir: Path) = tests {
+        fun `should not exist`(@TempDir tempDir: Path) = test {
             tempDir.randomPath().shouldNotExist()
         }
     }
@@ -33,17 +36,17 @@ class PathsKtTest {
     inner class RandomDirectory {
 
         @Test
-        fun `should create inside receiver path`(@TempDir tempDir: Path) = tests {
+        fun `should create inside receiver path`(@TempDir tempDir: Path) = test {
             tempDir.randomDirectory().isSubPathOf(tempDir) shouldBe true
         }
 
         @Test
-        fun `should create directory`(@TempDir tempDir: Path) = tests {
+        fun `should create directory`(@TempDir tempDir: Path) = test {
             tempDir.randomDirectory().shouldBeADirectory()
         }
 
         @Test
-        fun `should create directory inside non-existent parent`(@TempDir tempDir: Path) = tests {
+        fun `should create directory inside non-existent parent`(@TempDir tempDir: Path) = test {
             tempDir.randomPath().randomDirectory().shouldBeADirectory()
         }
     }
@@ -52,38 +55,38 @@ class PathsKtTest {
     inner class RandomFile {
 
         @Test
-        fun `should create inside receiver path`(@TempDir tempDir: Path) = tests {
+        fun `should create inside receiver path`(@TempDir tempDir: Path) = test {
             tempDir.randomFile().isSubPathOf(tempDir) shouldBe true
         }
 
         @Test
-        fun `should create regular file`(@TempDir tempDir: Path) = tests {
+        fun `should create regular file`(@TempDir tempDir: Path) = test {
             tempDir.randomFile().shouldBeAFile()
         }
 
         @Test
-        fun `should create regular file inside non-existent parent`(@TempDir tempDir: Path) = tests {
+        fun `should create regular file inside non-existent parent`(@TempDir tempDir: Path) = test {
             tempDir.randomPath().randomFile().shouldBeAFile()
         }
     }
 
-    @Test fun temp_dir() = tests {
+    @Test fun temp_dir() = test {
         tempDir() should { tmp ->
             tmp.isSubPathOf(KommonsTest.Temp) shouldBe true
             tmp.shouldBeADirectory()
             tmp.getPosixFilePermissions() shouldContainExactly setOf(
-                PosixFilePermission.OWNER_READ,
-                PosixFilePermission.OWNER_WRITE,
-                PosixFilePermission.OWNER_EXECUTE
+                OWNER_READ,
+                OWNER_WRITE,
+                OWNER_EXECUTE
             )
 
             tmp.tempDir() should { sub ->
                 sub.isSubPathOf(tmp) shouldBe true
                 sub.shouldBeADirectory()
                 sub.getPosixFilePermissions() shouldContainExactly setOf(
-                    PosixFilePermission.OWNER_READ,
-                    PosixFilePermission.OWNER_WRITE,
-                    PosixFilePermission.OWNER_EXECUTE
+                    OWNER_READ,
+                    OWNER_WRITE,
+                    OWNER_EXECUTE
                 )
             }
 
@@ -93,9 +96,9 @@ class PathsKtTest {
                 it.isSubPathOf(nonExistentParent) shouldBe true
                 it.shouldBeADirectory()
                 it.getPosixFilePermissions() shouldContainExactly setOf(
-                    PosixFilePermission.OWNER_READ,
-                    PosixFilePermission.OWNER_WRITE,
-                    PosixFilePermission.OWNER_EXECUTE
+                    OWNER_READ,
+                    OWNER_WRITE,
+                    OWNER_EXECUTE
                 )
             }
         }

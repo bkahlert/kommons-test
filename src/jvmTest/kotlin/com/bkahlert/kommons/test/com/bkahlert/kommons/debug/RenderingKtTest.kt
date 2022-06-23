@@ -1,7 +1,8 @@
-package com.bkahlert.kommons.test
+package com.bkahlert.kommons.test.com.bkahlert.kommons.debug
 
-import com.bkahlert.kommons.emptyException
-import com.bkahlert.kommons.runtimeException
+import com.bkahlert.kommons.test.com.bkahlert.kommons.emptyException
+import com.bkahlert.kommons.test.com.bkahlert.kommons.runtimeException
+import com.bkahlert.kommons.test.test
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
@@ -12,7 +13,7 @@ import java.nio.file.Paths
 
 class RenderingKtTest {
 
-    @Test fun to_compact_string() = tests {
+    @Test fun to_compact_string() = test {
         runtimeException.toCompactString() should {
             it shouldStartWith "RuntimeException: Something happened at.(StringsKtTest.kt:"
             it shouldEndWith ")"

@@ -36,19 +36,19 @@ Kommons Debug is hosted on GitHub with releases provided on Maven Central.
 
 ## Features
 
-### tests
+### test
 
-Write a bunch of tests conveniently in a single test:
+Write a bunch of soft assertions conveniently in a single test:
 
 ```kotlin
-@Test fun test_contain() = tests {
+@Test fun test_contain() = test {
     "foo bar" shouldContain "Foo"
     "foo bar" shouldContain "foo"
     "foo bar" shouldContain "baz"
 }
 ```
 
-The above tests has three assertions of which the first and last fail
+The above test has three assertions of which the first and last fail
 when run with the following output:
 
 ```
@@ -61,7 +61,7 @@ The following 2 assertions failed:
 
 ### testAll
 
-Write a bunch of tests conveniently for multiple subjects in a single test:
+Write a bunch of soft assertions conveniently for multiple subjects in a single test:
 
 ```kotlin
 @Test fun test_contain() = testAll("foo bar", "FOO BAR") {
@@ -77,7 +77,7 @@ sequenceOf("foo bar", "FOO BAR").testAll { /* ... */ }
 mapOf("key1" to "foo bar", "key2" to "FOO BAR").testAll { (_, v) -> /* ... */ }
 ```
 
-The above tests has three assertions of which the first and second fail
+The above test has three assertions of which the first and second fail
 when run with the following output:
 
 ```
@@ -98,7 +98,7 @@ The following 2 assertions failed:
 
 ### testEnum
 
-Write a bunch of tests conveniently for all enum entries in a single test:
+Write a bunch of soft assertions conveniently for all enum entries in a single test:
 
 ```kotlin
 enum class FooBar { foo_bar, FOO_BAR }
@@ -110,7 +110,7 @@ enum class FooBar { foo_bar, FOO_BAR }
 }
 ```
 
-The above tests has three assertions of which the first and second fail
+The above test has three assertions of which the first and second fail
 when run with the following output:
 
 ```
@@ -130,50 +130,6 @@ The following 2 assertions failed:
 ```
 
 ## JVM Features
-
-### Test Builders
-
-Write concise tests with one of the following test builders:
-
-- `testing`
-- `testingEach`
-
-```kotlin
-class SubjectsTest {
-
-    // create three test containers - one for each subject 
-    @TestFactory fun subjects() = testEach(
-        "subject 1",
-        "subject 2",
-        "subject 3",
-    ) {
-        // all assertions will be run as separate JUnit tests 
-        expecting { length } it { shouldBeGreaterThan(0) }
-        // if you prefer to do assertions using `it` use the `that` infix 
-        expecting { length } that { it.shouldBeGreaterThan(0) }
-
-        // assert potential exceptions 
-        expectCatching { "nope" } it { shouldBeSuccess() }
-        expectCatching { throw RuntimeException() } it { shouldBeFailure() }
-
-        // assert definitive exceptions 
-        expectThrows<RuntimeException> { throw RuntimeException() }
-
-        // the display name for each expectation is computed automatically
-        // the following expectation will render as `"$this-foo" shouldStartWith("subject ")`
-        expecting { "$this-foo" } it { shouldStartWith("subject ") }
-
-        // this expectation will render as `error(this) shouldBeFailure().shouldBeInstanceOf<IllegalStateException>()`
-        expectCatching { error(this) } that { it.shouldBeFailure().shouldBeInstanceOf<IllegalStateException>() }
-    }
-}
-```
-
-A proper [JUnit test source URI](https://junit.org/junit5/docs/current/user-guide/#writing-tests-dynamic-tests-uri-test-source)
-similar to `file:///home/dev/my-project/src/jvmTest/kotlin/pkg/test/SubjectsTest.kt?line=16&column=9` is created
-automatically for each expectation.
-
-Depending on your IDE a simple double-click on a failed test should bring you exactly to where you typed your expectation.
 
 ### Source File Location
 
@@ -258,7 +214,7 @@ spring.test.constructor.autowire.mode=all
 
 ### Reporting
 
-Tests results are printed at the end of a test run
+Test results are printed at the end of a test run
 by [TestExecutionReporter](src/jvmMain/kotlin/com/bkahlert/kommons/test/junit/launcher/TestExecutionReporter.kt) as follows:
 
 ```log
@@ -277,6 +233,35 @@ This feature is enabled by default but can be disabled by setting:
 com.bkahlert.kommons.test.junit.launcher.reporter.disabled=true
 ```
 
+### testEach
+
+Write a bunch of soft assertions conveniently for multiple subjects in a single test.
+
+In contrast to [testAll](#testall) this function
+returns a [DynamicNode](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/DynamicNode.html) stream
+with one [DynamicTest](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/DynamicTest.html)
+for each test subject.
+
+Also, a [TestFactory](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/TestFactory.html) annotation has to be used in place
+of [Test](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/Test.html).
+
+```kotlin
+@TestFactory fun test_contain() = testEach("foo bar", "FOO BAR") {
+    it shouldContain "foo"
+    it shouldContain "bar"
+    it shouldContain "BAR"
+}
+
+// The following invocations are equivalent: 
+testEach("foo bar", "FOO BAR") { /* ... */ }
+listOf("foo bar", "FOO BAR").testEach { /* ... */ }
+sequenceOf("foo bar", "FOO BAR").testEach { /* ... */ }
+mapOf("key1" to "foo bar", "key2" to "FOO BAR").testEach { (_, v) -> /* ... */ }
+```
+
+The above test has three assertions of which the first and second fail
+when run.
+
 ### Parameter Resolvers
 
 #### Unique ID
@@ -284,7 +269,7 @@ com.bkahlert.kommons.test.junit.launcher.reporter.disabled=true
 ```kotlin
 class UniqueIdResolverTest {
     @Nested inner class NestedTest {
-        @Test fun test_name(uniqueId: UniqueId) = tests {
+        @Test fun test_name(uniqueId: UniqueId) {
             uniqueId.segments.first() // "[engine:junit-jupiter]"
             uniqueId.segments.last()  // "[method:test_name(org.junit.platform.engine.UniqueId)]"
         }
@@ -297,7 +282,7 @@ class UniqueIdResolverTest {
 ```kotlin
 class SimpleIdResolverTest {
     @Nested inner class NestedTest {
-        @Test fun test_name(simpleId: SimpleId) = tests {
+        @Test fun test_name(simpleId: SimpleId) {
             simpleId.segments.first() // "SimpleIdResolverTest"
             simpleId.segments.last()  // "test_name"
             simpleId.toString()       // "SimpleIdResolverTest.test_name"
@@ -311,7 +296,7 @@ class SimpleIdResolverTest {
 ```kotlin
 class DisplayNameResolverTest {
     @Nested inner class NestedTest {
-        @Test fun `test name`(displayName: DisplayName) = tests {
+        @Test fun `test name`(displayName: DisplayName) {
             displayName.displayName         // "test_name"
             displayName.composedDisplayName // "DisplayNameResolverTest ➜ NestedTest ➜ test_name"
         }
@@ -324,7 +309,7 @@ class DisplayNameResolverTest {
 ```kotlin
 class ExtensionContextResolverTest {
     @Nested inner class NestedTest {
-        @Test fun `test name`(extensionContext: ExtensionContext) = tests {
+        @Test fun `test name`(extensionContext: ExtensionContext) {
             extensionContext.simpleId   // "ExtensionContextResolverTest.NestedTest.test_name"
         }
     }
