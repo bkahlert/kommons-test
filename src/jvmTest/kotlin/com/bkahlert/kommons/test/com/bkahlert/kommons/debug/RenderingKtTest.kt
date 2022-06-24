@@ -1,7 +1,5 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons.debug
 
-import com.bkahlert.kommons.test.com.bkahlert.kommons.emptyException
-import com.bkahlert.kommons.test.com.bkahlert.kommons.runtimeException
 import com.bkahlert.kommons.test.test
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -15,23 +13,23 @@ class RenderingKtTest {
 
     @Test fun to_compact_string() = test {
         runtimeException.toCompactString() should {
-            it shouldStartWith "RuntimeException: Something happened at.(StringsKtTest.kt:"
+            it shouldStartWith "RuntimeException: Something happened at.(RenderingKtTest.kt:"
             it shouldEndWith ")"
             it shouldNotContain "\n"
         }
         emptyException.toCompactString() should {
-            it shouldStartWith "RuntimeException at.(StringsKtTest.kt:"
+            it shouldStartWith "RuntimeException at.(RenderingKtTest.kt:"
             it shouldEndWith ")"
             it shouldNotContain "\n"
         }
 
         Result.failure<String>(runtimeException).toCompactString() should {
-            it shouldStartWith "RuntimeException: Something happened at.(StringsKtTest.kt:"
+            it shouldStartWith "RuntimeException: Something happened at.(RenderingKtTest.kt:"
             it shouldEndWith ")"
             it shouldNotContain "\n"
         }
         Result.failure<String>(emptyException).toCompactString() should {
-            it shouldStartWith "RuntimeException at.(StringsKtTest.kt:"
+            it shouldStartWith "RuntimeException at.(RenderingKtTest.kt:"
             it shouldEndWith ")"
             it shouldNotContain "\n"
         }
@@ -43,3 +41,15 @@ class RenderingKtTest {
         LineSeparators.joinToString("") { "line$it" }.toCompactString() shouldBe "\"line⏎line⏎line⏎line⏎line⏎line\""
     }
 }
+
+internal val emptyException = RuntimeException()
+internal val runtimeException = RuntimeException(
+    "Something happened\n" +
+        " ➜ A dump has been written to:\n" +
+        "   - file:///var/folders/…/file.log (unchanged)\n" +
+        "   - file:///var/folders/…/file.ansi-removed.log (ANSI escape/control sequences removed)\n" +
+        " ➜ The last lines are:\n" +
+        "    raspberry\n" +
+        "    Login incorrect\n" +
+        "    raspberrypi login:"
+)

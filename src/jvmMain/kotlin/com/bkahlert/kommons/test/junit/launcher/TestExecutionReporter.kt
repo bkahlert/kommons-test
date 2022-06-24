@@ -39,8 +39,7 @@ public class TestExecutionReporter(
             if (total == 0L) yellow("⁉︎ no tests executed")
             else buildString {
                 appendLine()
-                append(cyan("${total.tests} within"))
-                append(" ")
+                append(cyan("${total.tests} within "))
                 append(brightCyan("$duration"))
                 append(": ")
                 listOf<Pair<Long, (String) -> String>>(

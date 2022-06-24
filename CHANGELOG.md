@@ -20,6 +20,23 @@
 
 ### Fixed
 
+## [0.3.0] - 2022-06-25
+
+### Added
+
+#### Fixtures
+
+- [GifImageFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/GifImageFixture.kt)  
+  A GIF image consisting of a red and white pixel.
+- [SvgImageFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/SvgImageFixture.kt)  
+  An SVG image with the animated Kommons logo.
+- [HtmlDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/HtmlDocumentFixture.kt)  
+  An HTML document that renders "Hello World!" on a red white striped background.
+- [TextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/TextDocumentFixture.kt)  
+  A text document containing different line separators.  
+  An UTF-8 encoded character can take between one and four bytes;  
+  this document includes at least one character for each encoding length.
+
 ## [0.2.0] - 2022-06-24
 
 ### Added
@@ -153,7 +170,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.0...HEAD
+
+[0.3.0]: https://github.com/bkahlert/kommons-test/compare/v0.2.0...v0.3.0
 
 [0.2.0]: https://github.com/bkahlert/kommons-test/compare/v0.1.0...v0.2.0
 

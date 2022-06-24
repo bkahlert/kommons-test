@@ -4,8 +4,7 @@ import kotlin.test.Test
 
 class ExceptionsMatchersKtTest {
 
-    @Test
-    fun root_cause() = testAll(
+    @Test fun root_cause() = testAll(
         IllegalArgumentException("error message"),
         IllegalStateException(IllegalArgumentException("error message")),
         RuntimeException(IllegalStateException(IllegalArgumentException("error message"))),

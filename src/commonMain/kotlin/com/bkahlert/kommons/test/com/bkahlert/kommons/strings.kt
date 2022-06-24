@@ -1,5 +1,7 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
+import kotlin.random.Random
+
 internal val ansiPatterns = listOf(
     @Suppress("RegExpRedundantEscape") // otherwise "lone quantifier brackets in JS"
     "\\u001B\\]\\d*;[^\\u001B]*\\u001B\\\\".toRegex(), // OSC (operating system command) escape sequences
@@ -24,6 +26,26 @@ internal fun String.withPrefix(prefix: CharSequence): String = if (startsWith(pr
 
 /** Returns this string with the [suffix] appended if it is not already present. */
 internal fun String.withSuffix(suffix: CharSequence): String = if (endsWith(suffix)) this else buildString { append(this@withSuffix);append(suffix) }
+
+private const val randomSuffixLength = 4
+private const val randomSuffixSeparator = "--"
+
+@Suppress("RegExpSimplifiable")
+private val randomSuffixMatcher: Regex = Regex(".*$randomSuffixSeparator[\\da-zA-Z]{$randomSuffixLength}\$")
+
+/** Returns this char sequence with a random suffix of two dashes dash and four alphanumeric characters. */
+internal fun CharSequence.withRandomSuffix(): CharSequence =
+    if (randomSuffixMatcher.matches(this)) this
+    else buildString { append(this@withRandomSuffix); append(randomSuffixSeparator); append(randomString(length = randomSuffixLength)) }
+
+/** Returns this string with a random suffix of two dashes dash and four alphanumeric characters. */
+internal fun String.withRandomSuffix(): String =
+    if (randomSuffixMatcher.matches(this)) this
+    else buildString { append(this@withRandomSuffix); append(randomSuffixSeparator); append(randomString(length = randomSuffixLength)) }
+
+/** Creates a random string of the specified [length] made up of the specified [allowedCharacters]. */
+internal fun randomString(length: Int = 16, vararg allowedCharacters: Char = (('0'..'9') + ('a'..'z') + ('A'..'Z')).toCharArray()): String =
+    buildString(length) { repeat(length) { append(allowedCharacters[Random.nextInt(0, allowedCharacters.size)]) } }
 
 /**
  * Returns the index within this string of the first occurrence of the specified character,

@@ -23,3 +23,5 @@ public class DisplayName(
 
     override fun toString(): String = displayName
 }
+
+public fun ExtensionContext.displayName(): DisplayName = DisplayName(this)

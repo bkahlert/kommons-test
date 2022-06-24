@@ -21,15 +21,15 @@ it for each supported platform separately.
 
 Kommons Debug is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.2.0")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.2.0")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.3.0")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.3.0")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.2.0</version>
+      <version>0.3.0</version>
       <scope>test</scope>
   </dependency>
   ```
@@ -128,6 +128,35 @@ The following 2 assertions failed:
 2) "FOO_BAR" should include substring "bar"
     at sample.Tests.test_contain(Tests.kt:4)
 ```
+
+### Fixtures
+
+Testing file operations and tired of making up data to test with?
+
+To help you focus on your actual test,
+the following binary and textual file fixtures are provided:
+
+- [GifImageFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/GifImageFixture.kt)  
+  A GIF image consisting of a red and white pixel.
+- [SvgImageFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/SvgImageFixture.kt)  
+  An SVG image with the animated Kommons logo.
+- [HtmlDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/HtmlDocumentFixture.kt)  
+  An HTML document that renders "Hello World!" on a red white striped background.
+- [TextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/TextDocumentFixture.kt)  
+  A text document containing different line separators.  
+  An UTF-8 encoded character can take between one and four bytes;  
+  this document includes at least one character for each encoding length.
+
+```kotlin
+GifImageFixture.name     // "pixels.gif"
+GifImageFixture.mimeType // "image/gif"
+GifImageFixture.content  // byte array
+GifImageFixture.dataURI  // "data:image/gif;base64,R0lGODdhAQADAPABAP////8AACwAAAAAAQADAAACAgxQADs="
+```
+
+Furthermore, on the JVM you'll find a bunch of extensions such as `copyToTempFile`.
+
+If all you want is *any* files, you can use `createAnyFile`, `createRandomFile` and `createDirectoryWithFiles`.
 
 ## JVM Features
 

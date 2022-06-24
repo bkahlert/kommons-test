@@ -2,7 +2,12 @@ package com.bkahlert.kommons.test.com.bkahlert.kommons
 
 import com.bkahlert.kommons.test.test
 import io.kotest.inspectors.forAll
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldHaveLength
+import io.kotest.matchers.string.shouldMatch
+import io.kotest.matchers.string.shouldStartWith
 import kotlin.test.Test
 
 class StringsKtTest {
@@ -40,6 +45,29 @@ class StringsKtTest {
         string.withSuffix("-ing") shouldBe "$string-ing"
     }
 
+    @Test fun with_random_suffix() = test {
+        charSequence.withRandomSuffix() should {
+            it shouldMatch Regex("$charSequence--[\\da-zA-Z]{4}")
+            it shouldStartWith charSequence
+            it.withRandomSuffix() shouldBe it
+        }
+        string.withRandomSuffix() should {
+            it shouldMatch Regex("$string--[\\da-zA-Z]{4}")
+            it shouldStartWith string
+            it.withRandomSuffix() shouldBe it
+        }
+    }
+
+    @Test fun random_string() = test {
+        randomString() shouldHaveLength 16
+        randomString(7) shouldHaveLength 7
+
+        val allowedByDefault = (('0'..'9') + ('a'..'z') + ('A'..'Z')).toList()
+        randomString(100).forAll { allowedByDefault shouldContain it }
+
+        randomString(100, 'A', 'B').forAll { listOf('A', 'B') shouldContain it }
+    }
+
     @Test fun index_of_or_null() = test {
         charSequence.indexOfOrNull('h') shouldBe 1
         string.indexOfOrNull('t') shouldBe 1
@@ -57,35 +85,22 @@ class StringsKtTest {
     @Test fun is_multiline() = test {
         "".isMultiline shouldBe false
         "foo".isMultiline shouldBe false
-        arrayOf("\u000D\u000A", "\u000A", "\u000D").forAll {
+        LineSeparators.Common.forAll {
             it.isMultiline shouldBe true
             "${it}foo".isMultiline shouldBe true
             "foo${it}".isMultiline shouldBe true
             "foo${it}bar".isMultiline shouldBe true
             "foo${it}bar${it}baz".isMultiline shouldBe true
         }
-        arrayOf("\u0085", "\u2029", "\u2028").forAll {
+        LineSeparators.Uncommon.forAll {
             it.isMultiline shouldBe false
             "${it}foo".isMultiline shouldBe false
             "foo${it}".isMultiline shouldBe false
             "foo${it}bar".isMultiline shouldBe false
-            "foo${it}bar${it}baz".isMultiline shouldBe false
+            "foo${it}bar${it}baz".trimIndent().isMultiline shouldBe false
         }
     }
 }
-
-
-internal val emptyException = RuntimeException()
-internal val runtimeException = RuntimeException(
-    "Something happened\n" +
-        " ➜ A dump has been written to:\n" +
-        "   - file:///var/folders/…/file.log (unchanged)\n" +
-        "   - file:///var/folders/…/file.ansi-removed.log (ANSI escape/control sequences removed)\n" +
-        " ➜ The last lines are:\n" +
-        "    raspberry\n" +
-        "    Login incorrect\n" +
-        "    raspberrypi login:"
-)
 
 internal val charSequence: CharSequence = StringBuilder("char sequence")
 internal val emptyCharSequence: CharSequence = StringBuilder()
