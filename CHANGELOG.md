@@ -20,6 +20,12 @@
 
 ### Fixed
 
+## [0.3.1] - 2022-06-26
+
+### Added
+
+Set default timeout for a test to 10 seconds.
+
 ## [0.3.0] - 2022-06-25
 
 ### Added
@@ -170,7 +176,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.1...HEAD
+
+[0.3.1]: https://github.com/bkahlert/kommons-test/compare/v0.3.0...v0.3.1
 
 [0.3.0]: https://github.com/bkahlert/kommons-test/compare/v0.2.0...v0.3.0
 

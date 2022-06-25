@@ -219,12 +219,16 @@ private inline fun catchException(block: () -> Nothing): Throwable =
 
 ### Opinionated Defaults
 
-JUnit based tests will be started with the following settings by default:
+This library comes with a `junit-platform.properties` and the following settings:
 
 ```properties
 # concise test names with no parameter list
 junit.jupiter.displayname.generator.default=\
   com.bkahlert.kommons.test.junit.MethodNameOnlyDisplayNameGenerator
+# default 10s timeout for each test
+junit.jupiter.execution.timeout.default=10s
+# disable timeout when debugging
+junit.jupiter.execution.timeout.mode=disabled_on_debug
 # run top-level test containers in parallel
 junit.jupiter.execution.parallel.enabled=true
 junit.jupiter.execution.parallel.mode.classes.default=concurrent
@@ -240,6 +244,11 @@ junit.jupiter.testinstance.lifecycle.default=per_class
 # enable constructor dependency injection for Spring tests
 spring.test.constructor.autowire.mode=all
 ```
+
+Platform properties have the lowest precedence and can be overridden
+with system properties. Please
+read [Configuration Parameters](https://junit.org/junit5/docs/current/user-guide/#running-tests-config-params)
+for more information.
 
 ### Reporting
 
