@@ -5,6 +5,7 @@
 ### Added
 
 Predefined timeout tags:
+
 - `@OneMinuteTimeout`
 - `@TwoMinutesTimeout` / `@Slow` (also adds the tag `slow`)
 - `@FiveMinutesTimeout`
@@ -25,6 +26,19 @@ Predefined timeout tags:
 *none*
 
 ### Fixed
+
+## [0.3.2] - 2022-06-27
+
+### Added
+
+Predefined timeout tags:
+
+- `@OneMinuteTimeout`
+- `@TwoMinutesTimeout` / `@Slow` (also adds the tag `slow`)
+- `@FiveMinutesTimeout`
+- `@TenMinutesTimeout`
+- `@FifteenMinutesTimeout`
+- `@ThirtyMinutesTimeout`
 
 ## [0.3.1] - 2022-06-26
 
@@ -182,7 +196,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.1...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.2...HEAD
+
+[0.3.2]: https://github.com/bkahlert/kommons-test/compare/v0.3.1...v0.3.2
 
 [0.3.1]: https://github.com/bkahlert/kommons-test/compare/v0.3.0...v0.3.1
 
