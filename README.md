@@ -250,6 +250,17 @@ with system properties. Please
 read [Configuration Parameters](https://junit.org/junit5/docs/current/user-guide/#running-tests-config-params)
 for more information.
 
+Please note that a default timeout of 10 seconds is set up.   
+The following annotations are provided to change the timeout for
+single tests or whole test containers.
+
+- `@OneMinuteTimeout`
+- `@TwoMinutesTimeout` / `@Slow` (also adds the tag `slow`)
+- `@FiveMinutesTimeout`
+- `@TenMinutesTimeout`
+- `@FifteenMinutesTimeout`
+- `@ThirtyMinutesTimeout`
+
 ### Reporting
 
 Test results are printed at the end of a test run
