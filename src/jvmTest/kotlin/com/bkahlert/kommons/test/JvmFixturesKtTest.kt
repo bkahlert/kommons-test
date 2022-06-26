@@ -1,5 +1,6 @@
 package com.bkahlert.kommons.test
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.deleteOnExit
 import com.bkahlert.kommons.test.com.bkahlert.kommons.listDirectoryEntriesRecursively
 import com.bkahlert.kommons.test.fixtures.GifImageFixture
 import com.bkahlert.kommons.test.fixtures.HtmlDocumentFixture
@@ -71,8 +72,8 @@ class JvmFixturesKtTest {
         }
     }
 
-    @Test fun copy_to_temp_file(@TempDir tempDir: Path) = test {
-        GifImageFixture.copyToTempFile() should {
+    @Test fun copy_to_temp_file() = test {
+        GifImageFixture.copyToTempFile().deleteOnExit() should {
             it.exists() shouldBe true
             it.readBytes() shouldBe GifImageFixture.bytes
             it.fileName.pathString shouldStartWith "pixels."
@@ -80,8 +81,8 @@ class JvmFixturesKtTest {
         }
     }
 
-    @Test fun copy_to_temp_text_file(@TempDir tempDir: Path) = test {
-        SvgImageFixture.copyToTempTextFile() should {
+    @Test fun copy_to_temp_text_file() = test {
+        SvgImageFixture.copyToTempTextFile().deleteOnExit() should {
             it.exists() shouldBe true
             it.readText() shouldBe SvgImageFixture.contents
             it.fileName.pathString shouldStartWith "kommons."

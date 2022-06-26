@@ -21,15 +21,15 @@ it for each supported platform separately.
 
 Kommons Debug is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.3.0")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.3.0")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.3.1")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.3.1")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.3.0</version>
+      <version>0.3.1</version>
       <scope>test</scope>
   </dependency>
   ```
