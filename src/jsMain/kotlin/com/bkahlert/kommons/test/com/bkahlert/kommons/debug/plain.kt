@@ -1,7 +1,5 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons.debug
 
-import kotlin.collections.EmptyMap.keys
-
 internal actual val Collection<*>.isPlain: Boolean
     get() = this::class.js.name.let {
         it.endsWith("HashSet") || it.endsWith("ArrayList")

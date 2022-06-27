@@ -43,8 +43,8 @@ class RenderingKtTest {
         Unit.toCompactString() shouldBe ""
 
         SomeClass().toCompactString() shouldBe "SomeClass"
-        SomeClass().Foo().toCompactString() shouldBe "Foo"
-        SomeClass.NestedClass.Foo().toCompactString() shouldBe "Foo"
+        SomeClass().Foo().toCompactString() shouldBe "SomeClass.Foo"
+        SomeClass.NestedClass.Foo().toCompactString() shouldBe "NestedClass.Foo"
 
         LineSeparators.joinToString("") { "line$it" }.toCompactString() shouldBe "\"line⏎line⏎line⏎line⏎line⏎line\""
     }

@@ -145,16 +145,16 @@ class RenderTypeTest {
                     "KClass"
                 )
                 ClassTypes.allValues.map { it.renderType(simplified = false) } shouldContainExactly listOf(
-                    "com.bkahlert.kommons.debug.Singleton",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Singleton",
                     "<object>",
-                    "com.bkahlert.kommons.debug.ListImplementingSingleton",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.ListImplementingSingleton",
                     "<object>",
-                    "com.bkahlert.kommons.debug.MapImplementingSingleton",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.MapImplementingSingleton",
                     "<object>",
-                    "com.bkahlert.kommons.debug.OrdinaryClass",
-                    "com.bkahlert.kommons.debug.OrdinaryClass.NestedClass",
-                    "com.bkahlert.kommons.debug.OrdinaryClass.NestedClass.InnerNestedClass",
-                    "com.bkahlert.kommons.debug.SealedClass.NestedObject",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.OrdinaryClass",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.OrdinaryClass.NestedClass",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.OrdinaryClass.NestedClass.InnerNestedClass",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.SealedClass.NestedObject",
                     "kotlin.Pair",
                     "kotlin.Triple",
                     "kotlin.reflect.jvm.internal.KClassImpl"
@@ -197,14 +197,14 @@ class RenderTypeTest {
                     "provide0() -> kotlin.Int",
                     "consume0(kotlin.String) -> kotlin.Unit",
                     "process0(kotlin.String) -> kotlin.Int",
-                    "com.bkahlert.kommons.debug.Receiver.work1() -> kotlin.Unit",
-                    "com.bkahlert.kommons.debug.Receiver.provide1() -> kotlin.Int",
-                    "com.bkahlert.kommons.debug.Receiver.consume1(kotlin.String) -> kotlin.Unit",
-                    "com.bkahlert.kommons.debug.Receiver.process1(kotlin.String) -> kotlin.Int",
-                    "com.bkahlert.kommons.debug.Owner.work1() -> kotlin.Unit",
-                    "com.bkahlert.kommons.debug.Owner.provide1() -> kotlin.Int",
-                    "com.bkahlert.kommons.debug.Owner.consume1(kotlin.String) -> kotlin.Unit",
-                    "com.bkahlert.kommons.debug.Owner.process1(kotlin.String) -> kotlin.Int"
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Receiver.work1() -> kotlin.Unit",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Receiver.provide1() -> kotlin.Int",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Receiver.consume1(kotlin.String) -> kotlin.Unit",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Receiver.process1(kotlin.String) -> kotlin.Int",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Owner.work1() -> kotlin.Unit",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Owner.provide1() -> kotlin.Int",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Owner.consume1(kotlin.String) -> kotlin.Unit",
+                    "com.bkahlert.kommons.test.com.bkahlert.kommons.debug.Owner.process1(kotlin.String) -> kotlin.Int"
                 )
                 ({}).renderFunctionType(simplified = false) shouldBe "() -> kotlin.Unit"
             }
