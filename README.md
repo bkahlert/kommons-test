@@ -311,6 +311,8 @@ mapOf("key1" to "foo bar", "key2" to "FOO BAR").testEach { (_, v) -> /* ... */ }
 The above test has three assertions of which the first and second fail
 when run.
 
+![testEach](docs/test-each.png)
+
 ### Parameter Resolvers
 
 #### Unique ID

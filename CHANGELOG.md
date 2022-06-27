@@ -4,14 +4,7 @@
 
 ### Added
 
-Predefined timeout tags:
-
-- `@OneMinuteTimeout`
-- `@TwoMinutesTimeout` / `@Slow` (also adds the tag `slow`)
-- `@FiveMinutesTimeout`
-- `@TenMinutesTimeout`
-- `@FifteenMinutesTimeout`
-- `@ThirtyMinutesTimeout`
+*none*
 
 ### Changed
 
