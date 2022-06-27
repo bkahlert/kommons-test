@@ -128,6 +128,5 @@ private val KClass<*>.innerEnclosingKClasses: List<KClass<*>>
 
 private val KClass<*>.enclosingKClasses: List<KClass<*>>
     get() = enclosingKClass?.let { listOf(it) + it.enclosingKClasses } ?: emptyList()
-
 private val KClass<*>.enclosingKClass: KClass<*>?
-    get() = java.enclosingClass?.kotlin
+    get() = java.enclosingClass?.takeUnless { it.name.endsWith("Kt") }?.kotlin

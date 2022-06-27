@@ -38,6 +38,14 @@ class RenderingKtTest {
         Result.success(Paths.get("/path")).toCompactString() shouldBe "file:///path"
         Result.success(emptyList<Any>()).toCompactString() shouldBe "[]"
         Result.success(arrayOf("a", "b")).toCompactString() shouldBe Result.success(listOf("a", "b")).toCompactString()
+
+        (null as String?).toCompactString() shouldBe "null"
+        Unit.toCompactString() shouldBe ""
+
+        SomeClass().toCompactString() shouldBe "SomeClass"
+        SomeClass().Foo().toCompactString() shouldBe "Foo"
+        SomeClass.NestedClass.Foo().toCompactString() shouldBe "Foo"
+
         LineSeparators.joinToString("") { "line$it" }.toCompactString() shouldBe "\"line⏎line⏎line⏎line⏎line⏎line\""
     }
 }
@@ -53,3 +61,10 @@ internal val runtimeException = RuntimeException(
         "    Login incorrect\n" +
         "    raspberrypi login:"
 )
+
+internal class SomeClass {
+    inner class Foo
+    sealed class NestedClass {
+        class Foo : NestedClass()
+    }
+}

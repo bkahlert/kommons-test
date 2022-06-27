@@ -20,6 +20,12 @@
 
 ### Fixed
 
+## [0.3.3] - 2022-06-28
+
+### Changed
+
+- show parent class if available for automatically named tests
+
 ## [0.3.2] - 2022-06-27
 
 ### Added
@@ -189,7 +195,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.2...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.3...HEAD
+
+[0.3.3]: https://github.com/bkahlert/kommons-test/compare/v0.3.2...v0.3.3
 
 [0.3.2]: https://github.com/bkahlert/kommons-test/compare/v0.3.1...v0.3.2
 
