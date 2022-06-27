@@ -46,7 +46,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(kotlin("test"))
-                implementation("io.kotest:kotest-common:5.3.1")
+                implementation("io.kotest:kotest-common:5.3.2")
                 api("io.kotest:kotest-assertions-core:5.3.2")
 
             }
