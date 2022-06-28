@@ -44,7 +44,7 @@ public class TestExecutionReporter(
                 append(": ")
                 listOf<Pair<Long, (String) -> String>>(
                     failed to { yellow("✘︎ $it failed") },
-                    aborted to { red("‼ $it crashed") },
+                    aborted to { red("ϟ $it crashed") },
                     succeeded to { green("✔︎ $it passed") },
                     skipped to { grey("◍ $it ignored") },
                 ).filter { (count, _) ->
