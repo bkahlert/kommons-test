@@ -21,15 +21,15 @@ it for each supported platform separately.
 
 Kommons Debug is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.3.3")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.3.3")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.3.5")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.3.5")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.3.3</version>
+      <version>0.3.5</version>
       <scope>test</scope>
   </dependency>
   ```
@@ -267,7 +267,7 @@ Test results are printed at the end of a test run
 by [TestExecutionReporter](src/jvmMain/kotlin/com/bkahlert/kommons/test/junit/launcher/TestExecutionReporter.kt) as follows:
 
 ```log
-120 tests within 1.8s: ✘︎ 2 failed, ‼ 3 crashed, ✔︎ 113 passed, 2 ignored
+120 tests within 1.8s: ✘︎ 2 failed, ϟ 3 crashed, ✔︎ 113 passed, 2 ignored
 ```
 
 Or if all went well:

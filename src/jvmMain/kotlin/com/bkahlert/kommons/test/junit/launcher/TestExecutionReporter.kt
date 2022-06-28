@@ -27,7 +27,9 @@ public class TestExecutionReporter(
     @Suppress("KDocMissingDocumentation")
     override fun testPlanExecutionStarted(testPlan: TestPlan) {
         super.testPlanExecutionStarted(testPlan)
-        disabled = testPlan.configurationParameters.getBoolean(DISABLED_PROPERTY_NAME).orElse(false)
+        disabled = kotlin.runCatching {
+            testPlan.configurationParameters.getBoolean(DISABLED_PROPERTY_NAME).orElse(false)
+        }.getOrDefault(false)
     }
 
     @Suppress("KDocMissingDocumentation")
@@ -44,7 +46,7 @@ public class TestExecutionReporter(
                 append(": ")
                 listOf<Pair<Long, (String) -> String>>(
                     failed to { yellow("✘︎ $it failed") },
-                    aborted to { red("‼ $it crashed") },
+                    aborted to { red("ϟ $it crashed") },
                     succeeded to { green("✔︎ $it passed") },
                     skipped to { grey("◍ $it ignored") },
                 ).filter { (count, _) ->
