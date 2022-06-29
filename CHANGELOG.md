@@ -20,6 +20,12 @@
 
 ### Fixed
 
+## [0.3.6] - 2022-06-29
+
+### Changes
+
+- display codepoint name (otherwise hex index) for displayed test names for single characters
+
 ## [0.3.5] - 2022-06-29
 
 ### Fixed
@@ -207,7 +213,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.5...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.6...HEAD
+
+[0.3.6]: https://github.com/bkahlert/kommons-test/compare/v0.3.5...v0.3.6
 
 [0.3.5]: https://github.com/bkahlert/kommons-test/compare/v0.3.4...v0.3.5
 

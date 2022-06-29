@@ -3,6 +3,7 @@ package com.bkahlert.kommons.test.junit
 import com.bkahlert.kommons.test.KommonsTest
 import com.bkahlert.kommons.test.LambdaBody
 import com.bkahlert.kommons.test.SLF4J
+import com.bkahlert.kommons.test.UnicodeFont
 import com.bkahlert.kommons.test.com.bkahlert.kommons.ansiRemoved
 import com.bkahlert.kommons.test.com.bkahlert.kommons.debug.renderFunctionType
 import com.bkahlert.kommons.test.com.bkahlert.kommons.debug.toCompactString
@@ -13,7 +14,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.reflect
+import kotlin.streams.asSequence
 
+/** A generator for dynamic test names. */
 public object DynamicTestDisplayNameGenerator {
 
     internal const val FOR: String = "ꜰᴏʀ"
@@ -30,9 +33,14 @@ public object DynamicTestDisplayNameGenerator {
     @Suppress("SpellCheckingInspection")
     internal const val RETURN: String = "ʀᴇᴛᴜʀɴ"
 
-    internal const val BLANK: String = "𝘣𝘭𝘢𝘯𝘬"
-    internal const val EMPTY: String = "𝘦𝘮𝘱𝘵𝘺"
-    internal const val NULL: String = "𝘯𝘶𝘭𝘭"
+    @Suppress("SpellCheckingInspection")
+    internal val CLASS: String = UnicodeFont.SansSerifItalic.format("class")
+
+    @Suppress("SpellCheckingInspection")
+    internal val OBJECT: String = UnicodeFont.SansSerifItalic.format("object")
+
+    @Suppress("SpellCheckingInspection")
+    internal val NULL: String = UnicodeFont.SansSerifItalic.format("null")
 
     /**
      * Calculates the display name for a test with the specified [subject],
@@ -51,29 +59,39 @@ public object DynamicTestDisplayNameGenerator {
      * Attempts to calculate a display name for a test case testing the specified [subject].
      */
     private fun displayNameFallback(subject: Any?): Pair<String, Array<String>> = when (subject) {
+        null -> "{}" to arrayOf(NULL)
         is KProperty<*> -> "$PROPERTY {}" to arrayOf(subject.name)
         is KFunction<*> -> "$FUNCTION {}" to arrayOf(subject.name)
         is Function<*> -> kotlin.runCatching { subject.reflect() }.getOrNull()
             ?.let { displayNameFallback(it) }
             ?: ("{}" to arrayOf(subject.renderFunctionType()))
+        is KClass<*> -> "{}" to arrayOf(subject.simpleName?.let { "$CLASS $it" } ?: "$OBJECT $subject")
         is Triple<*, *, *> -> "( {}, {}, {} )" to arrayOf(
-            subject.first.serialized,
-            subject.second.serialized,
-            subject.third.serialized
+            displayNameFor(subject.first),
+            displayNameFor(subject.second),
+            displayNameFor(subject.third),
         )
-        is Pair<*, *> -> "( {}, {} )" to arrayOf(subject.first.serialized, subject.second.serialized)
-        is Map.Entry<*, *> -> "{} → {}" to arrayOf(subject.key.serialized, subject.value.serialized)
-        is CharSequence -> "{}" to arrayOf(
-            when {
-                subject.isEmpty() -> EMPTY
-                subject.isBlank() -> BLANK
-                else -> subject.quoted
-            }
+        is Pair<*, *> -> "( {}, {} )" to arrayOf(
+            displayNameFor(subject.first),
+            displayNameFor(subject.second),
         )
-        else -> "{}" to arrayOf(subject.serialized)
+        is Map.Entry<*, *> -> "{} → {}" to arrayOf(displayNameFor(subject.key), displayNameFor(subject.value))
+        is Char -> "{} {}" to arrayOf(subject.quoted, subject.describe())
+        is CharSequence -> when (subject.toString().let { it.codePointCount(0, it.length) }) {
+            1 -> "{} {}" to arrayOf(subject.quoted, subject.describe())
+            else -> "{}" to arrayOf(subject.quoted)
+        }
+        else -> "{}" to arrayOf(subject.toCompactString())
     }
 
-    private val <T> T?.serialized get() = this?.toCompactString() ?: NULL
+    private fun Char.describe(): String = toString().describe()
+    private fun CharSequence.describe(): String =
+        codePoints().asSequence().map { codePoint ->
+            when (val name: String? = Character.getName(codePoint)) {
+                null -> "0x${Integer.toHexString(codePoint).uppercase()}"
+                else -> name
+            }
+        }.joinToString(separator = ", ")
 
     /** Returns an object with its [Any.toString] returning this string in order to protect it from being quoted (again). */
     private val CharSequence.protected: Any

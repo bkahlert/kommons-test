@@ -27,9 +27,7 @@ public class TestExecutionReporter(
     @Suppress("KDocMissingDocumentation")
     override fun testPlanExecutionStarted(testPlan: TestPlan) {
         super.testPlanExecutionStarted(testPlan)
-        disabled = kotlin.runCatching {
-            testPlan.configurationParameters.getBoolean(DISABLED_PROPERTY_NAME).orElse(false)
-        }.getOrDefault(false)
+        disabled = testPlan.getConfigurationBooleanValue(DISABLED_PROPERTY_NAME, false)
     }
 
     @Suppress("KDocMissingDocumentation")
@@ -72,6 +70,16 @@ public class TestExecutionReporter(
             configurationParameter(DISABLED_PROPERTY_NAME, value.toString())
     }
 }
+
+/** Gets the configuration value for the specified [name] or the specified [default] if no configuration is found or an error occurs. */
+@Suppress("unused")
+internal fun TestPlan.getConfigurationValue(name: String, default: String): String =
+    kotlin.runCatching { configurationParameters.get(name).orElse(default) }.getOrDefault(default)
+
+/** Gets the boolean configuration value for the specified [name] or the specified [default] if no configuration is found or an error occurs. */
+@Suppress("unused")
+internal fun TestPlan.getConfigurationBooleanValue(name: String, default: Boolean): Boolean =
+    kotlin.runCatching { configurationParameters.getBoolean(name).orElse(default) }.getOrDefault(default)
 
 private val Long.tests: String
     get() = when (this) {
