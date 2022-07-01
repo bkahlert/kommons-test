@@ -4,17 +4,28 @@
 
 <!-- C21E73 -->
 
+![Kommons Test](docs/test-summary.png)
+
 ## About
 
-**Kommons Test** is a Kotlin Multiplatform Library to ease testing.
+**Kommons Test** is a Kotlin Multiplatform Library to ease testing for
+[kotlin.test](https://kotlinlang.org/api/latest/kotlin.test/) and
+[JUnit](https://junit.org) users.
 
-This library is based on [Kotest Assertions](https://kotest.io/docs/assertions/assertions.html).
+Adding this library as a dependency...
 
-It provides you with a small number of helper functions to help
-you write most tests as common Kotlin tests.
+1. adds the [Kotest Assertions](https://kotest.io/docs/assertions/assertions.html) based test helpers [test](#test), [testAll](#testall), [testEnum](#testenum),
+   and
+2. provides you with some useful [fixtures](#fixtures).
 
-Why? Because every common test you write saves you from having to write
-it for each supported platform separately.
+JUnit users benefit from:
+
+1. an [optimized set of defaults settings](#opinionated-defaults),
+2. the [testEach](#testeach) dynamic test builder with automatically derived display name
+3. a [@SystemProperty extension](#system-property-extension),
+4. and a small selection of [parameter resolvers](#parameter-resolvers), among other things.
+
+Furthermore, there are some more [advanced features for the JVM platform](#jvm-features).
 
 
 ## Installation / Setup
@@ -245,12 +256,7 @@ junit.jupiter.testinstance.lifecycle.default=per_class
 spring.test.constructor.autowire.mode=all
 ```
 
-Platform properties have the lowest precedence and can be overridden
-with system properties. Please
-read [Configuration Parameters](https://junit.org/junit5/docs/current/user-guide/#running-tests-config-params)
-for more information.
-
-Please note that a default timeout of 10 seconds is set up.   
+Please note that the default timeout is set to 10 seconds.   
 The following annotations are provided to change the timeout for
 single tests or whole test containers.
 
@@ -260,6 +266,25 @@ single tests or whole test containers.
 - `@TenMinutesTimeout`
 - `@FifteenMinutesTimeout`
 - `@ThirtyMinutesTimeout`
+
+Platform properties have the lowest precedence and can be overridden
+with system properties.
+
+If, for example, you want to change the default timeout to 30s for all tests,
+in Gradle you can configure:
+
+```kotlin
+tasks {
+    test {
+        useJUnitPlatform()
+        systemProperty("junit.jupiter.execution.timeout.default", "30s")
+    }
+}
+```
+
+Please consult [Configuration Parameters](https://junit.org/junit5/docs/current/user-guide/#running-tests-config-params)
+for more information.
+
 
 ### Reporting
 
