@@ -1,5 +1,11 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
+/** Returns a hexadecimal string representation of this [Byte] value. */
+internal fun Byte.toHexadecimalString(): String = (toInt() and 0xFF).toString(16).padStart(2, '0')
+
+/** Returns a hexadecimal string representation of this [ByteArray] value. */
+internal fun ByteArray.toHexadecimalString(): String = joinToString("") { it.toHexadecimalString() }
+
 private val base64Characters = ("" +
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
     "abcdefghijklmnopqrstuvwxyz" +

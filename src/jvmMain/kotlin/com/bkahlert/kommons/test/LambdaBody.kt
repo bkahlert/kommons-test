@@ -1,7 +1,7 @@
 package com.bkahlert.kommons.test
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.LineSeparators.isMultiline
 import com.bkahlert.kommons.test.com.bkahlert.kommons.indexOfOrNull
-import com.bkahlert.kommons.test.com.bkahlert.kommons.isMultiline
 
 /** The body of a lambda function. */
 @JvmInline
@@ -14,7 +14,7 @@ public value class LambdaBody internal constructor(
     /** The outer body of this lambda function, that is, the [body] surrounded by [Brackets]. */
     public val outerBody: String
         get() = Brackets.let { (left, right) ->
-            if (body.isMultiline) {
+            if (body.isMultiline()) {
                 buildString {
                     appendLine(left)
                     appendLine(body.prependIndent("    "))
@@ -53,7 +53,7 @@ public value class LambdaBody internal constructor(
             val body = code.substring(firstBracket, subjectEnd)
             val bodyWithoutStartAndEndLines = body.lines().dropWhile { it.isBlank() }.dropLastWhile { it.isBlank() }.joinToString("\n")
             return bodyWithoutStartAndEndLines.run {
-                LambdaBody(if (isMultiline) trimIndent() else trim())
+                LambdaBody(if (isMultiline()) trimIndent() else trim())
             }
         }
 

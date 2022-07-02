@@ -14,14 +14,13 @@
 
 Adding this library as a dependency...
 
-1. adds the [Kotest Assertions](https://kotest.io/docs/assertions/assertions.html) based test helpers [test](#test), [testAll](#testall), [testEnum](#testenum),
-   and
+1. adds [Kotest Assertions](https://kotest.io/docs/assertions/assertions.html) based [helpers](#helpers) and [matchers](#matchers), and
 2. provides you with some useful [fixtures](#fixtures).
 
 JUnit users benefit from:
 
 1. an [optimized set of defaults settings](#opinionated-defaults),
-2. the [testEach](#testeach) dynamic test builder with automatically derived display name
+2. the [testEach](#testeach) dynamic test builder with automatically derived display name,
 3. a [@SystemProperty extension](#system-property-extension),
 4. and a small selection of [parameter resolvers](#parameter-resolvers), among other things.
 
@@ -47,7 +46,9 @@ Kommons Test is hosted on GitHub with releases provided on Maven Central.
 
 ## Features
 
-### test
+### Helpers
+
+#### test
 
 Write a bunch of soft assertions conveniently in a single test:
 
@@ -70,7 +71,7 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:3)
 ```
 
-### testAll
+#### testAll
 
 Write a bunch of soft assertions conveniently for multiple subjects in a single test:
 
@@ -107,7 +108,7 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:2)
 ```
 
-### testEnum
+#### testEnum
 
 Write a bunch of soft assertions conveniently for all enum entries in a single test:
 
@@ -138,6 +139,52 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:3)
 2) "FOO_BAR" should include substring "bar"
     at sample.Tests.test_contain(Tests.kt:4)
+```
+
+### Matchers
+
+#### shouldMatchGlob / shouldNotMatchGlob / matchGlob
+
+Match (multiline) strings with glob patterns:
+
+```kotlin
+@Test fun test_glob_match() = test {
+    val multilineString = """
+            foo
+              .bar()
+              .baz()
+        """.trimIndent()
+
+    // ✅ matches thanks to the multiline wildcard **
+    multilineString shouldMatchGlob """
+            foo
+              .**()
+        """.trimIndent()
+
+    // ❌ fails to match since the simple wildcard * 
+    // does not match across line breaks
+    multilineString shouldMatchGlob """
+            foo
+              .*()
+        """.trimIndent()
+}
+```
+
+The above test has two assertions of which the second fails
+when run with the following output:
+
+```
+"""
+foo
+  .bar()
+  .baz()
+"""
+should match the following glob pattern with \
+  (wildcard: *, multiline wildcard: **, line separators: CRLF (\r\n), LF (\n), CR (\r))
+"""
+foo
+  .*()
+"""
 ```
 
 ### Fixtures

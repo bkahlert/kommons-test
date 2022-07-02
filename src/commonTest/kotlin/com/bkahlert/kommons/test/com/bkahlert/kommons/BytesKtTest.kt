@@ -1,11 +1,25 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
+import com.bkahlert.kommons.test.test
 import com.bkahlert.kommons.test.testAll
+import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 class BytesTest {
 
+    @Test fun to_hexadecimal_string() = test {
+        byteArray should { array ->
+            array.map { it.toHexadecimalString() } shouldContainExactly listOf("00", "7f", "80", "ff")
+            array.toHexadecimalString() shouldBe "007f80ff"
+        }
+
+        @Suppress("SpellCheckingInspection")
+        largeByteArrayOf.toHexadecimalString() shouldBe "ffffffffffffffffffffffffffffffff"
+
+        veryLargeByteArray.toHexadecimalString() shouldBe "0100000000000000000000000000000000"
+    }
 
     @Test fun encode_to_base64() = base64Bytes.testAll { (bytes, base64) ->
         bytes.encodeToBase64() shouldBe base64
@@ -35,6 +49,12 @@ class BytesTest {
         "/A==".decodeFromBase64() shouldBe byteArrayOf(252.toByte())
     }
 }
+
+internal val byteArray = byteArrayOf(0x00, 0x7f, -0x80, -0x01)
+
+internal val largeByteArrayOf = byteArrayOf(-0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01, -0x01)
+
+internal val veryLargeByteArray = byteArrayOf(0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
 
 @Suppress("SpellCheckingInspection")
 internal val base64Bytes = listOf(

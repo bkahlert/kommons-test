@@ -3,6 +3,7 @@ package com.bkahlert.kommons.test.com.bkahlert.kommons
 import com.bkahlert.kommons.test.test
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.sequences.shouldContainExactly
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldHaveLength
@@ -82,25 +83,25 @@ class StringsKtTest {
         string.indexOfOrNull("xyz") shouldBe null
     }
 
-    @Test fun is_multiline() = test {
-        "".isMultiline shouldBe false
-        "foo".isMultiline shouldBe false
-        LineSeparators.Common.forAll {
-            it.isMultiline shouldBe true
-            "${it}foo".isMultiline shouldBe true
-            "foo${it}".isMultiline shouldBe true
-            "foo${it}bar".isMultiline shouldBe true
-            "foo${it}bar${it}baz".isMultiline shouldBe true
-        }
-        LineSeparators.Uncommon.forAll {
-            it.isMultiline shouldBe false
-            "${it}foo".isMultiline shouldBe false
-            "foo${it}".isMultiline shouldBe false
-            "foo${it}bar".isMultiline shouldBe false
-            "foo${it}bar${it}baz".trimIndent().isMultiline shouldBe false
-        }
+
+    @Test fun split_to_sequence() = test {
+        "foo X bar x baz".cs.splitToSequence(" X ").shouldContainExactly("foo", "bar x baz")
+        "foo X bar x baz".cs.splitToSequence(" X ", " x ").shouldContainExactly("foo", "bar", "baz")
+        "foo X bar x baz".cs.splitToSequence(" X ", " x ", keepDelimiters = true).shouldContainExactly("foo X ", "bar x ", "baz")
+        "foo X bar x baz".cs.splitToSequence(" X ", ignoreCase = true).shouldContainExactly("foo", "bar", "baz")
+        "foo X bar x baz".cs.splitToSequence(" X ", ignoreCase = true, keepDelimiters = true).shouldContainExactly("foo X ", "bar x ", "baz")
+        "foo X bar x baz".cs.splitToSequence(" X ", " x ", limit = 2).shouldContainExactly("foo", "bar x baz")
+
+        "foo X bar x baz".splitToSequence(" X ").shouldContainExactly("foo", "bar x baz")
+        "foo X bar x baz".splitToSequence(" X ", " x ").shouldContainExactly("foo", "bar", "baz")
+        "foo X bar x baz".splitToSequence(" X ", " x ", keepDelimiters = true).shouldContainExactly("foo X ", "bar x ", "baz")
+        "foo X bar x baz".splitToSequence(" X ", ignoreCase = true).shouldContainExactly("foo", "bar", "baz")
+        "foo X bar x baz".splitToSequence(" X ", ignoreCase = true, keepDelimiters = true).shouldContainExactly("foo X ", "bar x ", "baz")
+        "foo X bar x baz".splitToSequence(" X ", " x ", limit = 2).shouldContainExactly("foo", "bar x baz")
     }
 }
+
+internal val String.cs: CharSequence get() = StringBuilder(this)
 
 internal val charSequence: CharSequence = StringBuilder("char sequence")
 internal val emptyCharSequence: CharSequence = StringBuilder()

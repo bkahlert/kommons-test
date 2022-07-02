@@ -4,7 +4,7 @@
 
 ### Added
 
-*none*
+- matchers: shouldMatchGlob / shouldNotMatchGlob / matchGlob
 
 ### Changed
 
