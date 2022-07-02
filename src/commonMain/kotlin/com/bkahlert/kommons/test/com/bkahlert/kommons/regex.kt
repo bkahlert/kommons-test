@@ -90,3 +90,50 @@ internal fun CharSequence.matchesGlob(
     multilineWildcard: String = "**",
     vararg lineSeparators: String = LineSeparators.Common,
 ): Boolean = Regex.fromGlob(pattern, wildcard, multilineWildcard, *lineSeparators).matches(this)
+
+/**
+ * Returns `true` if this character sequence matches the given
+ * SLF4J / Logback style [pattern], using
+ * `{}` to match within lines, and
+ * `{{}}` to match across lines.
+ *
+ * The specified [lineSeparators] (default: [LineSeparators.Common]) can
+ * be matches by any line separator, i.e. [LineSeparators.LF] / `\n`.
+ *
+ * **Example 1: matching within lines with `{}`**
+ * ```kotlin
+ * "foo.bar()".matchesGlob("foo.{}")  // ✅
+ * ```
+ *
+ * **Example 2: matching across lines with `{{}}`**
+ * ```kotlin
+ * """
+ * foo
+ *   .bar()
+ *   .baz()
+ * """.trimIndent().matchesGlob(
+ *     """
+ *     foo
+ *       .{{}}()
+ *     """.trimIndent())             // ✅
+ * ```
+ *
+ * **Example 3: `{}` not matching across lines**
+ * ```kotlin
+ * """
+ * foo
+ *   .bar()
+ *   .baz()
+ * """.trimIndent().matchesGlob(
+ *     """
+ *     foo
+ *       .{}()
+ *     """.trimIndent())             // ❌ ({} does not match across lines)
+ * ```
+ *
+ * @see [Regex.Companion.fromGlob]
+ */
+internal fun CharSequence.matchesCurly(
+    pattern: CharSequence,
+    vararg lineSeparators: String = LineSeparators.Common,
+): Boolean = Regex.fromGlob(pattern, "{}", "{{}}", *lineSeparators).matches(this)

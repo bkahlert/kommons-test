@@ -1,5 +1,6 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons.debug
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.LineSeparators
 import com.bkahlert.kommons.test.test
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
@@ -46,7 +47,7 @@ class RenderingKtTest {
         SomeClass().Foo().toCompactString() shouldBe "SomeClass.Foo"
         SomeClass.NestedClass.Foo().toCompactString() shouldBe "NestedClass.Foo"
 
-        LineSeparators.joinToString("") { "line$it" }.toCompactString() shouldBe "\"line⏎line⏎line⏎line⏎line⏎line\""
+        LineSeparators.Unicode.joinToString("") { "line$it" }.toCompactString() shouldBe "\"line⏎line⏎line⏎line⏎line⏎line\""
     }
 }
 

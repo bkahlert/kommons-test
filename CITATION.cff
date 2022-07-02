@@ -5,6 +5,6 @@ authors:
         family-names: "Kahlert"
         orcid: "https://orcid.org/0000-0003-1705-4067"
 title: "Kommons Test — A Kotlin Multiplatform Library to ease testing"
-version: 0.3.6
-date-released: 2022-06-30
+version: 0.4.0
+date-released: 2022-07-02
 url: "https://github.com/bkahlert/kommons-test"

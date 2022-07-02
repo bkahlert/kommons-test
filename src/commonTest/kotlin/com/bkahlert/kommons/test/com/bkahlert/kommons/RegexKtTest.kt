@@ -1,5 +1,6 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.LineSeparators.NEL
 import com.bkahlert.kommons.test.test
 import io.kotest.assertions.withClue
 import io.kotest.inspectors.forAll
@@ -109,4 +110,70 @@ class RegexKtTest {
             }
         }
     }
+
+    @Test fun matches_glob() = test {
+        "foo.bar()".matchesGlob("foo.*") shouldBe true
+        "foo.bar()".matchesGlob("foo.{}", wildcard = "{}") shouldBe true
+
+        multilineGlobMatchInput.matchesGlob(
+            """
+            foo
+              .**()
+            """.trimIndent()
+        ) shouldBe true
+
+        multilineGlobMatchInput.matchesGlob(
+            """
+            foo
+              .{{}}()
+            """.trimIndent(),
+            multilineWildcard = "{{}}",
+        ) shouldBe true
+
+        multilineGlobMatchInput.matchesGlob(
+            """
+            foo${NEL}  .**()
+            """.trimIndent(),
+            lineSeparators = LineSeparators.Unicode,
+        ) shouldBe true
+
+        multilineGlobMatchInput.matchesGlob(
+            """
+            foo
+              .*()
+            """.trimIndent()
+        ) shouldBe false
+    }
+
+    @Test fun matches_curly() = test {
+        "foo.bar()".matchesCurly("foo.{}") shouldBe true
+
+        multilineGlobMatchInput.matchesCurly(
+            """
+            foo
+              .{{}}()
+            """.trimIndent()
+        ) shouldBe true
+
+        multilineGlobMatchInput.matchesCurly(
+            """
+            foo${NEL}  .{{}}()
+            """.trimIndent(),
+            lineSeparators = LineSeparators.Unicode,
+        ) shouldBe true
+
+        multilineGlobMatchInput.matchesCurly(
+            """
+            foo
+              .{}()
+            """.trimIndent()
+        ) shouldBe false
+    }
 }
+
+
+internal val multilineGlobMatchInput = """
+foo
+  .bar()
+  .baz()
+""".trimIndent()

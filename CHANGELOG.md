@@ -4,7 +4,7 @@
 
 ### Added
 
-- matchers: shouldMatchGlob / shouldNotMatchGlob / matchGlob
+*none
 
 ### Changed
 
@@ -19,6 +19,13 @@
 *none*
 
 ### Fixed
+
+## [0.4.0] - 2022-07-02
+
+### Added
+
+- matchers: shouldMatchGlob / shouldNotMatchGlob / matchGlob
+- matchers: shouldMatchCurly / shouldNotMatchCurly / matchCurly
 
 ## [0.3.6] - 2022-06-30
 
@@ -213,7 +220,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.3.6...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.0...HEAD
+
+[0.4.0]: https://github.com/bkahlert/kommons-test/compare/v0.3.6...v0.4.0
 
 [0.3.6]: https://github.com/bkahlert/kommons-test/compare/v0.3.5...v0.3.6
 

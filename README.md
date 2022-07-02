@@ -31,15 +31,15 @@ Furthermore, there are some more [advanced features for the JVM platform](#jvm-f
 
 Kommons Test is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.3.6")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.3.6")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.4.0")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.4.0")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.3.6</version>
+      <version>0.4.0</version>
       <scope>test</scope>
   </dependency>
   ```
@@ -143,7 +143,7 @@ The following 2 assertions failed:
 
 ### Matchers
 
-#### shouldMatchGlob / shouldNotMatchGlob / matchGlob
+#### shouldMatchGlob / shouldNotMatchGlob / matchGlob / *Curly
 
 Match (multiline) strings with glob patterns:
 
@@ -179,13 +179,16 @@ foo
   .bar()
   .baz()
 """
-should match the following glob pattern with \
-  (wildcard: *, multiline wildcard: **, line separators: CRLF (\r\n), LF (\n), CR (\r))
+should match the following glob pattern \
+  (wildcard: *, multiline wildcard: **, line separators: CRLF (\r\n), LF (\n), CR (\r)):
 """
 foo
   .*()
 """
 ```
+
+Alternatively, you can use `shouldMatchCurly`  / `shouldNotMatchCurly`  / `matchCurly` if you prefer SLF4J / Logback style
+wildcards `{}` and `{{}}`.
 
 ### Fixtures
 
