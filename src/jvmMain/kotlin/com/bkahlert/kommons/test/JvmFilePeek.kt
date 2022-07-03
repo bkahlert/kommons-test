@@ -211,11 +211,8 @@ internal object FilePeekMPP {
         val sourceFile = stackTraceElement.`class`.findSourceFileOrNull(stackTraceElement.fileName) ?: return null
         val sourceFileLines = sourceFile.readLines()
         val (lines, lineNumber) = sourceFileLines.let { lines ->
-            if (stackTraceElement.lineNumber < lines.size) {
-                // looks like not inlined
-                lines.drop(stackTraceElement.lineNumber - 1) to stackTraceElement.lineNumber
-            } else {
-                // obviously inlined since line number > available lines
+            val inlined = stackTraceElement.lineNumber >= lines.size
+            if (inlined) {
                 val classNames = stackTraceElement.className.split("$").map { it.substringAfterLast('.') }
                 val relevantLines = classNames.fold(lines) { remainingLines, className ->
                     findBlock(remainingLines
@@ -225,6 +222,8 @@ internal object FilePeekMPP {
                 val fullText = lines.joinToString("\n")
                 val relevantFullText = relevantLines.joinToString("\n")
                 relevantLines to fullText.substringBefore(relevantFullText).lines().size
+            } else {
+                lines.drop(stackTraceElement.lineNumber - 1) to stackTraceElement.lineNumber
             }
         }
 

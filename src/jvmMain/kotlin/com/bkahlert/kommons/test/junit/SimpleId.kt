@@ -1,5 +1,7 @@
 package com.bkahlert.kommons.test.junit
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.indexOfOrNull
+import com.bkahlert.kommons.test.com.bkahlert.kommons.lastIndexOfOrNull
 import com.bkahlert.kommons.test.com.bkahlert.kommons.withPrefix
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
@@ -51,14 +53,29 @@ public data class SimpleId(
             }
         }
 
-        private fun simplifyClass(value: String): String = value.split(".").last()
+        private fun simplifyClass(value: String): String = simpleName(value).toString()
 
         private fun simplifyMethod(value: String): String {
-            fun formatArgs(args: String) = args.split(",")
+            val parameterStart = value.indexOfOrNull('(') ?: return value
+            val parameters = value.subSequence(parameterStart + 1, value.lastIndex)
+                .split(parameterDelimiterRegex)
                 .filter { it.isNotBlank() && it != SimpleId::class.qualifiedName }
-                .joinToString("") { "-" + simplifyClass(it) }
-
-            return value.split("(").let { it.first().replace(" ", "_") + formatArgs(it.last().removeSuffix(")")) }
+            val methodName = value.substring(0, parameterStart).replace(" ", "_")
+            return when (parameters.size) {
+                0 -> methodName
+                else -> buildString {
+                    append(methodName)
+                    parameters
+                        .forEach { parameter ->
+                            append('-')
+                            append(simpleName(parameter))
+                        }
+                }
+            }
         }
+
+        private val parameterDelimiterRegex = Regex(",\\s*")
+        private fun simpleName(name: CharSequence): CharSequence =
+            name.lastIndexOfOrNull('.')?.let { name.subSequence(it + 1, name.length) } ?: name
     }
 }

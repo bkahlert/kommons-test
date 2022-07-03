@@ -35,7 +35,7 @@ internal fun Regex.Companion.fromGlob(
         .split(multilineWildcardRegex)
         .joinToString("$anyCharacterPattern*") { multilineWildcardFenced ->
             multilineWildcardFenced.split(wildcard).joinToString("$anyNonLineSeparatorPattern*") { wildcardFenced ->
-                wildcardFenced.splitToSequence(delimiters = lineSeparators, keepDelimiters = false).joinToString(anyLineSepPattern) {
+                wildcardFenced.splitToSequence(delimiters = lineSeparators).joinToString(anyLineSepPattern) {
                     escape(it)
                 }
             }

@@ -36,6 +36,10 @@ class SimpleIdTest {
         simpleId.toString() shouldBe "SimpleIdTest.test_name-TestInfo"
     }
 
+    @Test fun `test name`(@Suppress("UNUSED_PARAMETER") `simple id goes second`: TestInfo, simpleId: SimpleId) {
+        simpleId.toString() shouldBe "SimpleIdTest.test_name-TestInfo"
+    }
+
     @TestFactory fun dynamic(simpleId: SimpleId): DynamicContainer =
         dynamicContainer("dynamic container", listOf(
             dynamicTest("dynamic test/container") {
