@@ -34,21 +34,13 @@ class TestKtTest {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "FOO"
             }
-        }.message
-            .shouldContain(
-                """
-                    The following 2 assertions failed:
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    1) "foo bar" should include substring "baz"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    2) "foo bar" should include substring "FOO"
-                """.trimIndent()
-            )
+        }.message shouldMatchGlob """
+
+            The following 2 assertions failed:
+            1) "foo bar" should include substring "baz"
+            **
+            2) "foo bar" should include substring "FOO"
+            **
+        """.trimIndent()
     }
 }

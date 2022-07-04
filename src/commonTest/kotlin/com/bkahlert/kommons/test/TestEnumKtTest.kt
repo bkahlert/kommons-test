@@ -65,36 +65,25 @@ class TestEnumKtTest {
                 it.name shouldContain "baz"
                 it.name shouldContain "BAZ"
             }
-        }.message
-            .shouldContain(
-                """
-                    0 elements passed but expected 2
+        }.message shouldMatchGlob """
+            0 elements passed but expected 2
 
-                    The following elements passed:
-                    --none--
-                    
-                    The following elements failed:
-                    foo_bar => 
-                    The following 2 assertions failed:
-                    1) "foo_bar" should include substring "baz"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    2) "foo_bar" should include substring "BAZ"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    FOO_BAR => 
-                    The following 2 assertions failed:
-                    1) "FOO_BAR" should include substring "baz"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    2) "FOO_BAR" should include substring "BAZ"
-                """.trimIndent()
-            )
+            The following elements passed:
+            --none--
+
+            The following elements failed:
+            foo_bar =>*
+            The following 2 assertions failed:
+            1) "foo_bar" should include substring "baz"
+            **
+            2) "foo_bar" should include substring "BAZ"
+            **
+            FOO_BAR =>*
+            The following 2 assertions failed:
+            1) "FOO_BAR" should include substring "baz"
+            **
+            2) "FOO_BAR" should include substring "BAZ"
+            **
+        """.trimIndent()
     }
 }

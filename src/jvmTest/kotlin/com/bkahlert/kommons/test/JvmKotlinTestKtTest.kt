@@ -34,14 +34,14 @@ class JvmKotlinTestKtTest {
                 "foo bar" shouldContain "baz"
                 "foo bar" shouldContain "FOO"
             }
-        }.message shouldBe """
-            
+        }.message shouldMatchGlob """
+
             The following 2 assertions failed:
             1) "foo bar" should include substring "baz"
             ${t}at com.bkahlert.kommons.test.JvmKotlinTestKtTest.test_multiple_fails(JvmKotlinTestKtTest.kt:34)
             2) "foo bar" should include substring "FOO"
             ${t}at com.bkahlert.kommons.test.JvmKotlinTestKtTest.test_multiple_fails(JvmKotlinTestKtTest.kt:35)
-            
+
         """.trimIndent()
     }
 }

@@ -7,45 +7,49 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldContainIgnoringCase
 import kotlin.test.Test
 
-class TestAllSequenceKtTest {
+class ForAllEnumValuesKtTest {
 
     @Test fun test_empty() {
-        shouldThrow<IllegalArgumentException> {
-            emptySequence<Any?>().testAll<Any?, Any?> { }
+        shouldNotThrowAny {
+            forAllEnumValues<EmptyEnum> { }
         }
+
+        forAllEnumValues<EmptyEnum> { } shouldBe emptyArray()
     }
 
     @Test fun test_success() {
         shouldNotThrowAny {
-            sequenceOf("foo bar", "FOO BAR").testAll {
-                it shouldContainIgnoringCase "foo"
-                it shouldContainIgnoringCase "bar"
+            forAllEnumValues<FooBarEnum> {
+                it.name shouldContainIgnoringCase "foo"
+                it.name shouldContainIgnoringCase "bar"
             }
         }
+
+        forAllEnumValues<FooBarEnum> {} shouldBe FooBarEnum.values()
     }
 
     @Test fun test_single_fail_single_subject() {
         shouldThrow<AssertionError> {
-            sequenceOf("foo bar", "FOO BAR").testAll {
-                it shouldContain "foo"
-                it shouldContainIgnoringCase "bar"
+            forAllEnumValues<FooBarEnum> {
+                it.name shouldContain "foo"
+                it.name shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             1 elements passed but expected 2
 
             The following elements passed:
-            foo bar
+            foo_bar
 
             The following elements failed:
-            "FOO BAR" => "FOO BAR" should include substring "foo"
+            FOO_BAR => "FOO_BAR" should include substring "foo"
         """.trimIndent()
     }
 
     @Test fun test_single_fail_multiple_subjects() {
         shouldThrow<AssertionError> {
-            sequenceOf("foo bar", "FOO BAR").testAll {
-                it shouldContainIgnoringCase "baz"
-                it shouldContainIgnoringCase "bar"
+            forAllEnumValues<FooBarEnum> {
+                it.name shouldContainIgnoringCase "baz"
+                it.name shouldContainIgnoringCase "bar"
             }
         }.message shouldBe """
             0 elements passed but expected 2
@@ -54,16 +58,16 @@ class TestAllSequenceKtTest {
             --none--
 
             The following elements failed:
-            "foo bar" => "foo bar" should contain the substring "baz" (case insensitive)
-            "FOO BAR" => "FOO BAR" should contain the substring "baz" (case insensitive)
+            foo_bar => "foo_bar" should contain the substring "baz" (case insensitive)
+            FOO_BAR => "FOO_BAR" should contain the substring "baz" (case insensitive)
         """.trimIndent()
     }
 
     @Test fun test_multiple_fails_multiple_subjects() {
         shouldThrow<AssertionError> {
-            sequenceOf("foo bar", "FOO BAR").testAll {
-                it shouldContain "baz"
-                it shouldContain "BAZ"
+            forAllEnumValues<FooBarEnum> {
+                it.name shouldContain "baz"
+                it.name shouldContain "BAZ"
             }
         }.message shouldMatchGlob """
             0 elements passed but expected 2
@@ -72,17 +76,18 @@ class TestAllSequenceKtTest {
             --none--
 
             The following elements failed:
-            "foo bar" =>*
+            foo_bar =>*
             The following 2 assertions failed:
-            1) "foo bar" should include substring "baz"
+            1) "foo_bar" should include substring "baz"
             **
-            2) "foo bar" should include substring "BAZ"
+            2) "foo_bar" should include substring "BAZ"
             **
-            "FOO BAR" =>*
+
+            FOO_BAR =>*
             The following 2 assertions failed:
-            1) "FOO BAR" should include substring "baz"
+            1) "FOO_BAR" should include substring "baz"
             **
-            2) "FOO BAR" should include substring "BAZ"
+            2) "FOO_BAR" should include substring "BAZ"
             **
         """.trimIndent()
     }

@@ -56,6 +56,6 @@ internal class UnicodeFontTest {
     }
 }
 
-private val capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-private val smallLetters = "abcdefghijklmnopqrstuvwxyz"
-private val digits = "0123456789"
+private const val capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+private const val smallLetters = "abcdefghijklmnopqrstuvwxyz"
+private const val digits = "0123456789"

@@ -20,6 +20,12 @@
 
 ### Fixed
 
+## [0.4.1] - 2022-07-05
+
+### Added
+
+- forAllEnumValues
+
 ## [0.4.0] - 2022-07-02
 
 ### Added
@@ -220,7 +226,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.1...HEAD
+
+[0.4.1]: https://github.com/bkahlert/kommons-test/compare/v0.4.0...v0.4.1
 
 [0.4.0]: https://github.com/bkahlert/kommons-test/compare/v0.3.6...v0.4.0
 

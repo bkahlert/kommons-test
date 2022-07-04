@@ -65,36 +65,25 @@ class TestAllMapKtTest {
                 value shouldContain "baz"
                 value shouldContain "BAZ"
             }
-        }.message
-            .shouldContain(
-                """
-                    0 elements passed but expected 2
+        }.message shouldMatchGlob """
+            0 elements passed but expected 2
 
-                    The following elements passed:
-                    --none--
-                    
-                    The following elements failed:
-                    a=foo bar => 
-                    The following 2 assertions failed:
-                    1) "foo bar" should include substring "baz"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    2) "foo bar" should include substring "BAZ"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    b=FOO BAR => 
-                    The following 2 assertions failed:
-                    1) "FOO BAR" should include substring "baz"
-                """.trimIndent()
-            )
-            .shouldContain(
-                """
-                    2) "FOO BAR" should include substring "BAZ"
-                """.trimIndent()
-            )
+            The following elements passed:
+            --none--
+
+            The following elements failed:
+            a=foo bar => *
+            The following 2 assertions failed:
+            1) "foo bar" should include substring "baz"
+            **
+            2) "foo bar" should include substring "BAZ"
+            **
+            b=FOO BAR =>*
+            The following 2 assertions failed:
+            1) "FOO BAR" should include substring "baz"
+            **
+            2) "FOO BAR" should include substring "BAZ"
+            **
+        """.trimIndent()
     }
 }
