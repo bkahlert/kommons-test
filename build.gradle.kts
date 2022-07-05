@@ -56,7 +56,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("reflect"))
                 api(kotlin("test-junit5"))
-                api(project.dependencies.platform("org.junit:junit-bom:5.9.0-M1"))
+                api(project.dependencies.platform("org.junit:junit-bom:5.9.0-RC1"))
                 listOf("api", "engine").forEach { api("org.junit.jupiter:junit-jupiter-$it") }
                 listOf("commons", "launcher").forEach { implementation("org.junit.platform:junit-platform-$it") }
             }
