@@ -7,8 +7,8 @@ import com.bkahlert.kommons.test.fixtures.GifImageFixture
 import com.bkahlert.kommons.test.fixtures.HtmlDocumentFixture
 import com.bkahlert.kommons.test.fixtures.ResourceFixture
 import com.bkahlert.kommons.test.fixtures.SvgImageFixture
-import com.bkahlert.kommons.test.fixtures.TextDocumentFixture
 import com.bkahlert.kommons.test.fixtures.TextResourceFixture
+import com.bkahlert.kommons.test.fixtures.UnicodeTextDocumentFixture
 import java.io.InputStream
 import java.io.StringReader
 import java.nio.charset.Charset
@@ -96,21 +96,21 @@ public fun Path.createAnyFile(fileName: String? = null): Path =
 
 /**
  * Copies one of the specified [fixtures]
- * (default: [GifImageFixture], [HtmlDocumentFixture], [SvgImageFixture], [TextDocumentFixture])
+ * (default: [GifImageFixture], [HtmlDocumentFixture], [SvgImageFixture], [UnicodeTextDocumentFixture])
  * to this directory.
  */
 public fun Path.createRandomFile(
-    vararg fixtures: ResourceFixture<*> = arrayOf(GifImageFixture, HtmlDocumentFixture, SvgImageFixture, TextDocumentFixture),
+    vararg fixtures: ResourceFixture<*> = arrayOf(GifImageFixture, HtmlDocumentFixture, SvgImageFixture, UnicodeTextDocumentFixture),
 ): Path = fixtures.random().let { it.copyTo(resolve(it.name)) }
 
 /**
  * Copies one of the specified [fixtures]
- * (default: [GifImageFixture], [HtmlDocumentFixture], [SvgImageFixture], [TextDocumentFixture])
+ * (default: [GifImageFixture], [HtmlDocumentFixture], [SvgImageFixture], [UnicodeTextDocumentFixture])
  * to the specified [fileName] in this directory.
  */
 public fun Path.createRandomFile(
     fileName: String,
-    vararg fixtures: ResourceFixture<*> = arrayOf(GifImageFixture, HtmlDocumentFixture, SvgImageFixture, TextDocumentFixture),
+    vararg fixtures: ResourceFixture<*> = arrayOf(GifImageFixture, HtmlDocumentFixture, SvgImageFixture, UnicodeTextDocumentFixture),
 ): Path = fixtures.random().copyTo(resolve(fileName))
 
 /**
@@ -120,7 +120,7 @@ public fun Path.createRandomFile(
  * The directory will contain
  * a [GifImageFixture], a [SvgImageFixture],
  * and a directory with the name `docs` containing
- * a [HtmlDocumentFixture] and a [TextDocumentFixture].
+ * a [HtmlDocumentFixture] and a [UnicodeTextDocumentFixture].
  */
 public fun Path.createDirectoryWithFiles(
     prefix: String? = null, vararg attributes: FileAttribute<*>
@@ -129,6 +129,6 @@ public fun Path.createDirectoryWithFiles(
     SvgImageFixture.copyToDirectory(this)
     resolve("docs").createDirectories().apply {
         HtmlDocumentFixture.copyToDirectory(this)
-        TextDocumentFixture.copyToDirectory(this)
+        UnicodeTextDocumentFixture.copyToDirectory(this)
     }
 }

@@ -203,10 +203,12 @@ the following binary and textual file fixtures are provided:
   An SVG image with the animated Kommons logo.
 - [HtmlDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/HtmlDocumentFixture.kt)  
   An HTML document that renders "Hello World!" on a red white striped background.
-- [TextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/TextDocumentFixture.kt)  
+- [UnicodeTextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/UnicodeTextDocumentFixture.kt)  
   A text document containing different line separators.  
   An UTF-8 encoded character can take between one and four bytes;  
   this document includes at least one character for each encoding length.
+- [EmojiTextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/EmojiTextDocumentFixture.kt)  
+  A text document encompassing the differently composed emoji 🫠, 🇩🇪, 👨🏾‍🦱, and 👩‍👩‍👦‍👦.
 
 ```kotlin
 GifImageFixture.name     // "pixels.gif"

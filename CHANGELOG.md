@@ -4,7 +4,7 @@
 
 ### Added
 
-*none
+*none*
 
 ### Changed
 
@@ -32,6 +32,7 @@
 
 - matchers: shouldMatchGlob / shouldNotMatchGlob / matchGlob
 - matchers: shouldMatchCurly / shouldNotMatchCurly / matchCurly
+- EmojiTextDocumentFixture
 
 ## [0.3.6] - 2022-06-30
 
@@ -88,7 +89,7 @@ Set default timeout for a test to 10 seconds.
   An SVG image with the animated Kommons logo.
 - [HtmlDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/HtmlDocumentFixture.kt)  
   An HTML document that renders "Hello World!" on a red white striped background.
-- [TextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/TextDocumentFixture.kt)  
+- [UnicodeTextDocumentFixture](src/commonMain/kotlin/com/bkahlert/kommons/test/fixtures/UnicodeTextDocumentFixture.kt)  
   A text document containing different line separators.  
   An UTF-8 encoded character can take between one and four bytes;  
   this document includes at least one character for each encoding length.

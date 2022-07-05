@@ -36,23 +36,26 @@ public class TestExecutionReporter(
         if (disabled) return
 
         with(summary) {
-            if (total == 0L) yellow("⁉︎ no tests executed")
-            else buildString {
+            buildString {
                 appendLine()
-                append(cyan("${total.tests} within "))
-                append(brightCyan("$duration"))
-                append(": ")
-                listOf<Pair<Long, (String) -> String>>(
-                    failed to { yellow("✘︎ $it failed") },
-                    aborted to { red("ϟ $it crashed") },
-                    succeeded to { green("✔︎ $it passed") },
-                    skipped to { grey("◍ $it ignored") },
-                ).filter { (count, _) ->
-                    count != 0L
-                }.joinTo(this, ", ") { (count, format) ->
-                    when (count) {
-                        total -> format("all")
-                        else -> format("$count")
+                if (total == 0L) {
+                    append(yellow("⁉︎ no tests executed"))
+                } else {
+                    append(cyan("${total.tests} within "))
+                    append(brightCyan("$duration"))
+                    append(": ")
+                    listOf<Pair<Long, (String) -> String>>(
+                        failed to { yellow("✘︎ $it failed") },
+                        aborted to { red("ϟ $it crashed") },
+                        succeeded to { green("✔︎ $it passed") },
+                        skipped to { grey("◍ $it ignored") },
+                    ).filter { (count, _) ->
+                        count != 0L
+                    }.joinTo(this, ", ") { (count, format) ->
+                        when (count) {
+                            total -> format("all")
+                            else -> format("$count")
+                        }
                     }
                 }
                 appendLine()

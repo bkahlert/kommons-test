@@ -69,12 +69,7 @@ public annotation class ThirtyMinutesTimeout
  * @see Timeout
  */
 @TwoMinutesTimeout
-@Tag(Slow.TagName)
+@Tag("slow")
 @Target(ANNOTATION_CLASS, FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER, CLASS)
 @Retention(RUNTIME)
-public annotation class Slow {
-    public companion object {
-        /** The tag name used for slow tests. */
-        public const val TagName: String = "slow"
-    }
-}
+public annotation class Slow

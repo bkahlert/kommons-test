@@ -11,7 +11,7 @@ package com.bkahlert.kommons.test.fixtures
  * 👋 // "WAVING HAND SIGN" + "LINE FEED"
  * ```
  */
-public object TextDocumentFixture : TextResourceFixture(
+public object UnicodeTextDocumentFixture : TextResourceFixture(
     "unicode.txt",
     "text/plain",
     0x61u.toByte(), // LATIN SMALL LETTER A

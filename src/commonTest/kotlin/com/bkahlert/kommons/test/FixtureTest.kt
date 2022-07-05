@@ -1,9 +1,10 @@
 package com.bkahlert.kommons.test
 
+import com.bkahlert.kommons.test.fixtures.EmojiTextDocumentFixture
 import com.bkahlert.kommons.test.fixtures.GifImageFixture
 import com.bkahlert.kommons.test.fixtures.HtmlDocumentFixture
 import com.bkahlert.kommons.test.fixtures.SvgImageFixture
-import com.bkahlert.kommons.test.fixtures.TextDocumentFixture
+import com.bkahlert.kommons.test.fixtures.UnicodeTextDocumentFixture
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
@@ -124,12 +125,23 @@ class FixtureTest {
     }
 
     @Suppress("SpellCheckingInspection")
-    @Test fun text_document_fixture() = test {
-        TextDocumentFixture.name shouldBe "unicode.txt"
-        TextDocumentFixture.mimeType shouldBe "text/plain"
-        TextDocumentFixture.dataURI shouldBe """
+    @Test fun unicode_text_document_fixture() = test {
+        UnicodeTextDocumentFixture.name shouldBe "unicode.txt"
+        UnicodeTextDocumentFixture.mimeType shouldBe "text/plain"
+        UnicodeTextDocumentFixture.dataURI shouldBe """
             data:text/plain;base64,
             YcKF8J2Vkw0K4piwCvCfkYsK
+        """.trimIndent().lineSequence().joinToString("")
+    }
+
+    @Suppress("SpellCheckingInspection")
+    @Test fun emoji_text_document_fixture() = test {
+        EmojiTextDocumentFixture.name shouldBe "emoji.txt"
+        EmojiTextDocumentFixture.mimeType shouldBe "text/plain"
+        EmojiTextDocumentFixture.contents shouldBe "a𝕓🫠🇩🇪👨🏾‍🦱👩‍👩‍👦‍👦"
+        EmojiTextDocumentFixture.dataURI shouldBe """
+            data:text/plain;base64,
+            YfCdlZPwn6ug8J+HqfCfh6rwn5Go8J+PvuKAjfCfprHwn5Gp4oCN8J+RqeKAjfCfkabigI3wn5Gm
         """.trimIndent().lineSequence().joinToString("")
     }
 }

@@ -5,7 +5,7 @@ import com.bkahlert.kommons.test.com.bkahlert.kommons.listDirectoryEntriesRecurs
 import com.bkahlert.kommons.test.fixtures.GifImageFixture
 import com.bkahlert.kommons.test.fixtures.HtmlDocumentFixture
 import com.bkahlert.kommons.test.fixtures.SvgImageFixture
-import com.bkahlert.kommons.test.fixtures.TextDocumentFixture
+import com.bkahlert.kommons.test.fixtures.UnicodeTextDocumentFixture
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.inspectors.forAny
 import io.kotest.inspectors.forNone
@@ -114,7 +114,7 @@ class JvmFixturesKtTest {
     @Test fun create_random_file(@TempDir tempDir: Path) {
         tempDir.createRandomFile("my.file") should {
             it.exists() shouldBe true
-            listOf(GifImageFixture, HtmlDocumentFixture, SvgImageFixture, TextDocumentFixture).forAny { fixture ->
+            listOf(GifImageFixture, HtmlDocumentFixture, SvgImageFixture, UnicodeTextDocumentFixture).forAny { fixture ->
                 it.readBytes() shouldBe fixture.bytes
             }
             it.fileName.pathString shouldBe "my.file"
@@ -126,7 +126,7 @@ class JvmFixturesKtTest {
                 it.readBytes() shouldBe fixture.bytes
                 it.fileName.pathString shouldBe fixture.name
             }
-            listOf(SvgImageFixture, TextDocumentFixture).forNone { fixture ->
+            listOf(SvgImageFixture, UnicodeTextDocumentFixture).forNone { fixture ->
                 it.readBytes() shouldBe fixture.bytes
                 it.fileName.pathString shouldBe fixture.name
             }
@@ -141,7 +141,7 @@ class JvmFixturesKtTest {
             it.resolve("docs") should { docs ->
                 docs.shouldBeADirectory()
                 docs.resolve("hello-world.html").readText() shouldBe HtmlDocumentFixture.contents
-                docs.resolve("unicode.txt").readText() shouldBe TextDocumentFixture.contents
+                docs.resolve("unicode.txt").readText() shouldBe UnicodeTextDocumentFixture.contents
             }
         }
 
