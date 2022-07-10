@@ -1,15 +1,13 @@
 @file:Suppress("UNUSED_VARIABLE")
 
+import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
+
 plugins {
     kotlin("multiplatform") version "1.7.0"
     id("org.jetbrains.dokka") version "1.7.0"
     id("maven-publish")
     signing
     id("nebula.release") version "16.0.0"
-}
-
-allprojects {
-    apply { plugin("maven-publish") }
 }
 
 description = "Kommons Test is a Kotlin Multiplatform Library to ease testing"
@@ -40,8 +38,10 @@ kotlin {
             }
         }
         nodejs()
+        yarn.ignoreScripts = false // suppress "warning Ignored scripts due to flag." warning
     }
 
+    @Suppress("UNUSED_VARIABLE")
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -80,29 +80,14 @@ kotlin {
     }
 }
 
-
-val dokkaOutputDir = buildDir.resolve("dokka")
-tasks.dokkaHtml.configure {
-    outputDirectory.set(dokkaOutputDir)
-    dokkaSourceSets {
-        configureEach {
-            displayName.set(
-                when (platform.get()) {
-                    org.jetbrains.dokka.Platform.jvm -> "jvm"
-                    org.jetbrains.dokka.Platform.js -> "js"
-                    org.jetbrains.dokka.Platform.native -> "native"
-                    org.jetbrains.dokka.Platform.common -> "common"
-                }
-            )
-        }
-    }
-}
-val deleteDokkaOutputDir by tasks.register<Delete>("deleteDokkaOutputDirectory") { delete(dokkaOutputDir) }
-val javadocJar = tasks.register<Jar>("javadocJar") {
+val javadocJar by tasks.registering(Jar::class) {
+    description = "Generates a JavaDoc JAR using Dokka"
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
     archiveClassifier.set("javadoc")
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    dependsOn(deleteDokkaOutputDir) // TODO add jsGenerateExternalsIntegrated
-    from(tasks.dokkaHtml.map { it.outputs })
+    tasks.named<org.jetbrains.dokka.gradle.DokkaTask>("dokkaHtml").also {
+        dependsOn(it)
+        from(it.get().outputDirectory)
+    }
 }
 
 publishing {
@@ -175,11 +160,6 @@ signing {
 }
 
 // getting rid of missing dependency declarations
-val signingTasks = tasks.filter { it.name.startsWith("sign") }
-listOf(
-    tasks.getByName("publishKotlinMultiplatformPublicationToMavenLocal"),
-    tasks.getByName("publishJsPublicationToMavenLocal"),
-    tasks.getByName("publishJvmPublicationToMavenLocal"),
-).forEach {
-    it.dependsOn(signingTasks)
+tasks.filter { it.name.startsWith("sign") }.also { signingTasks ->
+    tasks.filter { it.name.startsWith("publish") && it.name.contains("Publication") }.forEach { it.dependsOn(signingTasks) }
 }
