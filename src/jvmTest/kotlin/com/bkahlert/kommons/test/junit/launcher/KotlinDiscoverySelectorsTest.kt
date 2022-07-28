@@ -2,7 +2,6 @@ package com.bkahlert.kommons.test.junit.launcher
 
 import com.bkahlert.kommons.test.junit.launcher.KotlinDiscoverySelectorsTest.FooTest.NestedTest
 import com.bkahlert.kommons.test.junit.launcher.KotlinDiscoverySelectorsTest.FooTest.NestedTest.DeepNestedTest
-import com.bkahlert.kommons.test.test
 import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Nested
@@ -11,7 +10,7 @@ import org.junit.platform.engine.discovery.DiscoverySelectors
 
 class KotlinDiscoverySelectorsTest {
 
-    @Test fun select_class() = test {
+    @Test fun select_class() = testAll {
         KotlinDiscoverySelectors.selectKotlinClass(
             FooTest::class,
         ) shouldBe DiscoverySelectors.selectClass(
@@ -19,7 +18,7 @@ class KotlinDiscoverySelectorsTest {
         )
     }
 
-    @Test fun select_method() = test {
+    @Test fun select_method() = testAll {
         KotlinDiscoverySelectors.selectKotlinMemberFunction(
             FooTest::class,
             FooTest::test_foo,
@@ -64,7 +63,7 @@ class KotlinDiscoverySelectorsTest {
         )
     }
 
-    @Test fun select() = test {
+    @Test fun select() = testAll {
         KotlinDiscoverySelectors.select(
             FooTest::class,
         ) shouldBe DiscoverySelectors.selectClass(

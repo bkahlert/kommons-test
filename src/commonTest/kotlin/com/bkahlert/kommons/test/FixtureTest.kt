@@ -11,7 +11,7 @@ import kotlin.test.Test
 class FixtureTest {
 
     @Suppress("SpellCheckingInspection")
-    @Test fun gif_image_fixture() = test {
+    @Test fun gif_image_fixture() = testAll {
         GifImageFixture.name shouldBe "pixels.gif"
         GifImageFixture.mimeType shouldBe "image/gif"
         GifImageFixture.dataURI shouldBe """
@@ -21,7 +21,7 @@ class FixtureTest {
     }
 
     @Suppress("SpellCheckingInspection")
-    @Test fun html_document_fixture() = test {
+    @Test fun html_document_fixture() = testAll {
         HtmlDocumentFixture.name shouldBe "hello-world.html"
         HtmlDocumentFixture.mimeType shouldBe "text/html"
         HtmlDocumentFixture.dataURI shouldBe """
@@ -34,7 +34,7 @@ class FixtureTest {
     }
 
     @Suppress("SpellCheckingInspection")
-    @Test fun svg_image_fixture() = test {
+    @Test fun svg_image_fixture() = testAll {
         SvgImageFixture.name shouldBe "kommons.svg"
         SvgImageFixture.mimeType shouldBe "image/svg+xml"
         SvgImageFixture.dataURI shouldBe """
@@ -125,7 +125,7 @@ class FixtureTest {
     }
 
     @Suppress("SpellCheckingInspection")
-    @Test fun unicode_text_document_fixture() = test {
+    @Test fun unicode_text_document_fixture() = testAll {
         UnicodeTextDocumentFixture.name shouldBe "unicode.txt"
         UnicodeTextDocumentFixture.mimeType shouldBe "text/plain"
         UnicodeTextDocumentFixture.dataURI shouldBe """
@@ -135,7 +135,7 @@ class FixtureTest {
     }
 
     @Suppress("SpellCheckingInspection")
-    @Test fun emoji_text_document_fixture() = test {
+    @Test fun emoji_text_document_fixture() = testAll {
         EmojiTextDocumentFixture.name shouldBe "emoji.txt"
         EmojiTextDocumentFixture.mimeType shouldBe "text/plain"
         EmojiTextDocumentFixture.contents shouldBe "a𝕓🫠🇩🇪👨🏾‍🦱👩‍👩‍👦‍👦"

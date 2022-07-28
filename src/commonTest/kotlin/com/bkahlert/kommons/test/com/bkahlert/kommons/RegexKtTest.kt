@@ -1,7 +1,7 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
 import com.bkahlert.kommons.test.com.bkahlert.kommons.LineSeparators.NEL
-import com.bkahlert.kommons.test.test
+import com.bkahlert.kommons.test.testAll
 import io.kotest.assertions.withClue
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.should
@@ -26,7 +26,7 @@ import kotlin.test.Test
 )
 class RegexKtTest {
 
-    @Test fun from_literal_alternates() = test {
+    @Test fun from_literal_alternates() = testAll {
         Regex.fromLiteralAlternates() shouldBe Regex("")
         Regex.fromLiteralAlternates("foo") shouldBe Regex(Regex.escape("foo"))
         Regex.fromLiteralAlternates("foo", "bar") shouldBe Regex("${Regex.escape("foo")}|${Regex.escape("bar")}")
@@ -36,7 +36,7 @@ class RegexKtTest {
         Regex.fromLiteralAlternates(listOf("foo", "bar")) shouldBe Regex("${Regex.escape("foo")}|${Regex.escape("bar")}")
     }
 
-    @Test fun from_glob() = test {
+    @Test fun from_glob() = testAll {
         val input = """
             foo.bar()
             bar[0]++
@@ -111,7 +111,7 @@ class RegexKtTest {
         }
     }
 
-    @Test fun matches_glob() = test {
+    @Test fun matches_glob() = testAll {
         "foo.bar()".matchesGlob("foo.*") shouldBe true
         "foo.bar()".matchesGlob("foo.{}", wildcard = "{}") shouldBe true
 
@@ -145,7 +145,7 @@ class RegexKtTest {
         ) shouldBe false
     }
 
-    @Test fun matches_curly() = test {
+    @Test fun matches_curly() = testAll {
         "foo.bar()".matchesCurly("foo.{}") shouldBe true
 
         multilineGlobMatchInput.matchesCurly(

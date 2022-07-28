@@ -31,15 +31,15 @@ Furthermore, there are some more [advanced features for the JVM platform](#jvm-f
 
 Kommons Test is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.4.1")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.4.1")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.4.2")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.4.2")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.4.1</version>
+      <version>0.4.2</version>
       <scope>test</scope>
   </dependency>
   ```
@@ -48,12 +48,12 @@ Kommons Test is hosted on GitHub with releases provided on Maven Central.
 
 ### Helpers
 
-#### test
+#### testAll
 
 Write a bunch of soft assertions conveniently in a single test:
 
 ```kotlin
-@Test fun test_contain() = test {
+@Test fun test_contain() = testAll {
     "foo bar" shouldContain "Foo"
     "foo bar" shouldContain "foo"
     "foo bar" shouldContain "baz"
@@ -71,9 +71,9 @@ The following 2 assertions failed:
     at sample.Tests.test_contain(Tests.kt:3)
 ```
 
-#### testAll
+#### testAll *(with subjects)*
 
-Write a bunch of soft assertions conveniently for multiple subjects in a single test:
+Write a bunch of soft assertions conveniently for one or more subjects in a single test:
 
 ```kotlin
 @Test fun test_contain() = testAll("foo bar", "FOO BAR") {
@@ -148,7 +148,7 @@ The following 2 assertions failed:
 Match (multiline) strings with glob patterns:
 
 ```kotlin
-@Test fun test_glob_match() = test {
+@Test fun test_glob_match() = testAll {
     val multilineString = """
             foo
               .bar()

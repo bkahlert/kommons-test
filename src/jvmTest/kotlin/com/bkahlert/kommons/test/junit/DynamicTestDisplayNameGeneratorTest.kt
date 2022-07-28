@@ -2,7 +2,7 @@ package com.bkahlert.kommons.test.junit
 
 import com.bkahlert.kommons.test.com.bkahlert.kommons.emptyString
 import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.displayNameFor
-import com.bkahlert.kommons.test.test
+import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Test
@@ -16,7 +16,7 @@ import kotlin.streams.asStream
 class DynamicTestDisplayNameGeneratorTest {
 
     @Suppress("SpellCheckingInspection")
-    @Test fun display_name_for() = test {
+    @Test fun display_name_for() = testAll {
         displayNameFor(nullSubject) shouldBe "𝘯𝘶𝘭𝘭"
         displayNameFor(kPropertySubject) shouldBe "ᴩʀᴏᴩᴇʀᴛy length"
         displayNameFor(kFunctionSubject) shouldBe "ꜰᴜɴᴄᴛɪᴏɴ toString"
@@ -34,7 +34,7 @@ class DynamicTestDisplayNameGeneratorTest {
         displayNameFor(anySubject) shouldBe "string representation"
     }
 
-    @Test fun display_name_for__explicit() = test {
+    @Test fun display_name_for__explicit() = testAll {
         displayNameFor(nullSubject, "foo {} bar") shouldBe "foo 𝘯𝘶𝘭𝘭 bar"
         displayNameFor(kPropertySubject, "foo {} bar") shouldBe "foo length bar"
         displayNameFor(kFunctionSubject, "foo {} bar") shouldBe "foo toString bar"

@@ -1,13 +1,13 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
-import com.bkahlert.kommons.test.test
+import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import kotlin.test.Test
 
 class CasesKtTest {
 
-    @Test fun capitalize_char_sequence() = test {
+    @Test fun capitalize_char_sequence() = testAll {
         charSequence_aa.capitalize() shouldBe "Aa"
         charSequence_aA.capitalize() shouldBe "AA"
         charSequence_a9.capitalize() shouldBe "A9"
@@ -27,7 +27,7 @@ class CasesKtTest {
     }
 
     @Suppress("SpellCheckingInspection")
-    @Test fun decapitalize_string() = test {
+    @Test fun decapitalize_string() = testAll {
         string_aa.decapitalize() shouldBeSameInstanceAs string_aa
         string_aA.decapitalize() shouldBeSameInstanceAs string_aA
         string_a9.decapitalize() shouldBeSameInstanceAs string_a9

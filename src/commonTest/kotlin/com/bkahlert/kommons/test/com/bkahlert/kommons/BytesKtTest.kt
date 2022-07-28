@@ -1,6 +1,5 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
-import com.bkahlert.kommons.test.test
 import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.should
@@ -9,7 +8,7 @@ import kotlin.test.Test
 
 class BytesTest {
 
-    @Test fun to_hexadecimal_string() = test {
+    @Test fun to_hexadecimal_string() = testAll {
         byteArray should { array ->
             array.map { it.toHexadecimalString() } shouldContainExactly listOf("00", "7f", "80", "ff")
             array.toHexadecimalString() shouldBe "007f80ff"

@@ -68,7 +68,7 @@ class JvmFilePeekKtTest {
     inner class StaticClass
     inner class InnerClass
 
-    @Test fun get_caller_file_info() = test {
+    @Test fun get_caller_file_info() = testAll {
         FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {
             throw RuntimeException()
         }).shouldNotBeNull() should { fileInfo ->

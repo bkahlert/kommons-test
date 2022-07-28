@@ -9,7 +9,7 @@ import java.time.Instant
 
 class LambdaBodyTest {
 
-    @Test fun to_string() = test {
+    @Test fun to_string() = testAll {
         LambdaBody("body").toString() shouldBe "body"
         LambdaBody(
             """
@@ -19,7 +19,7 @@ class LambdaBodyTest {
         ).toString() shouldBe "body 1\nbody 2"
     }
 
-    @Test fun body() = test {
+    @Test fun body() = testAll {
         LambdaBody("body").body shouldBe "body"
         LambdaBody(
             """
@@ -29,7 +29,7 @@ class LambdaBodyTest {
         ).body shouldBe "body 1\nbody 2"
     }
 
-    @Test fun outer_body() = test {
+    @Test fun outer_body() = testAll {
         LambdaBody("body").outerBody shouldBe "{ body }"
         LambdaBody(
             """
@@ -57,7 +57,7 @@ class LambdaBodyTest {
         """.trimIndent()
     }
 
-    @Test fun guess_name() = test {
+    @Test fun guess_name() = testAll {
         "foo".asClue { LambdaBody.guessName(it) shouldBe null }
         "foo {".asClue { LambdaBody.guessName(it) shouldBe "foo" }
         "   foo {".asClue { LambdaBody.guessName(it) shouldBe "foo" }
@@ -76,11 +76,11 @@ class LambdaBodyTest {
         " \n   {".asClue { LambdaBody.guessName(it) shouldBe null }
     }
 
-    @Test fun parse_or_null__single_line() = testAll(*validSingleLineLambdaStrings) { code ->
+    @Test fun parse_or_null__single_line() = validSingleLineLambdaStrings.testAll { code ->
         LambdaBody.parseOrNull("foo", code) shouldBe LambdaBody("body")
     }
 
-    @Test fun parse_or_null__multi_line() = testAll(*validMultiLineLambdaStrings) { code ->
+    @Test fun parse_or_null__multi_line() = validMultiLineLambdaStrings.testAll { code ->
         LambdaBody.parseOrNull("foo", code) shouldBe LambdaBody(
             """
             body 1
@@ -89,13 +89,13 @@ class LambdaBodyTest {
         )
     }
 
-    @Test fun parse_or_null__wrapped_single_line() = testAll(*validSingleLineLambdaStrings) { code ->
+    @Test fun parse_or_null__wrapped_single_line() = validSingleLineLambdaStrings.testAll { code ->
         wrapped(code).forAll { wrappedCode ->
             LambdaBody.parseOrNull("foo", wrappedCode) shouldBe LambdaBody("body")
         }
     }
 
-    @Test fun parse_or_null__wrapped_multi_line() = testAll(*validMultiLineLambdaStrings) { code ->
+    @Test fun parse_or_null__wrapped_multi_line() = validMultiLineLambdaStrings.testAll { code ->
         wrapped(code).forAll { wrappedCode ->
             LambdaBody.parseOrNull("foo", wrappedCode) shouldBe LambdaBody(
                 """
@@ -106,15 +106,15 @@ class LambdaBodyTest {
         }
     }
 
-    @Test fun parse_or_null__invalid() = testAll(*invalidSingleLineLambdaStrings, *invalidMultiLineLambdaStrings) { code ->
+    @Test fun parse_or_null__invalid() = listOf(*invalidSingleLineLambdaStrings, *invalidMultiLineLambdaStrings).testAll { code ->
         LambdaBody.parseOrNull("foo", code) shouldBe null
     }
 
-    @Test fun parse_or_null__missing_name() = testAll(*validSingleLineLambdaStrings, *validMultiLineLambdaStrings) { code ->
+    @Test fun parse_or_null__missing_name() = listOf(*validSingleLineLambdaStrings, *validMultiLineLambdaStrings).testAll { code ->
         LambdaBody.parseOrNull("bar", code) shouldBe null
     }
 
-    @Test fun parse_or_null__stacktrace_single_line() = test {
+    @Test fun parse_or_null__stacktrace_single_line() = testAll {
         LambdaBody.parseOrNull(raiseStackTraceElement { foo { bar { throw RuntimeException() } } })
             .shouldBe(LambdaBody("foo { bar { throw RuntimeException() } }"))
 
@@ -131,7 +131,7 @@ class LambdaBodyTest {
             .shouldBeNull()
     }
 
-    @Test fun parse_or_null__stacktrace_multi_line() = test {
+    @Test fun parse_or_null__stacktrace_multi_line() = testAll {
         LambdaBody.parseOrNull(raiseStackTraceElement {
             foo {
                 bar {
@@ -208,7 +208,7 @@ class LambdaBodyTest {
         }, "invalid").shouldBeNull()
     }
 
-    @Test fun parse_or_null__extension() = test {
+    @Test fun parse_or_null__extension() = testAll {
         raiseStackTraceElement { foo { bar { throw RuntimeException() } } }
             .getLambdaBodyOrNull().shouldBe(LambdaBody("foo { bar { throw RuntimeException() } }"))
         raise { foo { bar { throw RuntimeException() } } }

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 internal class UnicodeFontTest {
 
-    @Test fun format() = test {
+    @Test fun format() = testAll {
         UnicodeFont.Bold.format(capitalLetters) shouldBe "𝐀𝐁𝐂𝐃𝐄𝐅𝐆𝐇𝐈𝐉𝐊𝐋𝐌𝐍𝐎𝐏𝐐𝐑𝐒𝐓𝐔𝐕𝐖𝐗𝐘𝐙"
         UnicodeFont.Italic.format(capitalLetters) shouldBe "𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍"
         UnicodeFont.BoldItalic.format(capitalLetters) shouldBe "𝑨𝑩𝑪𝑫𝑬𝑭𝑮𝑯𝑰𝑱𝑲𝑳𝑴𝑵𝑶𝑷𝑸𝑹𝑺𝑻𝑼𝑽𝑾𝑿𝒀𝒁"
@@ -50,7 +50,7 @@ internal class UnicodeFontTest {
         UnicodeFont.Monospace.format(digits) shouldBe "𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿"
     }
 
-    @Test fun format_throwing() = test {
+    @Test fun format_throwing() = testAll {
         UnicodeFont.Bold.format(digits) shouldBe "𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗"
         shouldThrow<IllegalArgumentException> { UnicodeFont.Italic.format(digits) { throw IllegalArgumentException("cannot format $it") } }
     }

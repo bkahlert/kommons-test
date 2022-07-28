@@ -29,20 +29,20 @@ import kotlin.io.path.readText
 
 class JvmFixturesKtTest {
 
-    @Test fun file_name() = test {
+    @Test fun file_name() = testAll {
         SvgImageFixture.fileName shouldBe Paths.get("kommons.svg")
     }
 
-    @Test fun input_stream() = test {
+    @Test fun input_stream() = testAll {
         GifImageFixture.inputStream().readBytes() shouldBe GifImageFixture.bytes
         SvgImageFixture.inputStream().readBytes() shouldBe SvgImageFixture.bytes
     }
 
-    @Test fun reader() = test {
+    @Test fun reader() = testAll {
         SvgImageFixture.reader().readText() shouldBe SvgImageFixture.contents
     }
 
-    @Test fun copy_to(@TempDir tempDir: Path) = test {
+    @Test fun copy_to(@TempDir tempDir: Path) = testAll {
         SvgImageFixture.copyTo(tempDir / "file") should {
             it.exists() shouldBe true
             it.readText() shouldBe SvgImageFixture.contents
@@ -56,7 +56,7 @@ class JvmFixturesKtTest {
         }
     }
 
-    @Test fun copy_to_directory(@TempDir tempDir: Path) = test {
+    @Test fun copy_to_directory(@TempDir tempDir: Path) = testAll {
         SvgImageFixture.copyToDirectory(tempDir) should {
             it.exists() shouldBe true
             it.readText() shouldBe SvgImageFixture.contents
@@ -72,7 +72,7 @@ class JvmFixturesKtTest {
         }
     }
 
-    @Test fun copy_to_temp_file() = test {
+    @Test fun copy_to_temp_file() = testAll {
         GifImageFixture.copyToTempFile().deleteOnExit() should {
             it.exists() shouldBe true
             it.readBytes() shouldBe GifImageFixture.bytes
@@ -81,7 +81,7 @@ class JvmFixturesKtTest {
         }
     }
 
-    @Test fun copy_to_temp_text_file() = test {
+    @Test fun copy_to_temp_text_file() = testAll {
         SvgImageFixture.copyToTempTextFile().deleteOnExit() should {
             it.exists() shouldBe true
             it.readText() shouldBe SvgImageFixture.contents

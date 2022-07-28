@@ -24,7 +24,7 @@ class KommonsTestTest {
         it.shouldBeADirectory()
     }
 
-    @Test fun locate_call() = test {
+    @Test fun locate_call() = testAll {
         KommonsTest.locateCall() should {
             it.fileName shouldBe "KommonsTestTest.kt"
             it.className shouldBe KommonsTestTest::class.qualifiedName

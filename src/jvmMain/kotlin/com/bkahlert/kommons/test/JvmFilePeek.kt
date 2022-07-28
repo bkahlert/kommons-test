@@ -137,7 +137,7 @@ internal data class FileInfo(
      * ***Note:** Line numbers are counted starting with `1`.*
      */
     val lineRange: ClosedRange<Int>,
-    /** The name of the lambda of interest. */
+    /** The name of the lambda. */
     val methodName: String,
 ) {
     /**

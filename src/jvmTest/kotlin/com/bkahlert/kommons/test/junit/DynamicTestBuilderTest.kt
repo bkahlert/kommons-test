@@ -1,7 +1,7 @@
 package com.bkahlert.kommons.test.junit
 
 import com.bkahlert.kommons.test.com.bkahlert.kommons.asList
-import com.bkahlert.kommons.test.test
+import com.bkahlert.kommons.test.testAll
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -95,7 +95,7 @@ class DynamicTestBuilderTest {
         }
 
 
-    @Test fun tests_without_subject() = test {
+    @Test fun tests_without_subject() = testAll {
         var currentLine = 25
         testsWithoutSubject.asList().filterIsInstance<DynamicTest>().map { test ->
             test.displayName to test.testSourceString?.substringAfterLast("?")
@@ -115,7 +115,7 @@ class DynamicTestBuilderTest {
     @TestFactory fun run_failing_tests_without_subject() = failingTestsWithoutSubject.transform { it.toExceptionExpectingTest<AssertionError>() }
 
 
-    @Test fun tests_with_subject() = test {
+    @Test fun tests_with_subject() = testAll {
         var currentLine = 47
         testsWithSubject.asList().filterIsInstance<DynamicTest>().map { test ->
             test.displayName to test.testSourceString?.substringAfterLast("?")
@@ -137,7 +137,7 @@ class DynamicTestBuilderTest {
     @TestFactory fun run_failing_tests_with_subject() = failingTestsWithSubject.transform { it.toExceptionExpectingTest<AssertionError>() }
 
 
-    @Test fun tests_with_subjects() = test {
+    @Test fun tests_with_subjects() = testAll {
         val firstLine = 73
         testsWithSubjects.asList() should { containers ->
             containers shouldHaveSize 3

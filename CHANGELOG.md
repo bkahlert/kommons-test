@@ -20,6 +20,14 @@
 
 ### Fixed
 
+*none*
+
+## [0.4.2] - 2022-08-06
+
+### Changed
+
+- rename `test` to `testAll`
+
 ## [0.4.1] - 2022-07-10
 
 ### Added
@@ -227,7 +235,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.1...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.2...HEAD
+
+[0.4.2]: https://github.com/bkahlert/kommons-test/compare/v0.4.1...v0.4.2
 
 [0.4.1]: https://github.com/bkahlert/kommons-test/compare/v0.4.0...v0.4.1
 

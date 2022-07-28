@@ -6,7 +6,7 @@ import com.bkahlert.kommons.test.foo
 import com.bkahlert.kommons.test.junit.PathSource.Companion.sourceUri
 import com.bkahlert.kommons.test.raise
 import com.bkahlert.kommons.test.raiseStackTraceElement
-import com.bkahlert.kommons.test.test
+import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
@@ -20,7 +20,7 @@ import kotlin.io.path.div
 
 class PathSourceTest {
 
-    @Test fun from(@TempDir tempDir: Path) = test {
+    @Test fun from(@TempDir tempDir: Path) = testAll {
         PathSource(tempDir / "file.kt", 10).toString() should {
             it.shouldStartWith("file:")
             it.shouldEndWith("file.kt?line=10")
@@ -32,22 +32,22 @@ class PathSourceTest {
         }
     }
 
-    @Test fun to_string(@TempDir tempDir: Path) = test {
+    @Test fun to_string(@TempDir tempDir: Path) = testAll {
         val pathSource = PathSource(tempDir / "file.kt", 10)
         pathSource.toString() shouldBe pathSource.uri.toString()
     }
 
-    @Test fun get_uri(@TempDir tempDir: Path) = test {
+    @Test fun get_uri(@TempDir tempDir: Path) = testAll {
         val path = tempDir / "file.kt"
         PathSource(path, 10).uri shouldBe URI("${path.toUri()}?line=10")
     }
 
-    @Test fun get_file(@TempDir tempDir: Path) = test {
+    @Test fun get_file(@TempDir tempDir: Path) = testAll {
         val path = tempDir / "file.kt"
         PathSource(path, 10).file shouldBe path.toFile()
     }
 
-    @Test fun from_or_null() = test {
+    @Test fun from_or_null() = testAll {
         val sourceFile = checkNotNull(javaClass.findSourceFileOrNull())
         val methodLineNumber = 52 // must be equal to line number of this line
 
@@ -74,7 +74,7 @@ class PathSourceTest {
         }).shouldBe(PathSource(sourceFile, methodLineNumber + 19, 21))
     }
 
-    @Test fun source_uri() = test {
+    @Test fun source_uri() = testAll {
         val sourceFile = checkNotNull(javaClass.findSourceFileOrNull())
         val methodLineNumber = 79 // must be equal to line number of this line
 
@@ -101,7 +101,7 @@ class PathSourceTest {
         }.sourceUri.shouldBe(PathSource(sourceFile, methodLineNumber + 19, 21).uri)
     }
 
-    @Test fun current() = test {
+    @Test fun current() = testAll {
         val sourceFile = checkNotNull(javaClass.findSourceFileOrNull())
         val methodLineNumber = 106 // must be equal to line number of this line
 
@@ -117,7 +117,7 @@ class PathSourceTest {
             .shouldBe(PathSource(sourceFile, methodLineNumber + 8, 17))
     }
 
-    @Test fun current_uri() = test {
+    @Test fun current_uri() = testAll {
         val sourceFile = checkNotNull(javaClass.findSourceFileOrNull())
         val methodLineNumber = 122 // must be equal to line number of this line
 

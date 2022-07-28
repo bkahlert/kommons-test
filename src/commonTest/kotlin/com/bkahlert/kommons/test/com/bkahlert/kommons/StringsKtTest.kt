@@ -1,6 +1,6 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
-import com.bkahlert.kommons.test.test
+import com.bkahlert.kommons.test.testAll
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.sequences.shouldContainExactly
@@ -13,7 +13,7 @@ import kotlin.test.Test
 
 class StringsKtTest {
 
-    @Test fun ansi_contained() = test {
+    @Test fun ansi_contained() = testAll {
         charSequence.ansiContained shouldBe false
         string.ansiContained shouldBe false
         emptyCharSequence.ansiContained shouldBe false
@@ -26,7 +26,7 @@ class StringsKtTest {
         ansiOscString.ansiContained shouldBe true
     }
 
-    @Test fun ansi_removed() = test {
+    @Test fun ansi_removed() = testAll {
         string.ansiRemoved shouldBe string
         emptyString.ansiRemoved shouldBe emptyString
         blankString.ansiRemoved shouldBe blankString
@@ -34,19 +34,19 @@ class StringsKtTest {
         ansiOscString.ansiRemoved shouldBe "↗ link"
     }
 
-    @Test fun with_prefix() = test {
+    @Test fun with_prefix() = testAll {
         string.withPrefix(string) shouldBe string
         string.withPrefix("str") shouldBe string
         string.withPrefix("str-") shouldBe "str-$string"
     }
 
-    @Test fun with_suffix() = test {
+    @Test fun with_suffix() = testAll {
         string.withSuffix(string) shouldBe string
         string.withSuffix("ing") shouldBe string
         string.withSuffix("-ing") shouldBe "$string-ing"
     }
 
-    @Test fun with_random_suffix() = test {
+    @Test fun with_random_suffix() = testAll {
         charSequence.withRandomSuffix() should {
             it shouldMatch Regex("$charSequence--[\\da-zA-Z]{4}")
             it shouldStartWith charSequence
@@ -59,7 +59,7 @@ class StringsKtTest {
         }
     }
 
-    @Test fun random_string() = test {
+    @Test fun random_string() = testAll {
         randomString() shouldHaveLength 16
         randomString(7) shouldHaveLength 7
 
@@ -70,7 +70,7 @@ class StringsKtTest {
     }
 
 
-    @Test fun index_of_or_null() = test {
+    @Test fun index_of_or_null() = testAll {
         charSequence.indexOfOrNull('e') shouldBe 6
         charSequence.indexOfOrNull('E') shouldBe null
         charSequence.indexOfOrNull('e', ignoreCase = true) shouldBe 6
@@ -86,7 +86,7 @@ class StringsKtTest {
         charSequence.indexOfOrNull("e", startIndex = 7, ignoreCase = true) shouldBe 9
     }
 
-    @Test fun last_index_of_or_null() = test {
+    @Test fun last_index_of_or_null() = testAll {
         charSequence.lastIndexOfOrNull('e') shouldBe 12
         charSequence.lastIndexOfOrNull('E') shouldBe null
         charSequence.lastIndexOfOrNull('e', ignoreCase = true) shouldBe 12
@@ -103,7 +103,7 @@ class StringsKtTest {
     }
 
 
-    @Test fun split_to_sequence() = test {
+    @Test fun split_to_sequence() = testAll {
         "foo X bar x baz".cs.splitToSequence(" X ").shouldContainExactly("foo", "bar x baz")
         "foo X bar x baz".cs.splitToSequence(" X ", " x ").shouldContainExactly("foo", "bar", "baz")
         "foo X bar x baz".cs.splitToSequence(" X ", " x ", keepDelimiters = true).shouldContainExactly("foo X ", "bar x ", "baz")

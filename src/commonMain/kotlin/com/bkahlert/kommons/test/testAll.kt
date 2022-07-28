@@ -1,10 +1,21 @@
 package com.bkahlert.kommons.test
 
+import io.kotest.assertions.assertSoftly
 import io.kotest.inspectors.forAll
 
+/** Asserts the specified [softAssertions]. */
+public inline fun <R> testAll(softAssertions: () -> R) {
+    assertSoftly(softAssertions)
+}
+
 /** Asserts the specified [softAssertions] for each of the specified [subjects]. */
-public inline fun <T, R> testAll(vararg subjects: T, softAssertions: (T) -> R) {
-    subjects.asList().testAll(softAssertions)
+public inline fun <T, R> testAll(subject: T, vararg subjects: T, softAssertions: (T) -> R) {
+    listOf(subject, *subjects).testAll(softAssertions)
+}
+
+/** Asserts the specified [softAssertions] for each of this [Array]. */
+public inline fun <T, R> Array<T>.testAll(softAssertions: (T) -> R) {
+    asList().testAll(softAssertions)
 }
 
 /** Asserts the specified [softAssertions] for each element of this [Collection]. */
@@ -12,7 +23,7 @@ public inline fun <T, R> Iterable<T>.testAll(softAssertions: (T) -> R) {
     val subjects = toList()
     require(subjects.isNotEmpty()) { "At least one subject must be provided for testing." }
     subjects.forAll {
-        test { softAssertions(it) }
+        testAll<R> { softAssertions(it) }
     }
 }
 
