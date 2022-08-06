@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 
 plugins {
     kotlin("multiplatform") version "1.7.10"
-    id("org.jetbrains.dokka") version "1.7.0"
+    id("org.jetbrains.dokka") version "1.7.10"
     id("maven-publish")
     signing
     id("nebula.release") version "16.0.0"
@@ -46,9 +46,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(kotlin("test"))
-                implementation("io.kotest:kotest-common:5.3.2")
-                api("io.kotest:kotest-assertions-core:5.3.2")
-
+                implementation("io.kotest:kotest-common:5.4.1")
+                api("io.kotest:kotest-assertions-core:5.4.1")
             }
         }
         val commonTest by getting
@@ -56,7 +55,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("reflect"))
                 api(kotlin("test-junit5"))
-                api(project.dependencies.platform("org.junit:junit-bom:5.9.0-RC1"))
+                api(project.dependencies.platform("org.junit:junit-bom:5.9.0"))
                 listOf("api", "engine").forEach { api("org.junit.jupiter:junit-jupiter-$it") }
                 listOf("commons", "launcher").forEach { implementation("org.junit.platform:junit-platform-$it") }
             }
