@@ -4,9 +4,7 @@
 
 ### Added
 
-- path matchers `shouldStartWith`, `shouldNotStartWith`, `startWith`
-- path matchers `shouldEndWith`, `shouldNotEndWith`, `endWith`
-- On JVM all fixtures are now also included as files in the `resources/fixtures` directory. The extension property `url` resolves to the appropriate URL.
+*none*
 
 ### Changed
 
@@ -19,6 +17,18 @@
 ### Removed
 
 *none*
+
+### Fixed
+
+*none*
+
+## [0.4.4] - 2022-08-07
+
+### Added
+
+- path matchers `shouldStartWith`, `shouldNotStartWith`, `startWith`
+- path matchers `shouldEndWith`, `shouldNotEndWith`, `endWith`
+- On JVM all fixtures are now also included as files in the `resources/fixtures` directory. The extension property `url` resolves to the appropriate URL.
 
 ### Fixed
 
@@ -243,7 +253,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.3...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.4...HEAD
+
+[0.4.4]: https://github.com/bkahlert/kommons-test/compare/v0.4.3...v0.4.4
 
 [0.4.3]: https://github.com/bkahlert/kommons-test/compare/v0.4.2...v0.4.3
 
