@@ -11,7 +11,7 @@ class JsTestAllArrayKtTest {
 
     @Test fun test_empty() {
         shouldThrow<IllegalArgumentException> {
-            emptyArray<String>().testAll<String, Any?> { }
+            emptyArray<Any?>().testAll { }
         }
     }
 

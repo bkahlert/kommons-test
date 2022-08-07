@@ -2,7 +2,6 @@ package com.bkahlert.kommons.test.junit
 
 import com.bkahlert.kommons.test.SLF4J
 import com.bkahlert.kommons.test.junit.DynamicTestDisplayNameGenerator.displayNameFor
-import com.bkahlert.kommons.test.testAll
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.function.Executable
 import java.util.stream.Stream
@@ -38,12 +37,15 @@ public fun <T> Iterable<T>.testEach(
     val testSourceUri = PathSource.currentUri
     return toList()
         .also { require(it.isNotEmpty()) { "At least one subject must be provided for testing." } }
-        .map { subject ->
-            val executable = if (softly) Executable { testAll<Unit> { assertions(subject) } } else Executable { assertions(subject) }
+        .map { subject: T ->
             DynamicTest.dynamicTest(
                 displayNameFor(subject, testNamePattern),
                 testSourceUri,
-                executable,
+                if (softly) {
+                    Executable { com.bkahlert.kommons.test.testAll { assertions(subject) } }
+                } else {
+                    Executable { assertions(subject) }
+                },
             )
         }.stream()
 }

@@ -11,7 +11,7 @@ class TestAllCollectionKtTest {
 
     @Test fun test_empty() {
         shouldThrow<IllegalArgumentException> {
-            emptyList<Any?>().testAll<Any?, Any?> { }
+            emptyList<Any?>().testAll { }
         }
     }
 

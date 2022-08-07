@@ -22,6 +22,12 @@
 
 *none*
 
+## [0.4.3] - 2022-08-07
+
+### Fixed
+
+- type inference problem when using `testAll`
+
 ## [0.4.2] - 2022-08-06
 
 ### Changed
@@ -212,7 +218,7 @@ a class instance argument.
 
 Launch JUnit tests programmatically using `launchTests`.
 
-Use `KotlinDiscoverySelectors` to easily select the tests to run explicitly using
+Use `KotlinDiscoverySelectors` to conveniently select the tests to run explicitly using
 `selectKotlinClass`, `selectKotlinMemberFunction`,
 `selectKotlinNestedClass`, `selectKotlinNestedMemberFunction`.
 
@@ -235,7 +241,9 @@ Write a bunch of soft assertions conveniently in a single test:
 }
 ```
 
-[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.2...HEAD
+[unreleased]: https://github.com/bkahlert/kommons-test/compare/v0.4.3...HEAD
+
+[0.4.3]: https://github.com/bkahlert/kommons-test/compare/v0.4.2...v0.4.3
 
 [0.4.2]: https://github.com/bkahlert/kommons-test/compare/v0.4.1...v0.4.2
 

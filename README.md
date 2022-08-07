@@ -31,15 +31,15 @@ Furthermore, there are some more [advanced features for the JVM platform](#jvm-f
 
 Kommons Test is hosted on GitHub with releases provided on Maven Central.
 
-* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.4.2")`
-* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.4.2")` *(for MPP projects)*
+* **Gradle** `testImplementation("com.bkahlert.kommons:kommons-test:0.4.3")`
+* **Gradle** `implementation("com.bkahlert.kommons:kommons-test:0.4.3")` *(for MPP projects)*
 
 * **Maven**
   ```xml
   <dependency>
       <groupId>com.bkahlert.kommons</groupId>
       <artifactId>kommons-test</artifactId>
-      <version>0.4.2</version>
+      <version>0.4.3</version>
       <scope>test</scope>
   </dependency>
   ```
