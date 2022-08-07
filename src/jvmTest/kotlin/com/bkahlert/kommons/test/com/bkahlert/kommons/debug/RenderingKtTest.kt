@@ -1,12 +1,11 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons.debug
 
 import com.bkahlert.kommons.test.com.bkahlert.kommons.LineSeparators
+import com.bkahlert.kommons.test.shouldMatchGlob
 import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldEndWith
 import io.kotest.matchers.string.shouldNotContain
-import io.kotest.matchers.string.shouldStartWith
 import org.junit.jupiter.api.Test
 import java.nio.file.Paths
 
@@ -14,29 +13,25 @@ class RenderingKtTest {
 
     @Test fun to_compact_string() = testAll {
         runtimeException.toCompactString() should {
-            it shouldStartWith "RuntimeException: Something happened at.(RenderingKtTest.kt:"
-            it shouldEndWith ")"
+            it shouldMatchGlob "RuntimeException: Something happened at.(RenderingKtTest.kt:*)"
             it shouldNotContain "\n"
         }
         emptyException.toCompactString() should {
-            it shouldStartWith "RuntimeException at.(RenderingKtTest.kt:"
-            it shouldEndWith ")"
+            it shouldMatchGlob "RuntimeException at.(RenderingKtTest.kt:*)"
             it shouldNotContain "\n"
         }
 
         Result.failure<String>(runtimeException).toCompactString() should {
-            it shouldStartWith "RuntimeException: Something happened at.(RenderingKtTest.kt:"
-            it shouldEndWith ")"
+            it shouldMatchGlob "RuntimeException: Something happened at.(RenderingKtTest.kt:*)"
             it shouldNotContain "\n"
         }
         Result.failure<String>(emptyException).toCompactString() should {
-            it shouldStartWith "RuntimeException at.(RenderingKtTest.kt:"
-            it shouldEndWith ")"
+            it shouldMatchGlob "RuntimeException at.(RenderingKtTest.kt:*)"
             it shouldNotContain "\n"
         }
 
         Result.success("good").toCompactString() shouldBe "\"good\""
-        Result.success(Paths.get("/path")).toCompactString() shouldBe "file:///path"
+        Result.success(Paths.get("/path")).toCompactString() shouldMatchGlob "file://*/path"
         Result.success(emptyList<Any>()).toCompactString() shouldBe "[]"
         Result.success(arrayOf("a", "b")).toCompactString() shouldBe Result.success(listOf("a", "b")).toCompactString()
 

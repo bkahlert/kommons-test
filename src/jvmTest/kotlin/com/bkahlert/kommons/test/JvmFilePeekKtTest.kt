@@ -1,5 +1,6 @@
 package com.bkahlert.kommons.test
 
+
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.collections.shouldHaveAtLeastSize
 import io.kotest.matchers.nulls.shouldBeNull
@@ -9,9 +10,8 @@ import io.kotest.matchers.paths.shouldBeAFile
 import io.kotest.matchers.paths.shouldExist
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldEndWith
 import org.junit.jupiter.api.Test
-import kotlin.io.path.pathString
+
 
 class JvmFilePeekKtTest {
 
@@ -25,7 +25,7 @@ class JvmFilePeekKtTest {
     ) { compute ->
         compute().shouldNotBeNull() should { dir ->
             dir.shouldBeADirectory()
-            dir.map { it.pathString }.takeLast(3).shouldContainExactly("kotlin", "jvm", "test")
+            dir.shouldEndWith("kotlin", "jvm", "test")
         }
 
         String::class.findClassesDirectoryOrNull().shouldBeNull()
@@ -41,7 +41,7 @@ class JvmFilePeekKtTest {
     ) { compute ->
         compute().shouldNotBeNull() should { dir ->
             dir.shouldBeADirectory()
-            dir.map { it.pathString }.takeLast(3).shouldContainExactly("src", "jvmTest", "kotlin")
+            dir.shouldEndWith("src", "jvmTest", "kotlin")
         }
 
         String::class.findSourceDirectoryOrNull().shouldBeNull()
@@ -57,23 +57,23 @@ class JvmFilePeekKtTest {
     ) { compute ->
         compute().shouldNotBeNull() should { file ->
             file.shouldBeAFile()
-            file.map { it.pathString }.takeLast(8).shouldContainExactly(
-                "src", "jvmTest", "kotlin", "com", "bkahlert", "kommons", "test", "JvmFilePeekKtTest.kt"
-            )
+            file.shouldEndWith("src", "jvmTest", "kotlin", "com", "bkahlert", "kommons", "test", "JvmFilePeekKtTest.kt")
         }
 
         String::class.findSourceFileOrNull().shouldBeNull()
     }
 
+
     inner class StaticClass
     inner class InnerClass
+
 
     @Test fun get_caller_file_info() = testAll {
         FilePeekMPP.getCallerFileInfo(raiseStackTraceElement {
             throw RuntimeException()
         }).shouldNotBeNull() should { fileInfo ->
             fileInfo.sourceFile should { file ->
-                file.pathString shouldEndWith "src/jvmTest/kotlin/com/bkahlert/kommons/test/JvmFilePeekKtTest.kt"
+                file.shouldEndWith("src", "jvmTest", "kotlin", "com", "bkahlert", "kommons", "test", "JvmFilePeekKtTest.kt")
                 file.shouldExist()
             }
             fileInfo.sourceFileLines shouldHaveAtLeastSize 100
@@ -113,7 +113,7 @@ class JvmFilePeekKtTest {
             foo { bar { throw RuntimeException() } }
         }).shouldNotBeNull() should { fileInfo ->
             fileInfo.sourceFile should { file ->
-                file.pathString shouldEndWith "src/jvmTest/kotlin/com/bkahlert/kommons/test/JvmFilePeekKtTest.kt"
+                file.shouldEndWith("src", "jvmTest", "kotlin", "com", "bkahlert", "kommons", "test", "JvmFilePeekKtTest.kt")
                 file.shouldExist()
             }
             fileInfo.sourceFileLines shouldHaveAtLeastSize 100
