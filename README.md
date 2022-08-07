@@ -145,7 +145,7 @@ The following 2 assertions failed:
 
 #### shouldMatchGlob / shouldNotMatchGlob / matchGlob / *Curly
 
-Match (multiline) strings with glob patterns:
+Match single- and multiline strings with glob patterns:
 
 ```kotlin
 @Test fun test_glob_match() = testAll {
@@ -170,7 +170,7 @@ Match (multiline) strings with glob patterns:
 }
 ```
 
-The above test has two assertions of which the second fails
+The preceding test has two assertions of which the second fails
 when run with the following output:
 
 ```
@@ -187,7 +187,7 @@ foo
 """
 ```
 
-Alternatively, you can use `shouldMatchCurly`  / `shouldNotMatchCurly`  / `matchCurly` if you prefer SLF4J / Logback style
+Or, you can use `shouldMatchCurly`  / `shouldNotMatchCurly`  / `matchCurly` if you prefer SLF4J / Logback style
 wildcards `{}` and `{{}}`.
 
 ### Fixtures

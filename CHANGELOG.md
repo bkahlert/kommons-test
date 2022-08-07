@@ -4,7 +4,8 @@
 
 ### Added
 
-*none*
+- path matchers `shouldStartWith`, `shouldNotStartWith`, `startWith`
+- path matchers `shouldEndWith`, `shouldNotEndWith`, `endWith`
 
 ### Changed
 
@@ -20,7 +21,7 @@
 
 ### Fixed
 
-*none*
+- fix Windows-related bugs
 
 ## [0.4.3] - 2022-08-07
 
