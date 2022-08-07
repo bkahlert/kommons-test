@@ -1,5 +1,6 @@
 package com.bkahlert.kommons.test
 
+import com.bkahlert.kommons.test.com.bkahlert.kommons.Program
 import com.bkahlert.kommons.test.com.bkahlert.kommons.createTempDirectory
 import com.bkahlert.kommons.test.com.bkahlert.kommons.useBufferedOutputStream
 import com.bkahlert.kommons.test.com.bkahlert.kommons.useBufferedWriter
@@ -11,6 +12,7 @@ import com.bkahlert.kommons.test.fixtures.TextResourceFixture
 import com.bkahlert.kommons.test.fixtures.UnicodeTextDocumentFixture
 import java.io.InputStream
 import java.io.StringReader
+import java.net.URL
 import java.nio.charset.Charset
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -28,6 +30,12 @@ public val ResourceFixture<*>.fileName: Path get() = Paths.get(name)
 
 /** Returns an [InputStream] for reading the [ResourceFixture.contents] of this [ResourceFixture]. */
 public fun ResourceFixture<*>.inputStream(): InputStream = bytes.inputStream()
+
+/** Returns an [URL] pointing to a resource with the same [ResourceFixture.name] and [ResourceFixture.contents] as this fixture. */
+public val ResourceFixture<*>.url: URL
+    get() = checkNotNull(Program.contextClassLoader.getResource("fixtures/$name")) {
+        "Missing fixture $name"
+    }
 
 /** Returns a [StringReader] for reading the [TextResourceFixture.contents] of this [ResourceFixture]. */
 public fun TextResourceFixture.reader(): StringReader = contents.reader()

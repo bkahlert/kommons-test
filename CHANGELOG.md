@@ -6,6 +6,7 @@
 
 - path matchers `shouldStartWith`, `shouldNotStartWith`, `startWith`
 - path matchers `shouldEndWith`, `shouldNotEndWith`, `endWith`
+- On JVM all fixtures are now also included as files in the `resources/fixtures` directory. The extension property `url` resolves to the appropriate URL.
 
 ### Changed
 

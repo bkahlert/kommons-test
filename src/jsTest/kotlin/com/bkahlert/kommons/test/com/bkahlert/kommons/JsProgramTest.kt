@@ -4,9 +4,9 @@ import com.bkahlert.kommons.test.testAll
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
-class JvmPlatformTest {
+class JsProgramTest {
 
-    @Test fun current() = testAll {
-        Platform.Current shouldBe Platform.JVM
+    @Test fun is_debugging() = testAll {
+        Program.isDebugging shouldBe false
     }
 }

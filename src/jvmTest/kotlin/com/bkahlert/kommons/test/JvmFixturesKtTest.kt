@@ -2,6 +2,7 @@ package com.bkahlert.kommons.test
 
 import com.bkahlert.kommons.test.com.bkahlert.kommons.deleteOnExit
 import com.bkahlert.kommons.test.com.bkahlert.kommons.listDirectoryEntriesRecursively
+import com.bkahlert.kommons.test.fixtures.EmojiTextDocumentFixture
 import com.bkahlert.kommons.test.fixtures.GifImageFixture
 import com.bkahlert.kommons.test.fixtures.HtmlDocumentFixture
 import com.bkahlert.kommons.test.fixtures.SvgImageFixture
@@ -36,6 +37,20 @@ class JvmFixturesKtTest {
     @Test fun input_stream() = testAll {
         GifImageFixture.inputStream().readBytes() shouldBe GifImageFixture.bytes
         SvgImageFixture.inputStream().readBytes() shouldBe SvgImageFixture.bytes
+    }
+
+    // TODO move to common
+    @Test fun url() = testAll(
+        EmojiTextDocumentFixture,
+        GifImageFixture,
+        HtmlDocumentFixture,
+        SvgImageFixture,
+        UnicodeTextDocumentFixture,
+    ) { fixture ->
+        fixture.url should {
+            it.toString() shouldEndWith fixture.name
+            it.readBytes() shouldBe fixture.bytes
+        }
     }
 
     @Test fun reader() = testAll {

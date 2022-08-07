@@ -1,27 +1,19 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
-/** Platforms this program can be run on. */
-internal expect sealed interface Platform {
+/** Platforms a program can run on. */
+internal expect enum class Platform {
 
-    /** Whether this program is running in debug mode. */
-    val isDebugging: Boolean
+    /** Browser platform */
+    Browser,
 
-    /** JavaScript based platform, e.g. browser. */
-    sealed interface JS : Platform {
+    /** NodeJS platform */
+    NodeJS,
 
-        /** Browser platform */
-        object Browser : JS
-
-        /** NodeJS platform */
-        object NodeJS : JS
-    }
-
-    /** Java virtual machine. */
-    object JVM : Platform
+    /** Java virtual machine */
+    JVM;
 
     companion object {
-
-        /** The platforms this program runs on. */
-        internal val Current: Platform
+        /** The platform this program runs on. */
+        val Current: Platform
     }
 }

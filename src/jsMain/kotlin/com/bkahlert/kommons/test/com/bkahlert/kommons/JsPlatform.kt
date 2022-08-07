@@ -1,36 +1,21 @@
 package com.bkahlert.kommons.test.com.bkahlert.kommons
 
-/** Platforms this program can be run on. */
-internal actual sealed interface Platform {
+/** Platforms a program can run on. */
+internal actual enum class Platform {
 
-    /** Whether this program is running in debug mode. */
-    actual val isDebugging: Boolean
+    /** Browser platform */
+    Browser,
 
-    /** JavaScript based platform, e.g. browser. */
-    actual sealed interface JS : Platform {
-        /** Browser platform */
-        actual object Browser : JS {
-            override val isDebugging: Boolean = false
-        }
+    /** NodeJS platform */
+    NodeJS,
 
-        /** NodeJS platform */
-        actual object NodeJS : JS {
-            override val isDebugging: Boolean = false
-        }
-    }
-
-    /** Java virtual machine. */
-    actual object JVM : Platform {
-        override val isDebugging: Boolean = false
-    }
+    /** Java virtual machine */
+    JVM;
 
     actual companion object {
-        private val currentPlatform by lazy {
-            runCatching { kotlinx.browser.window }.fold({ JS.Browser }, { JS.NodeJS })
+        /** The platform this program runs on. */
+        actual val Current: Platform by lazy {
+            runCatching { kotlinx.browser.window }.fold({ Browser }, { NodeJS })
         }
-
-        /** The platforms this program runs on. */
-        actual val Current: Platform
-            get() = currentPlatform
     }
 }
